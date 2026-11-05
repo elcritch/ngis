@@ -1,8 +1,8 @@
 import std/unittest
 
-import nim_repo
+import ngis
 
-suite "nim_repo":
+suite "ngis":
   test "greets by name":
     check greet("Nim") == "hello, Nim"
 
