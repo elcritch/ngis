@@ -1,6 +1,4 @@
-## Root module for ngis.
-
-proc greet*(name: string): string =
-  ## Returns a greeting for `name`.
-  "hello, " & name
-
+## GDAL raster, vector, spatial-reference, and utility APIs with automatic cleanup.
+## Import `ngis/gdal` directly when only the raw C ABI is needed.
+import ngis/[gdal, datasets, raster, vector, operations]
+export gdal, datasets, raster, vector, operations

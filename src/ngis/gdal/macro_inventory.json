@@ -1,0 +1,612 @@
+{
+  "scope": "Function-like definitions in listed headers, including inactive preprocessor branches; object-like macros are in bindings.json.",
+  "macros": {
+    "CPLAssert": {
+      "category": "nim_idiom_or_control_flow",
+      "headers": [
+        "cpl_error.h"
+      ]
+    },
+    "CPLAssertAlwaysEval": {
+      "category": "nim_idiom_or_control_flow",
+      "headers": [
+        "cpl_error.h"
+      ]
+    },
+    "CPLAtomicDec": {
+      "category": "implemented",
+      "headers": [
+        "cpl_atomic_ops.h"
+      ]
+    },
+    "CPLAtomicInc": {
+      "category": "implemented",
+      "headers": [
+        "cpl_atomic_ops.h"
+      ]
+    },
+    "CPLDebug": {
+      "category": "nim_idiom_or_control_flow",
+      "headers": [
+        "cpl_error.h"
+      ]
+    },
+    "CPLDebugOnce": {
+      "category": "nim_idiom_or_control_flow",
+      "headers": [
+        "cpl_error.h"
+      ]
+    },
+    "CPLDebugOnly": {
+      "category": "nim_idiom_or_control_flow",
+      "headers": [
+        "cpl_error.h"
+      ]
+    },
+    "CPLDebugProgress": {
+      "category": "nim_idiom_or_control_flow",
+      "headers": [
+        "cpl_error.h"
+      ]
+    },
+    "CPLErrorOnce": {
+      "category": "nim_idiom_or_control_flow",
+      "headers": [
+        "cpl_error.h"
+      ]
+    },
+    "CPLIsEqual": {
+      "category": "implemented",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPLIsFinite": {
+      "category": "implemented",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPLIsInf": {
+      "category": "implemented",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPLIsNan": {
+      "category": "implemented",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPLLockHolderD": {
+      "category": "cpp_or_internal",
+      "headers": [
+        "cpl_multiproc.h"
+      ]
+    },
+    "CPLLockHolderOptionalLockD": {
+      "category": "cpp_or_internal",
+      "headers": [
+        "cpl_multiproc.h"
+      ]
+    },
+    "CPLMutexHolderD": {
+      "category": "cpp_or_internal",
+      "headers": [
+        "cpl_multiproc.h"
+      ]
+    },
+    "CPLMutexHolderExD": {
+      "category": "cpp_or_internal",
+      "headers": [
+        "cpl_multiproc.h"
+      ]
+    },
+    "CPLMutexHolderOptionalLockD": {
+      "category": "cpp_or_internal",
+      "headers": [
+        "cpl_multiproc.h"
+      ]
+    },
+    "CPL_ABS": {
+      "category": "implemented",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_ARRAYSIZE": {
+      "category": "nim_idiom_or_control_flow",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_DISALLOW_COPY_ASSIGN": {
+      "category": "compiler_annotation_or_cast",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_FORMAT_STRING": {
+      "category": "compiler_annotation_or_cast",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_INT64_FITS_ON_INT32": {
+      "category": "implemented",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_IS_ALIGNED": {
+      "category": "implemented",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_LSBINT16PTR": {
+      "category": "implemented",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_LSBINT32PTR": {
+      "category": "implemented",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_LSBPTR16": {
+      "category": "implemented",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_LSBPTR32": {
+      "category": "implemented",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_LSBPTR64": {
+      "category": "implemented",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_LSBSINT16PTR": {
+      "category": "implemented",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_LSBSINT32PTR": {
+      "category": "implemented",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_LSBUINT16PTR": {
+      "category": "implemented",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_LSBUINT32PTR": {
+      "category": "implemented",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_LSBWORD16": {
+      "category": "implemented",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_LSBWORD32": {
+      "category": "implemented",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_MAX": {
+      "category": "implemented",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_MIN": {
+      "category": "implemented",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_MSBPTR16": {
+      "category": "implemented",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_MSBPTR32": {
+      "category": "implemented",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_MSBPTR64": {
+      "category": "implemented",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_MSBWORD16": {
+      "category": "implemented",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_MSBWORD32": {
+      "category": "implemented",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_PRINT_FUNC_FORMAT": {
+      "category": "compiler_annotation_or_cast",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_REINTERPRET_CAST": {
+      "category": "compiler_annotation_or_cast",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_SCANF_FORMAT_STRING": {
+      "category": "compiler_annotation_or_cast",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_SCAN_FUNC_FORMAT": {
+      "category": "compiler_annotation_or_cast",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_STATIC_ASSERT": {
+      "category": "compiler_annotation_or_cast",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_STATIC_ASSERT_IF_AVAILABLE": {
+      "category": "compiler_annotation_or_cast",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_STATIC_CAST": {
+      "category": "compiler_annotation_or_cast",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_SWAP16": {
+      "category": "implemented",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_SWAP16PTR": {
+      "category": "implemented",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_SWAP32": {
+      "category": "implemented",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_SWAP32PTR": {
+      "category": "implemented",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_SWAP64": {
+      "category": "implemented",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_SWAP64PTR": {
+      "category": "implemented",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_SWAPDOUBLE": {
+      "category": "implemented",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_UNLIKELY": {
+      "category": "compiler_annotation_or_cast",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "CPL_WARN_DEPRECATED": {
+      "category": "compiler_annotation_or_cast",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "DB2_V72_FIX_BYTE_ORDER": {
+      "category": "cpp_or_internal",
+      "headers": [
+        "ogr_core.h"
+      ]
+    },
+    "DB2_V72_UNFIX_BYTE_ORDER": {
+      "category": "cpp_or_internal",
+      "headers": [
+        "ogr_core.h"
+      ]
+    },
+    "EQUAL": {
+      "category": "implemented",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "EQUALN": {
+      "category": "implemented",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "GDAL_CHECK_VERSION": {
+      "category": "implemented",
+      "headers": [
+        "gdal.h",
+        "ogr_core.h"
+      ]
+    },
+    "GDAL_COMPUTE_VERSION": {
+      "category": "implemented",
+      "headers": [
+        "gdal_version.h"
+      ]
+    },
+    "GDAL_DEFINE_ARITHOP": {
+      "category": "cpp_or_internal",
+      "headers": [
+        "cpl_float.h"
+      ]
+    },
+    "GDAL_DEFINE_COMPARISON": {
+      "category": "cpp_or_internal",
+      "headers": [
+        "cpl_float.h"
+      ]
+    },
+    "GDAL_DEFINE_CONVERSION": {
+      "category": "cpp_or_internal",
+      "headers": [
+        "cpl_float.h"
+      ]
+    },
+    "GDAL_GET_OPERATE_IN_BUF_TYPE": {
+      "category": "implemented",
+      "headers": [
+        "gdal.h"
+      ]
+    },
+    "INIT_RASTERIO_EXTRA_ARG": {
+      "category": "implemented",
+      "headers": [
+        "gdal.h"
+      ]
+    },
+    "OGR_FOR_EACH_FEATURE_BEGIN": {
+      "category": "nim_idiom_or_control_flow",
+      "headers": [
+        "ogr_api.h"
+      ]
+    },
+    "OGR_FOR_EACH_FEATURE_END": {
+      "category": "nim_idiom_or_control_flow",
+      "headers": [
+        "ogr_api.h"
+      ]
+    },
+    "SRCVAL": {
+      "category": "cpp_or_internal",
+      "headers": [
+        "gdal.h"
+      ]
+    },
+    "STARTS_WITH": {
+      "category": "implemented",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "STARTS_WITH_CI": {
+      "category": "implemented",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "STRCASECMP": {
+      "category": "implemented",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "STRNCASECMP": {
+      "category": "implemented",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "UNREFERENCED_PARAM": {
+      "category": "compiler_annotation_or_cast",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "VALIDATE_POINTER0": {
+      "category": "nim_idiom_or_control_flow",
+      "headers": [
+        "cpl_error.h"
+      ]
+    },
+    "VALIDATE_POINTER1": {
+      "category": "nim_idiom_or_control_flow",
+      "headers": [
+        "cpl_error.h"
+      ]
+    },
+    "VSIDebug1": {
+      "category": "nim_idiom_or_control_flow",
+      "headers": [
+        "cpl_vsi.h"
+      ]
+    },
+    "VSIDebug2": {
+      "category": "nim_idiom_or_control_flow",
+      "headers": [
+        "cpl_vsi.h"
+      ]
+    },
+    "VSIDebug3": {
+      "category": "nim_idiom_or_control_flow",
+      "headers": [
+        "cpl_vsi.h"
+      ]
+    },
+    "VSIDebug4": {
+      "category": "nim_idiom_or_control_flow",
+      "headers": [
+        "cpl_vsi.h"
+      ]
+    },
+    "VSI_CALLOC_VERBOSE": {
+      "category": "implemented",
+      "headers": [
+        "cpl_vsi.h"
+      ]
+    },
+    "VSI_ISBLK": {
+      "category": "implemented",
+      "headers": [
+        "cpl_vsi.h"
+      ]
+    },
+    "VSI_ISCHR": {
+      "category": "implemented",
+      "headers": [
+        "cpl_vsi.h"
+      ]
+    },
+    "VSI_ISDIR": {
+      "category": "implemented",
+      "headers": [
+        "cpl_vsi.h"
+      ]
+    },
+    "VSI_ISLNK": {
+      "category": "implemented",
+      "headers": [
+        "cpl_vsi.h"
+      ]
+    },
+    "VSI_ISREG": {
+      "category": "implemented",
+      "headers": [
+        "cpl_vsi.h"
+      ]
+    },
+    "VSI_MALLOC2_VERBOSE": {
+      "category": "implemented",
+      "headers": [
+        "cpl_vsi.h"
+      ]
+    },
+    "VSI_MALLOC3_VERBOSE": {
+      "category": "implemented",
+      "headers": [
+        "cpl_vsi.h"
+      ]
+    },
+    "VSI_MALLOC_ALIGNED_AUTO_VERBOSE": {
+      "category": "implemented",
+      "headers": [
+        "cpl_vsi.h"
+      ]
+    },
+    "VSI_MALLOC_VERBOSE": {
+      "category": "implemented",
+      "headers": [
+        "cpl_vsi.h"
+      ]
+    },
+    "VSI_REALLOC_VERBOSE": {
+      "category": "implemented",
+      "headers": [
+        "cpl_vsi.h"
+      ]
+    },
+    "VSI_STRDUP_VERBOSE": {
+      "category": "implemented",
+      "headers": [
+        "cpl_vsi.h"
+      ]
+    },
+    "__has_attribute": {
+      "category": "compiler_annotation_or_cast",
+      "headers": [
+        "cpl_port.h"
+      ]
+    },
+    "wkbFlatten": {
+      "category": "implemented",
+      "headers": [
+        "ogr_core.h"
+      ]
+    },
+    "wkbHasM": {
+      "category": "implemented",
+      "headers": [
+        "ogr_core.h"
+      ]
+    },
+    "wkbHasZ": {
+      "category": "implemented",
+      "headers": [
+        "ogr_core.h"
+      ]
+    },
+    "wkbSetM": {
+      "category": "implemented",
+      "headers": [
+        "ogr_core.h"
+      ]
+    },
+    "wkbSetZ": {
+      "category": "implemented",
+      "headers": [
+        "ogr_core.h"
+      ]
+    }
+  }
+}

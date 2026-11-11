@@ -1,8 +1,8 @@
 version       = "0.1.0"
-author        = "Your Name"
-description   = "A Nim package."
+author        = "elcritch"
+description   = "Nim bindings and owning wrappers for GDAL."
 license       = "MIT"
 srcDir        = "src"
 
-requires "nim >= 2.0.0"
+requires "nim >= 2.2.0"
 
