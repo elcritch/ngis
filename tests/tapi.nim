@@ -5,8 +5,21 @@ static:
   doAssert not declared(GDALOpenEx)
   doAssert declared(loadGdal)
   doAssert not declared(registerGdalImports)
+  doAssert declared(initLocalProjection)
+  doAssert declared(estimateGridIdw)
+  doAssert declared(initPolygon2D)
 
 suite "high-level API":
+  test "local mapping uses the same coordinates as native geometry":
+    let projection = initLocalProjection(GeoPoint(lat: 42, lon: -93))
+    let origin = projection.project(GeoPoint(lat: 42, lon: -93))
+    let position = projection.project(GeoPoint(lat: 42.001, lon: -92.999))
+    let line = newLineString([origin, position])
+    var points: seq[Coordinate]
+    for point in line.points:
+      points.add(point)
+    check points == @[origin, position]
+
   test "typed raster, resampling and copy":
     let image = createRaster(float32, 2, 2)
     var grid = initRasterGrid[float32](2, 2)

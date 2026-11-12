@@ -103,6 +103,14 @@ proc coordinateExample() =
   )
   echo copy.size, " ", calls
 
+proc localMappingExample() =
+  let projection = initLocalProjection(GeoPoint(lat: 42, lon: -93))
+  let position = projection.project(GeoPoint(lat: 42.0001, lon: -92.9999))
+  let samples = [MetricSample(x: position.x, y: position.y, value: 12.5)]
+  let spec = gridSpecForSamples(samples, cellSize = 10).get()
+  let observed = aggregateObserved(samples, spec)
+  echo observed.cells[0].value
+
 proc resourcesExample() =
   let xml = parseXml("<station><name>Harbour</name></station>")
   echo xml.root.value("name")
@@ -127,4 +135,5 @@ when isMainModule:
   multidimensionalExample()
   algorithmsExample()
   coordinateExample()
+  localMappingExample()
   resourcesExample()

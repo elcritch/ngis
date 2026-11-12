@@ -1,6 +1,6 @@
-version       = "0.3.0"
+version       = "0.4.0"
 author        = "elcritch"
-description   = "Nim bindings and owning wrappers for GDAL."
+description   = "Nim bindings and owning wrappers for GDAL, with standalone local mapping tools."
 license       = "MIT"
 srcDir        = "src"
 

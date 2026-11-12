@@ -1,10 +1,10 @@
 # ngis
 
-Work with GDAL rasters, vector data, multidimensional arrays, and coordinate systems from Nim. Use typed grids, feature values, geometry operations, iterators, and processing options with automatic resource cleanup. The complete GDAL C API is available alongside the high-level API.
+Work with GDAL rasters, vector data, multidimensional arrays, and coordinate systems from Nim. Use typed grids, feature values, geometry operations, iterators, and processing options with automatic resource cleanup. The complete GDAL C API is available alongside the high-level API. Standalone mapping tools also support GPS projection, sparse observations, interpolation, and polygon queries without GDAL.
 
 ## Install
 
-Install Nim 2.2 or later and the GDAL 3.13.3 development headers and shared library. Add ngis to your project's `.nimble` file:
+Install Nim 2.2 or later. For the GDAL modules, also install the GDAL 3.13.3 development headers and shared library. Add ngis to your project's `.nimble` file:
 
 ```nim
 requires "https://github.com/elcritch/ngis"
@@ -61,6 +61,33 @@ lookup.colorize(colors, pixels) # Reuse storage for another layer's colors.
 `initRasterLookup` uses exact nearest-neighbor reprojection. Pass `clip = boundary` with geometry already in the target CRS to retain holes and disconnected parts at output resolution. Set `sourceRows = RasterRowOrder.bottomUp` for analytical grids whose row zero is at the southern edge. `colorize` accepts per-cell hatch flags and an `initHatchStyle` value.
 
 The output is contiguous straight RGBA, ready for Pixie's `encodePng` or another encoder. Pixie is an optional application dependency; see the complete [PNG example](examples/render_pixie.nim) and [rendering API guide](docs/api.md#map-rendering).
+
+## GPS and local mapping
+
+Use `ngis/mapping` for standard-library-only tools on native Nim or JavaScript:
+
+```nim
+import std/options
+import ngis/mapping
+
+let projection = initLocalProjection(GeoPoint(lat: 42, lon: -93))
+let position = projection.project(GeoPoint(lat: 42.0001, lon: -92.9999))
+let samples = [MetricSample(x: position.x, y: position.y, value: 12.5)]
+let spec = gridSpecForSamples(samples, cellSize = 10).get()
+let observed = aggregateObserved(samples, spec)
+echo observed.cells[0].value
+```
+
+`initLocalProjection` supplies approximate local metres around a fixed GPS origin.
+`webMercator` supplies normalized world coordinates for web maps, including longitude
+wrapping across the antimeridian. `aggregateObserved` retains only occupied cells;
+`estimateIdw` and `estimateGridIdw` return estimates separately from observations.
+`initPolygon2D` prepares repeated point queries with holes and explicit boundary results.
+All use the same double-precision `Coordinate` as the GDAL API.
+
+These tools are also exported by `ngis/api`. See the [local mapping guide](docs/local_mapping.md)
+for coordinate limits, missing values, and computation budgets. Importing `ngis/mapping`
+directly requires neither GDAL headers nor its shared library.
 
 ## Vector data
 
@@ -126,6 +153,7 @@ CPL and virtual filesystem helpers are available too: `parseXml`, `newStringList
 | Datasets and drivers | `datasets`, `datasetops`, `drivers`: opening options, metadata, CRS properties, datasets and drivers |
 | Raster | `raster`, `rasterio`, `rasterextras`, `asyncio`: typed grids, tiles, resampling, bands, tables and async readers |
 | Map rendering | `rendering`: georeferenced layouts, reusable pixel lookups, output-resolution masks, RGBA colors and hatching |
+| Local mapping | `mapping`: `mapprojection`, `metricgrid`, `localidw`, `polygonqueries`, and `coordinatevalues`; GPS and numeric mapping tools for native Nim and JavaScript |
 | Vector and schema | `vector`, `features`, `geometryops`, `vectorextras`, `schemadomains`: typed fields, geometry construction and operations, prepared geometries, styles, domains and relationships |
 | Coordinates and arrays | `coordinates`, `spatialrefs`, `multidim`, `arrayops`: bounds, affine mapping, CRS transformations, typed arrays, slices and attributes |
 | Processing | `processing`, `operations`, `utilities`, `algorithms`, `advanced`: typed conversion and reprojection, progress closures, utilities, transformers, gridding and pansharpening |
@@ -145,5 +173,6 @@ The raw bindings target GDAL 3.13.3's public C headers. They do not wrap the GDA
 ```sh
 atlas install
 atlas-run tests
+atlas-run tests --backend:js mapping mapprojection metricgrid localidw polygonqueries polygonindex
 atlas-run tests --compile-only examples/all_compile.nim
 ```
