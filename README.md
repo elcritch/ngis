@@ -1,16 +1,16 @@
 # ngis
 
-Nim bindings for GDAL: work with rasters, vector data, coordinate systems, and GDAL utilities through owning Nim wrappers or the public C API.
+Work with GDAL rasters, vector data, multidimensional arrays, and coordinate systems from Nim. ngis provides automatic resource cleanup for common workflows and direct access to the GDAL C API when you need finer control.
 
-## Installation
+## Install
 
-Install Nim 2.2 or later and the GDAL 3.13.3 headers and shared library. The bindings are generated against GDAL 3.13.3; use that version for matching ABI and functionality. Add ngis to your project's `.nimble` file:
+Install Nim 2.2 or later and the GDAL 3.13.3 development headers and shared library. Add ngis to your project's `.nimble` file:
 
 ```nim
 requires "https://github.com/elcritch/ngis"
 ```
 
-Run `atlas install` in your project. The GDAL library must be available at runtime. On macOS the loader uses the Homebrew GDAL prefix when available; Linux uses `libgdal.so`. Set `-d:gdalLib=/path/to/libgdal` at compile time to select another shared library. The current tested platforms are macOS arm64 and 64-bit Linux; Windows requires native ABI validation before it can be considered supported.
+Run `atlas install` in your project. GDAL must be available at runtime. On macOS ngis uses the Homebrew GDAL prefix when available; Linux uses `libgdal.so`. Use `-d:gdalLib=/path/to/libgdal` when compiling to select another shared library. The currently tested platforms are macOS arm64 and 64-bit Linux; Windows needs native ABI validation.
 
 ## Raster quick start
 
@@ -23,14 +23,13 @@ pixels.write([1'f32, 2, 3, 4])
 echo read[float32](pixels)
 ```
 
-## Vector and coordinate systems
+## Vector data
 
 ```nim
 import ngis
 
 let data = createDataset("MEM", "", 0, 0, bands = 0)
-let crs = newSpatialReference(4326)
-let places = data.createLayer("places", wkbPoint, crs)
+let places = data.createLayer("places", wkbPoint, newSpatialReference(4326))
 places.addField("name", OFTString)
 let feature = places.newFeature()
 feature["name"] = "Harbour"
@@ -40,11 +39,24 @@ for place in places:
   echo place["name"], ": ", place.geometry.toWkt()
 ```
 
-Use `newCoordinateTransform(source, target)` and `transform` to transform coordinates or geometries. GDAL's axis-order rules for the selected CRS apply.
+Coordinate transformations use GDAL's axis-order rules for the selected CRS.
 
-## GDAL utilities
+## Multidimensional arrays
 
-Utility options use the same arguments as the corresponding GDAL command-line tool:
+```nim
+import ngis
+
+let data = createMultiDimDataset("MEM", "")
+let root = data.rootGroup()
+let time = root.createDimension("time", 3)
+let temperature = root.createArray("temperature", [time], numericType(GDT_Float32))
+temperature.write([18'f32, 19, 20])
+echo temperature.read(float32)
+```
+
+## Algorithms and utilities
+
+Use command-line-style GDAL utility options or inspect and run registered algorithms:
 
 ```nim
 import ngis
@@ -53,15 +65,33 @@ let source = createDataset("MEM", "", 2, 2)
 source.band().write([1'u8, 2, 3, 4])
 let copy = translate(source, "", ["-of", "MEM"])
 echo read[uint8](copy.band())
+
+let algorithm = globalAlgorithmRegistry().instantiate(["raster", "info"])
+algorithm.argument("input").set([source])
+algorithm.argument("format").set("json")
+algorithm.run()
+algorithm.finalize()
 ```
 
-`warp`, `vectorTranslate`, `rasterize`, `grid`, and `buildVrt` are also available. Utility results retain native references to their backing source datasets where needed.
+CPL and virtual filesystem helpers are available too: `parseXml`, `newStringList`, `openVirtualFile`, `createZip`, and `newNativeBuffer` manage their native resources.
 
-Datasets close automatically when their last owner is released. Bands and layers retain their dataset. Calling `close` explicitly invalidates aliases and borrowed bands or layers from that dataset; use it when deterministic release is needed. Geometry, feature, spatial reference, and coordinate transform wrappers own their native resources.
+## API guide
 
-## Raw bindings
+| Area | Modules and resources |
+| --- | --- |
+| Datasets and drivers | `datasets`, `drivers`: datasets, registered drivers and owned unregistered drivers |
+| Raster | `raster`, `rasterextras`, `asyncio`: bands, color and attribute tables, async readers |
+| Vector and schema | `vector`, `vectorextras`, `schemadomains`: features, geometries, prepared geometries, styles, field domains and relationships |
+| Coordinates and arrays | `spatialrefs`, `schemadomains`, `multidim`: CRS, coordinate operations, groups, arrays, dimensions and attributes |
+| Processing | `operations`, `utilities`, `algorithms`, `advanced`: utilities, algorithm registry and arguments, transformers, warping, gridding and pansharpening |
+| Specialised resources | `coordinateprecision`, `geocoding`, `triangulation`, `contours`, `subdatasets`, `computedbands`: precision models, geocoding results, meshes, streaming contours, subdataset descriptions and computed bands |
+| CPL and I/O | `cpl`, `vsi`, `memory`, `progress`, `plugins`, `processes`: XML, HTTP, compression, containers, synchronization, virtual files, ZIP archives, buffers, callbacks and processes |
+| Networks | `networks`: GNM networks, when the installed GDAL build includes GNM |
+| Raw C API | `gdal`: generated GDAL, OGR, OSR, CPL and VSI declarations and macro equivalents |
 
-`import ngis/gdal` exposes generated declarations for the GDAL 3.13.3 public C API, including GDAL, OGR, OSR, and CPL. The header inventory, signatures, and hashes are recorded in `src/ngis/gdal/bindings.json`. C macro equivalents and their coverage inventory live in `macros.nim` and `macro_inventory.json`; compiler annotations, C++ constructs, and C control-flow macros use Nim's native equivalents. GDAL's C++ API is not wrapped. Some C symbols depend on the features enabled in the installed GDAL build; a declaration does not guarantee that its symbol exists in every build. Raw handles follow GDAL's C ownership rules. Some platform-specific stat helpers use native system headers.
+`import ngis` exports these modules; `import ngis/gdal` imports only the raw bindings. The owning Nim API covers common resource families and workflows, but does not provide a one-to-one wrapper for every C function. For other calls, use the C API directly; `rawHandle` borrows from an owner, and `adopt` factories take ownership of compatible independently owned handles. Keep owners alive for any borrowed handles. See [ownership and lifetimes](docs/ownership.md) for details.
+
+The raw bindings target GDAL 3.13.3's public C headers. They do not wrap the GDAL C++ API; symbols for optional drivers and features depend on the installed build. See [binding generation and checks](docs/bindings.md) for the API boundary and development workflow.
 
 ## Development
 
@@ -70,15 +100,3 @@ atlas install
 atlas-run tests
 atlas-run tests --compile-only examples/all_compile.nim
 ```
-
-The ABI tests compile against the installed GDAL headers using `gdal-config`. To regenerate the bindings and ABI checks, install the Python package `clang==18.1.8` and a compatible libclang, then run against the GDAL 3.13.3 headers:
-
-```sh
-python3 -m pip install clang==18.1.8
-python3 scripts/generate_bindings.py --include "$(gdal-config --prefix)/include"
-python3 scripts/generate_abi_test.py --include "$(gdal-config --prefix)/include"
-python3 scripts/gdal_macros.py --include "$(gdal-config --prefix)/include"
-nph src/ngis/gdal/bindings.nim tests/tgdal_generated_abi.nim
-```
-
-Pass `--libclang /path/to/libclang` to either script if libclang is not found automatically.

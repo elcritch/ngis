@@ -35,6 +35,21 @@ jobs:
         shell: micromamba-shell {0}
         run: atlas install
 
+      - name: Install binding audit tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y libclang-dev python3-venv
+          python3 -m venv /tmp/ngis-bindgen
+          /tmp/ngis-bindgen/bin/pip install clang==18.1.8
+
+      - name: Audit public C coverage and signatures
+        shell: micromamba-shell {0}
+        run: |
+          /tmp/ngis-bindgen/bin/python scripts/audit_headers.py
+          /tmp/ngis-bindgen/bin/python scripts/check_function_abi.py
+          python3 scripts/gdal_macros.py
+          git diff --exit-code -- src/ngis/gdal/macro_inventory.json
+
       - name: Run tests
         shell: micromamba-shell {0}
         run: |

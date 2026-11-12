@@ -15,6 +15,7 @@ import subprocess
 import sys
 import tempfile
 from clang import cindex as ci
+from clang_support import configure_clang
 
 HEADERS = """cpl_atomic_ops.h cpl_compressor.h cpl_conv.h cpl_csv.h cpl_error.h cpl_float.h cpl_hash_set.h
 cpl_http.h cpl_list.h cpl_minixml.h cpl_multiproc.h cpl_port.h cpl_progress.h
@@ -24,6 +25,10 @@ gdal_mem.h gdal_utils.h gdal_version.h gdal_vrt.h gdalalgorithm_c.h gdalgrid.h
 gdalpansharpen.h gdalwarper.h gnm.h gnm_api.h ogr_api.h ogr_core.h
 ogr_geocoding.h ogr_recordbatch.h ogr_srs_api.h""".split()
 ROOT = pathlib.Path(__file__).resolve().parents[1]
+CPP_ONLY_FUNCTIONS = {
+    "CPLGreatestCommonDivisor", "CPLUnixTimeToYMDHMS",
+    "CPLYMDHMSToUnixTime", "CPLParseRFC822DateTime",
+}
 KEYWORDS = set("addr and as asm bind block break case cast concept const continue converter defer discard distinct div do elif else end enum except export finally for from func if import in include interface is isnot iterator let macro method mixin mod nil not notin object of or out proc ptr raise ref return shl shr static template try tuple type using var when while with without xor yield".split())
 
 def identifier(name):
@@ -44,11 +49,7 @@ def main():
     version = tuple(int(re.search(r"#\s*define\s+GDAL_VERSION_" + part + r"\s+(\d+)", version_header).group(1)) for part in ("MAJOR", "MINOR", "REV"))
     if version != (3, 13, 3):
         raise RuntimeError(f"expected GDAL 3.13.3 headers, got {version}; update the pinned API deliberately")
-    if args.libclang:
-        ci.Config.set_library_file(args.libclang)
-    elif sys.platform == "darwin":
-        ci.Config.set_library_file("/Library/Developer/CommandLineTools/usr/lib/libclang.dylib")
-    ci.Config.set_compatibility_check(False)
+    configure_clang(args.libclang)
     flags = ["-x", "c", "-std=c11", "-I" + str(include)]
     if sys.platform == "darwin":
         flags += ["-isysroot", subprocess.check_output(["xcrun", "--show-sdk-path"], text=True).strip()]
@@ -59,7 +60,7 @@ def main():
         errors = [str(d) for d in tu.diagnostics if d.severity >= ci.Diagnostic.Error]
         if errors: raise RuntimeError("\n".join(errors))
         def public(n):
-            return n.location.file and pathlib.Path(n.location.file.name).parent.resolve() == include.resolve()
+            return n.location.file and pathlib.Path(n.location.file.name).parent.resolve() == include.resolve() and pathlib.Path(n.location.file.name).name in HEADERS
         nodes = [n for n in tu.cursor.get_children() if public(n)]
         aliases = {n.spelling: n for n in nodes if n.kind == ci.CursorKind.TYPEDEF_DECL}
         record_names, records, enums = {}, {}, {}
@@ -93,6 +94,16 @@ def main():
                   "int32_t": "int32", "uint32_t": "uint32", "int64_t": "int64", "uint64_t": "uint64",
                   "va_list": "GdalVaList", "__builtin_va_list": "GdalVaList", "FILE": "GdalFile"}
         external = {}
+        def parameter_type(t):
+            # C array parameters decay to pointers even when libclang preserves
+            # their fixed or incomplete array spelling in argument_types().
+            if t.kind in (ci.TypeKind.CONSTANTARRAY, ci.TypeKind.INCOMPLETEARRAY):
+                element = t.element_type
+                if element.kind == ci.TypeKind.POINTER and element.get_pointee().kind in (ci.TypeKind.CHAR_S, ci.TypeKind.CHAR_U):
+                    return "cstringArray"
+                return "ptr " + typ(element)
+            return typ(t)
+
         def typ(t):
             k = t.kind
             if k in builtin: return builtin[k]
@@ -111,7 +122,7 @@ def main():
                 return "ptr " + typ(p)
             if k in (ci.TypeKind.FUNCTIONPROTO, ci.TypeKind.FUNCTIONNOPROTO):
                 argtypes = list(t.argument_types()) if k == ci.TypeKind.FUNCTIONPROTO else []
-                params = ", ".join("a" + str(i) + ": " + typ(a) for i, a in enumerate(argtypes))
+                params = ", ".join("a" + str(i) + ": " + parameter_type(a) for i, a in enumerate(argtypes))
                 ret = typ(t.get_result())
                 pragmas = "cdecl, raises: []" + (", varargs" if k == ci.TypeKind.FUNCTIONPROTO and t.is_function_variadic() else "")
                 return "proc(" + params + ")" + (": " + ret if ret != "void" else "") + " {." + pragmas + ".}"
@@ -160,13 +171,15 @@ def main():
         static_functions = []
         for n in nodes:
             if n.kind != ci.CursorKind.FUNCTION_DECL: continue
+            if n.spelling in CPP_ONLY_FUNCTIONS:
+                continue
             if n.storage_class == ci.StorageClass.STATIC:
                 static_functions.append(n.spelling); continue
             params=[]; used=set()
             for i,p in enumerate(n.get_arguments()):
                 name=p.spelling or "a"+str(i)
                 if key(name) in used: name += str(i)
-                used.add(key(name)); params.append(identifier(name)+": "+typ(p.type))
+                used.add(key(name)); params.append(identifier(name)+": "+parameter_type(p.type))
             result=typ(n.result_type)
             tokens=[t.spelling for t in n.get_tokens()]
             prefix = tokens[:tokens.index(n.spelling)] if n.spelling in tokens else tokens
@@ -242,9 +255,11 @@ def main():
         system_types=["  GdalFile* {.importc: \"FILE\", header: \"<stdio.h>\", incompleteStruct.} = object",
                       "  GdalVaList* {.importc: \"va_list\", header: \"<stdarg.h>\".} = object"]
         for name,cname in external.items():
+            if cname in ("stat", "tm"):
+                continue
             header="<sys/stat.h>" if "stat" in cname else "<time.h>" if cname=="tm" else "<stdio.h>"
             system_types.append('  '+name+'* {.importc: "struct '+cname+'", header: "'+header+'", bycopy.} = object')
-        banner="## Generated from GDAL 3.13.3 public C headers. Do not edit.\n## Regenerate with scripts/generate_bindings.py; see bindings.json for coverage.\nimport ./library\nexport library\n\nwhen defined(windows) and defined(i386):\n  {.pragma: gdalCall, stdcall.}\nelse:\n  {.pragma: gdalCall, cdecl.}\n\n"
+        banner="## Generated from GDAL 3.13.3 public C headers. Do not edit.\n## Regenerate with scripts/generate_bindings.py; see bindings.json for coverage.\nimport ./[library, systemtypes]\nexport library, systemtypes\n\nwhen defined(windows) and defined(i386):\n  {.pragma: gdalCall, stdcall.}\nelse:\n  {.pragma: gdalCall, cdecl.}\n\n"
         platform_types = '''when defined(windows):
   type
     CPL_FILE_HANDLE* = pointer
@@ -259,9 +274,6 @@ else:
   const
     CPL_FILE_INVALID_HANDLE* = -1
     CPL_FRMT_GB_WITHOUT_PREFIX* = "ll"
-type
-  VSIStatBufL* {.importc: "VSIStatBufL", header: "<cpl_vsi.h>", bycopy.} = object
-
 '''
         enum_ops = "\n".join("proc `==`*(a, b: " + identifier(name) + "): bool {.borrow.}\nproc `$`*(value: " + identifier(name) + "): string {.borrow.}" for name in enum_aliases)
         output=banner+platform_types+"type\n"+"\n".join(system_types+declarations)+"\n\n"+enum_ops+"\n\nconst\n"+"\n".join("  "+identifier(n)+"* = "+v for n,v in sorted(constants.items()))+"\n\n"+"\n".join(f["nim"] for f in functions.values())+"\n"
@@ -274,7 +286,7 @@ type
         missing = [name for name, entry in macro_coverage.items() if entry["category"] == "unimplemented"]
         if missing:
             raise RuntimeError("unimplemented public object macros: " + ", ".join(missing))
-        manifest={"gdal_version":"3.13.3","headers":HEADERS,"header_sha256":{name:hashlib.sha256((include/name).read_bytes()).hexdigest() for name in HEADERS},"functions":{name:{k:v for k,v in f.items() if k!="nim"} for name,f in sorted(functions.items())},"static_inline_functions":sorted(set(static_functions)),"object_macro_equivalents":macro_coverage,"counts":{"functions":len(functions),"types":len(declarations),"constants":len(constants)}}
+        manifest={"gdal_version":"3.13.3","headers":HEADERS,"excluded_cpp_functions":sorted(CPP_ONLY_FUNCTIONS),"header_sha256":{name:hashlib.sha256((include/name).read_bytes()).hexdigest() for name in HEADERS},"functions":{name:{k:v for k,v in f.items() if k!="nim"} for name,f in sorted(functions.items())},"static_inline_functions":sorted(set(static_functions)),"object_macro_equivalents":macro_coverage,"counts":{"functions":len(functions),"types":len(declarations),"constants":len(constants)}}
         (dest/"bindings.json").write_text(json.dumps(manifest,indent=2,sort_keys=True)+"\n")
         print(json.dumps(manifest["counts"]))
 

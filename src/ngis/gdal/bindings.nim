@@ -1,7 +1,7 @@
 ## Generated from GDAL 3.13.3 public C headers. Do not edit.
 ## Regenerate with scripts/generate_bindings.py; see bindings.json for coverage.
-import ./library
-export library
+import ./[library, systemtypes]
+export library, systemtypes
 
 when defined(windows) and defined(i386):
   {.pragma: gdalCall, stdcall.}
@@ -24,13 +24,9 @@ else:
   const
     CPL_FILE_INVALID_HANDLE* = -1
     CPL_FRMT_GB_WITHOUT_PREFIX* = "ll"
-type VSIStatBufL* {.importc: "VSIStatBufL", header: "<cpl_vsi.h>", bycopy.} = object
-
 type
   GdalFile* {.importc: "FILE", header: "<stdio.h>", incompleteStruct.} = object
   GdalVaList* {.importc: "va_list", header: "<stdarg.h>".} = object
-  GdalSystemstat* {.importc: "struct stat", header: "<sys/stat.h>", bycopy.} = object
-  GdalSystemtm* {.importc: "struct tm", header: "<time.h>", bycopy.} = object
   GInt32* = cint
   GUInt32* = cuint
   GInt16* = cshort
@@ -287,7 +283,7 @@ type
     a17: cdouble,
     a18: cdouble,
     a19: cdouble,
-    a20: UncheckedArray[cdouble],
+    a20: ptr cdouble,
     a21: cstring,
     a22: CSLConstList,
   ): CPLErr {.cdecl, raises: [].}
@@ -3638,10 +3634,6 @@ proc CPLTripleToFloat*(
   iTriple: GUInt32
 ): GUInt32 {.cdecl, importc: "CPLTripleToFloat", dynlib: gdalLib, raises: [].}
 
-proc CPLGreatestCommonDivisor*(
-  x: cdouble, y: cdouble
-): cdouble {.cdecl, importc: "CPLGreatestCommonDivisor", dynlib: gdalLib, raises: [].}
-
 proc CPLHashSetNew*(
   fnHashFunc: CPLHashSetHashFunc,
   fnEqualFunc: CPLHashSetEqualFunc,
@@ -4112,15 +4104,12 @@ proc CPLQuadTreeGetStats*(
 ) {.cdecl, importc: "CPLQuadTreeGetStats", dynlib: gdalLib, raises: [].}
 
 proc CPLSpawn*(
-  papszArgv: UncheckedArray[cstring],
-  fin: ptr VSILFILE,
-  fout: ptr VSILFILE,
-  bDisplayErr: cint,
+  papszArgv: cstringArray, fin: ptr VSILFILE, fout: ptr VSILFILE, bDisplayErr: cint
 ): cint {.cdecl, importc: "CPLSpawn", dynlib: gdalLib, raises: [].}
 
 proc CPLSpawnAsync*(
   pfnMain: proc(a0: CPL_FILE_HANDLE, a1: CPL_FILE_HANDLE): cint {.cdecl, raises: [].},
-  papszArgv: UncheckedArray[cstring],
+  papszArgv: cstringArray,
   bCreateInputPipe: cint,
   bCreateOutputPipe: cint,
   bCreateErrorPipe: cint,
@@ -4176,28 +4165,6 @@ proc CPLPipeRead*(
 proc CPLPipeWrite*(
   fout: CPL_FILE_HANDLE, data: pointer, length: cint
 ): cint {.cdecl, importc: "CPLPipeWrite", dynlib: gdalLib, raises: [].}
-
-proc CPLUnixTimeToYMDHMS*(
-  unixTime: GIntBig, pRet: ptr GdalSystemtm
-): ptr GdalSystemtm {.
-  cdecl, importc: "CPLUnixTimeToYMDHMS", dynlib: gdalLib, raises: []
-.}
-
-proc CPLYMDHMSToUnixTime*(
-  brokendowntime: ptr GdalSystemtm
-): GIntBig {.cdecl, importc: "CPLYMDHMSToUnixTime", dynlib: gdalLib, raises: [].}
-
-proc CPLParseRFC822DateTime*(
-  pszRFC822DateTime: cstring,
-  pnYear: ptr cint,
-  pnMonth: ptr cint,
-  pnDay: ptr cint,
-  pnHour: ptr cint,
-  pnMinute: ptr cint,
-  pnSecond: ptr cint,
-  pnTZFlag: ptr cint,
-  pnWeekDay: ptr cint,
-): cint {.cdecl, importc: "CPLParseRFC822DateTime", dynlib: gdalLib, raises: [].}
 
 proc CPLGetPageSize*(): csize_t {.
   cdecl, importc: "CPLGetPageSize", dynlib: gdalLib, raises: []
@@ -7766,7 +7733,7 @@ proc GDALSetRasterScale*(
 ): CPLErr {.gdalCall, importc: "GDALSetRasterScale", dynlib: gdalLib, raises: [].}
 
 proc GDALComputeRasterMinMax*(
-  hBand: GDALRasterBandH, bApproxOK: cint, adfMinMax: array[2, cdouble]
+  hBand: GDALRasterBandH, bApproxOK: cint, adfMinMax: ptr cdouble
 ): CPLErr {.gdalCall, importc: "GDALComputeRasterMinMax", dynlib: gdalLib, raises: [].}
 
 proc GDALComputeRasterMinMaxLocation*(
@@ -9826,7 +9793,7 @@ proc GDALGCPTransform*(
 ): cint {.cdecl, importc: "GDALGCPTransform", dynlib: gdalLib, raises: [].}
 
 proc GDALCreateHomographyTransformer*(
-  adfHomography: array[9, cdouble]
+  adfHomography: ptr cdouble
 ): pointer {.
   cdecl, importc: "GDALCreateHomographyTransformer", dynlib: gdalLib, raises: []
 .}

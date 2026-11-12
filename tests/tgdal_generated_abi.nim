@@ -192,6 +192,8 @@ size_t ngis_abi_value(int i) {
     sizeof(CPLQuadTreeGetBoundsExFunc),
     sizeof(CPLQuadTreeForeachFunc),
     sizeof(CPLQuadTreeDumpFeatureFunc),
+    sizeof(CPL_FILE_HANDLE),
+    sizeof(CPL_PID),
     sizeof(CPLVirtualMemCachePageCbk),
     sizeof(CPLVirtualMemUnCachePageCbk),
     sizeof(CPLVirtualMemFreeUserData),
@@ -1115,1724 +1117,1728 @@ suite "generated GDAL ABI":
     check sizeof(CPLQuadTreeForeachFunc) == int(cAbiValue(138))
     checkpoint "CPLQuadTreeDumpFeatureFunc"
     check sizeof(CPLQuadTreeDumpFeatureFunc) == int(cAbiValue(139))
+    checkpoint "CPL_FILE_HANDLE"
+    check sizeof(CPL_FILE_HANDLE) == int(cAbiValue(140))
+    checkpoint "CPL_PID"
+    check sizeof(CPL_PID) == int(cAbiValue(141))
     checkpoint "CPLVirtualMemCachePageCbk"
-    check sizeof(CPLVirtualMemCachePageCbk) == int(cAbiValue(140))
+    check sizeof(CPLVirtualMemCachePageCbk) == int(cAbiValue(142))
     checkpoint "CPLVirtualMemUnCachePageCbk"
-    check sizeof(CPLVirtualMemUnCachePageCbk) == int(cAbiValue(141))
+    check sizeof(CPLVirtualMemUnCachePageCbk) == int(cAbiValue(143))
     checkpoint "CPLVirtualMemFreeUserData"
-    check sizeof(CPLVirtualMemFreeUserData) == int(cAbiValue(142))
+    check sizeof(CPLVirtualMemFreeUserData) == int(cAbiValue(144))
     checkpoint "CPLVirtualMemAccessMode"
-    check sizeof(CPLVirtualMemAccessMode) == int(cAbiValue(143))
+    check sizeof(CPLVirtualMemAccessMode) == int(cAbiValue(145))
     checkpoint "VSIErrorNum"
-    check sizeof(VSIErrorNum) == int(cAbiValue(144))
+    check sizeof(VSIErrorNum) == int(cAbiValue(146))
     checkpoint "GDALMajorObjectH"
-    check sizeof(GDALMajorObjectH) == int(cAbiValue(145))
+    check sizeof(GDALMajorObjectH) == int(cAbiValue(147))
     checkpoint "GDALDatasetH"
-    check sizeof(GDALDatasetH) == int(cAbiValue(146))
+    check sizeof(GDALDatasetH) == int(cAbiValue(148))
     checkpoint "GDALRasterBandH"
-    check sizeof(GDALRasterBandH) == int(cAbiValue(147))
+    check sizeof(GDALRasterBandH) == int(cAbiValue(149))
     checkpoint "GDALComputedRasterBandH"
-    check sizeof(GDALComputedRasterBandH) == int(cAbiValue(148))
+    check sizeof(GDALComputedRasterBandH) == int(cAbiValue(150))
     checkpoint "GDALDriverH"
-    check sizeof(GDALDriverH) == int(cAbiValue(149))
+    check sizeof(GDALDriverH) == int(cAbiValue(151))
     checkpoint "GDALColorTableH"
-    check sizeof(GDALColorTableH) == int(cAbiValue(150))
+    check sizeof(GDALColorTableH) == int(cAbiValue(152))
     checkpoint "GDALRasterAttributeTableH"
-    check sizeof(GDALRasterAttributeTableH) == int(cAbiValue(151))
+    check sizeof(GDALRasterAttributeTableH) == int(cAbiValue(153))
     checkpoint "GDALAsyncReaderH"
-    check sizeof(GDALAsyncReaderH) == int(cAbiValue(152))
+    check sizeof(GDALAsyncReaderH) == int(cAbiValue(154))
     checkpoint "GDALRelationshipH"
-    check sizeof(GDALRelationshipH) == int(cAbiValue(153))
+    check sizeof(GDALRelationshipH) == int(cAbiValue(155))
     checkpoint "GDALExtendedDataTypeH"
-    check sizeof(GDALExtendedDataTypeH) == int(cAbiValue(154))
+    check sizeof(GDALExtendedDataTypeH) == int(cAbiValue(156))
     checkpoint "GDALEDTComponentH"
-    check sizeof(GDALEDTComponentH) == int(cAbiValue(155))
+    check sizeof(GDALEDTComponentH) == int(cAbiValue(157))
     checkpoint "GDALGroupH"
-    check sizeof(GDALGroupH) == int(cAbiValue(156))
+    check sizeof(GDALGroupH) == int(cAbiValue(158))
     checkpoint "GDALMDArrayH"
-    check sizeof(GDALMDArrayH) == int(cAbiValue(157))
+    check sizeof(GDALMDArrayH) == int(cAbiValue(159))
     checkpoint "GDALAttributeH"
-    check sizeof(GDALAttributeH) == int(cAbiValue(158))
+    check sizeof(GDALAttributeH) == int(cAbiValue(160))
     checkpoint "GDALDimensionH"
-    check sizeof(GDALDimensionH) == int(cAbiValue(159))
+    check sizeof(GDALDimensionH) == int(cAbiValue(161))
     checkpoint "GDALSubdatasetInfoH"
-    check sizeof(GDALSubdatasetInfoH) == int(cAbiValue(160))
+    check sizeof(GDALSubdatasetInfoH) == int(cAbiValue(162))
     checkpoint "OGRGeometryH"
-    check sizeof(OGRGeometryH) == int(cAbiValue(161))
+    check sizeof(OGRGeometryH) == int(cAbiValue(163))
     checkpoint "OGRGeomTransformerH"
-    check sizeof(OGRGeomTransformerH) == int(cAbiValue(162))
+    check sizeof(OGRGeomTransformerH) == int(cAbiValue(164))
     checkpoint "OGRGeomCoordinatePrecisionH"
-    check sizeof(OGRGeomCoordinatePrecisionH) == int(cAbiValue(163))
+    check sizeof(OGRGeomCoordinatePrecisionH) == int(cAbiValue(165))
     checkpoint "OGRPreparedGeometryH"
-    check sizeof(OGRPreparedGeometryH) == int(cAbiValue(164))
+    check sizeof(OGRPreparedGeometryH) == int(cAbiValue(166))
     checkpoint "OGRFieldDefnH"
-    check sizeof(OGRFieldDefnH) == int(cAbiValue(165))
+    check sizeof(OGRFieldDefnH) == int(cAbiValue(167))
     checkpoint "OGRFeatureDefnH"
-    check sizeof(OGRFeatureDefnH) == int(cAbiValue(166))
+    check sizeof(OGRFeatureDefnH) == int(cAbiValue(168))
     checkpoint "OGRGeomFieldDefnH"
-    check sizeof(OGRGeomFieldDefnH) == int(cAbiValue(167))
+    check sizeof(OGRGeomFieldDefnH) == int(cAbiValue(169))
     checkpoint "OGRFieldDomainH"
-    check sizeof(OGRFieldDomainH) == int(cAbiValue(168))
+    check sizeof(OGRFieldDomainH) == int(cAbiValue(170))
     checkpoint "OGRFeatureH"
-    check sizeof(OGRFeatureH) == int(cAbiValue(169))
+    check sizeof(OGRFeatureH) == int(cAbiValue(171))
     checkpoint "OGRLayerH"
-    check sizeof(OGRLayerH) == int(cAbiValue(170))
+    check sizeof(OGRLayerH) == int(cAbiValue(172))
     checkpoint "OGRDataSourceH"
-    check sizeof(OGRDataSourceH) == int(cAbiValue(171))
+    check sizeof(OGRDataSourceH) == int(cAbiValue(173))
     checkpoint "OGRSFDriverH"
-    check sizeof(OGRSFDriverH) == int(cAbiValue(172))
+    check sizeof(OGRSFDriverH) == int(cAbiValue(174))
     checkpoint "OGRStyleMgrH"
-    check sizeof(OGRStyleMgrH) == int(cAbiValue(173))
+    check sizeof(OGRStyleMgrH) == int(cAbiValue(175))
     checkpoint "OGRStyleToolH"
-    check sizeof(OGRStyleToolH) == int(cAbiValue(174))
+    check sizeof(OGRStyleToolH) == int(cAbiValue(176))
     checkpoint "OGRStyleTableH"
-    check sizeof(OGRStyleTableH) == int(cAbiValue(175))
+    check sizeof(OGRStyleTableH) == int(cAbiValue(177))
     checkpoint "OGRSpatialReferenceH"
-    check sizeof(OGRSpatialReferenceH) == int(cAbiValue(176))
+    check sizeof(OGRSpatialReferenceH) == int(cAbiValue(178))
     checkpoint "OGRCoordinateTransformationH"
-    check sizeof(OGRCoordinateTransformationH) == int(cAbiValue(177))
+    check sizeof(OGRCoordinateTransformationH) == int(cAbiValue(179))
     checkpoint "OGRCoordinateTransformationOptionsH"
-    check sizeof(OGRCoordinateTransformationOptionsH) == int(cAbiValue(178))
+    check sizeof(OGRCoordinateTransformationOptionsH) == int(cAbiValue(180))
     checkpoint "GNMNetworkH"
-    check sizeof(GNMNetworkH) == int(cAbiValue(179))
+    check sizeof(GNMNetworkH) == int(cAbiValue(181))
     checkpoint "GNMGenericNetworkH"
-    check sizeof(GNMGenericNetworkH) == int(cAbiValue(180))
+    check sizeof(GNMGenericNetworkH) == int(cAbiValue(182))
     checkpoint "OGREnvelope"
-    check sizeof(OGREnvelope) == int(cAbiValue(181))
+    check sizeof(OGREnvelope) == int(cAbiValue(183))
     block:
       var value: OGREnvelope
       checkpoint "OGREnvelope.MinX"
       check cast[int](unsafeAddr value.MinX) - cast[int](addr value) ==
-        int(cAbiValue(182))
+        int(cAbiValue(184))
     block:
       var value: OGREnvelope
       checkpoint "OGREnvelope.MaxX"
       check cast[int](unsafeAddr value.MaxX) - cast[int](addr value) ==
-        int(cAbiValue(183))
+        int(cAbiValue(185))
     block:
       var value: OGREnvelope
       checkpoint "OGREnvelope.MinY"
       check cast[int](unsafeAddr value.MinY) - cast[int](addr value) ==
-        int(cAbiValue(184))
+        int(cAbiValue(186))
     block:
       var value: OGREnvelope
       checkpoint "OGREnvelope.MaxY"
       check cast[int](unsafeAddr value.MaxY) - cast[int](addr value) ==
-        int(cAbiValue(185))
+        int(cAbiValue(187))
     checkpoint "OGREnvelope3D"
-    check sizeof(OGREnvelope3D) == int(cAbiValue(186))
+    check sizeof(OGREnvelope3D) == int(cAbiValue(188))
     block:
       var value: OGREnvelope3D
       checkpoint "OGREnvelope3D.MinX"
       check cast[int](unsafeAddr value.MinX) - cast[int](addr value) ==
-        int(cAbiValue(187))
+        int(cAbiValue(189))
     block:
       var value: OGREnvelope3D
       checkpoint "OGREnvelope3D.MaxX"
       check cast[int](unsafeAddr value.MaxX) - cast[int](addr value) ==
-        int(cAbiValue(188))
+        int(cAbiValue(190))
     block:
       var value: OGREnvelope3D
       checkpoint "OGREnvelope3D.MinY"
       check cast[int](unsafeAddr value.MinY) - cast[int](addr value) ==
-        int(cAbiValue(189))
+        int(cAbiValue(191))
     block:
       var value: OGREnvelope3D
       checkpoint "OGREnvelope3D.MaxY"
       check cast[int](unsafeAddr value.MaxY) - cast[int](addr value) ==
-        int(cAbiValue(190))
+        int(cAbiValue(192))
     block:
       var value: OGREnvelope3D
       checkpoint "OGREnvelope3D.MinZ"
       check cast[int](unsafeAddr value.MinZ) - cast[int](addr value) ==
-        int(cAbiValue(191))
+        int(cAbiValue(193))
     block:
       var value: OGREnvelope3D
       checkpoint "OGREnvelope3D.MaxZ"
       check cast[int](unsafeAddr value.MaxZ) - cast[int](addr value) ==
-        int(cAbiValue(192))
+        int(cAbiValue(194))
     checkpoint "OGRErr"
-    check sizeof(OGRErr) == int(cAbiValue(193))
+    check sizeof(OGRErr) == int(cAbiValue(195))
     checkpoint "OGRBoolean"
-    check sizeof(OGRBoolean) == int(cAbiValue(194))
+    check sizeof(OGRBoolean) == int(cAbiValue(196))
     checkpoint "OGRwkbGeometryType"
-    check sizeof(OGRwkbGeometryType) == int(cAbiValue(195))
+    check sizeof(OGRwkbGeometryType) == int(cAbiValue(197))
     checkpoint "OGRwkbVariant"
-    check sizeof(OGRwkbVariant) == int(cAbiValue(196))
+    check sizeof(OGRwkbVariant) == int(cAbiValue(198))
     checkpoint "OGRwkbByteOrder"
-    check sizeof(OGRwkbByteOrder) == int(cAbiValue(197))
+    check sizeof(OGRwkbByteOrder) == int(cAbiValue(199))
     checkpoint "OGRFieldType"
-    check sizeof(OGRFieldType) == int(cAbiValue(198))
+    check sizeof(OGRFieldType) == int(cAbiValue(200))
     checkpoint "OGRFieldSubType"
-    check sizeof(OGRFieldSubType) == int(cAbiValue(199))
+    check sizeof(OGRFieldSubType) == int(cAbiValue(201))
     checkpoint "OGRJustification"
-    check sizeof(OGRJustification) == int(cAbiValue(200))
+    check sizeof(OGRJustification) == int(cAbiValue(202))
     checkpoint "OGRField"
-    check sizeof(OGRField) == int(cAbiValue(201))
+    check sizeof(OGRField) == int(cAbiValue(203))
     block:
       var value: OGRField
       checkpoint "OGRField.Integer"
       check cast[int](unsafeAddr value.Integer) - cast[int](addr value) ==
-        int(cAbiValue(202))
+        int(cAbiValue(204))
     block:
       var value: OGRField
       checkpoint "OGRField.Integer64"
       check cast[int](unsafeAddr value.Integer64) - cast[int](addr value) ==
-        int(cAbiValue(203))
+        int(cAbiValue(205))
     block:
       var value: OGRField
       checkpoint "OGRField.Real"
       check cast[int](unsafeAddr value.Real) - cast[int](addr value) ==
-        int(cAbiValue(204))
+        int(cAbiValue(206))
     block:
       var value: OGRField
       checkpoint "OGRField.String"
       check cast[int](unsafeAddr value.String) - cast[int](addr value) ==
-        int(cAbiValue(205))
+        int(cAbiValue(207))
     block:
       var value: OGRField
       checkpoint "OGRField.IntegerList"
       check cast[int](unsafeAddr value.IntegerList) - cast[int](addr value) ==
-        int(cAbiValue(206))
+        int(cAbiValue(208))
     block:
       var value: OGRField
       checkpoint "OGRField.IntegerList.nCount"
       check cast[int](unsafeAddr value.IntegerList.nCount) - cast[int](addr value) ==
-        int(cAbiValue(207))
+        int(cAbiValue(209))
     block:
       var value: OGRField
       checkpoint "OGRField.IntegerList.paList"
       check cast[int](unsafeAddr value.IntegerList.paList) - cast[int](addr value) ==
-        int(cAbiValue(208))
+        int(cAbiValue(210))
     block:
       var value: OGRField
       checkpoint "OGRField.Integer64List"
       check cast[int](unsafeAddr value.Integer64List) - cast[int](addr value) ==
-        int(cAbiValue(209))
+        int(cAbiValue(211))
     block:
       var value: OGRField
       checkpoint "OGRField.Integer64List.nCount"
       check cast[int](unsafeAddr value.Integer64List.nCount) - cast[int](addr value) ==
-        int(cAbiValue(210))
+        int(cAbiValue(212))
     block:
       var value: OGRField
       checkpoint "OGRField.Integer64List.paList"
       check cast[int](unsafeAddr value.Integer64List.paList) - cast[int](addr value) ==
-        int(cAbiValue(211))
+        int(cAbiValue(213))
     block:
       var value: OGRField
       checkpoint "OGRField.RealList"
       check cast[int](unsafeAddr value.RealList) - cast[int](addr value) ==
-        int(cAbiValue(212))
+        int(cAbiValue(214))
     block:
       var value: OGRField
       checkpoint "OGRField.RealList.nCount"
       check cast[int](unsafeAddr value.RealList.nCount) - cast[int](addr value) ==
-        int(cAbiValue(213))
+        int(cAbiValue(215))
     block:
       var value: OGRField
       checkpoint "OGRField.RealList.paList"
       check cast[int](unsafeAddr value.RealList.paList) - cast[int](addr value) ==
-        int(cAbiValue(214))
+        int(cAbiValue(216))
     block:
       var value: OGRField
       checkpoint "OGRField.StringList"
       check cast[int](unsafeAddr value.StringList) - cast[int](addr value) ==
-        int(cAbiValue(215))
+        int(cAbiValue(217))
     block:
       var value: OGRField
       checkpoint "OGRField.StringList.nCount"
       check cast[int](unsafeAddr value.StringList.nCount) - cast[int](addr value) ==
-        int(cAbiValue(216))
+        int(cAbiValue(218))
     block:
       var value: OGRField
       checkpoint "OGRField.StringList.paList"
       check cast[int](unsafeAddr value.StringList.paList) - cast[int](addr value) ==
-        int(cAbiValue(217))
+        int(cAbiValue(219))
     block:
       var value: OGRField
       checkpoint "OGRField.Binary"
       check cast[int](unsafeAddr value.Binary) - cast[int](addr value) ==
-        int(cAbiValue(218))
+        int(cAbiValue(220))
     block:
       var value: OGRField
       checkpoint "OGRField.Binary.nCount"
       check cast[int](unsafeAddr value.Binary.nCount) - cast[int](addr value) ==
-        int(cAbiValue(219))
+        int(cAbiValue(221))
     block:
       var value: OGRField
       checkpoint "OGRField.Binary.paData"
       check cast[int](unsafeAddr value.Binary.paData) - cast[int](addr value) ==
-        int(cAbiValue(220))
+        int(cAbiValue(222))
     block:
       var value: OGRField
       checkpoint "OGRField.Set"
       check cast[int](unsafeAddr value.Set) - cast[int](addr value) ==
-        int(cAbiValue(221))
+        int(cAbiValue(223))
     block:
       var value: OGRField
       checkpoint "OGRField.Set.nMarker1"
       check cast[int](unsafeAddr value.Set.nMarker1) - cast[int](addr value) ==
-        int(cAbiValue(222))
+        int(cAbiValue(224))
     block:
       var value: OGRField
       checkpoint "OGRField.Set.nMarker2"
       check cast[int](unsafeAddr value.Set.nMarker2) - cast[int](addr value) ==
-        int(cAbiValue(223))
+        int(cAbiValue(225))
     block:
       var value: OGRField
       checkpoint "OGRField.Set.nMarker3"
       check cast[int](unsafeAddr value.Set.nMarker3) - cast[int](addr value) ==
-        int(cAbiValue(224))
+        int(cAbiValue(226))
     block:
       var value: OGRField
       checkpoint "OGRField.Date"
       check cast[int](unsafeAddr value.Date) - cast[int](addr value) ==
-        int(cAbiValue(225))
+        int(cAbiValue(227))
     block:
       var value: OGRField
       checkpoint "OGRField.Date.Year"
       check cast[int](unsafeAddr value.Date.Year) - cast[int](addr value) ==
-        int(cAbiValue(226))
+        int(cAbiValue(228))
     block:
       var value: OGRField
       checkpoint "OGRField.Date.Month"
       check cast[int](unsafeAddr value.Date.Month) - cast[int](addr value) ==
-        int(cAbiValue(227))
+        int(cAbiValue(229))
     block:
       var value: OGRField
       checkpoint "OGRField.Date.Day"
       check cast[int](unsafeAddr value.Date.Day) - cast[int](addr value) ==
-        int(cAbiValue(228))
+        int(cAbiValue(230))
     block:
       var value: OGRField
       checkpoint "OGRField.Date.Hour"
       check cast[int](unsafeAddr value.Date.Hour) - cast[int](addr value) ==
-        int(cAbiValue(229))
+        int(cAbiValue(231))
     block:
       var value: OGRField
       checkpoint "OGRField.Date.Minute"
       check cast[int](unsafeAddr value.Date.Minute) - cast[int](addr value) ==
-        int(cAbiValue(230))
+        int(cAbiValue(232))
     block:
       var value: OGRField
       checkpoint "OGRField.Date.TZFlag"
       check cast[int](unsafeAddr value.Date.TZFlag) - cast[int](addr value) ==
-        int(cAbiValue(231))
+        int(cAbiValue(233))
     block:
       var value: OGRField
       checkpoint "OGRField.Date.Reserved"
       check cast[int](unsafeAddr value.Date.Reserved) - cast[int](addr value) ==
-        int(cAbiValue(232))
+        int(cAbiValue(234))
     block:
       var value: OGRField
       checkpoint "OGRField.Date.Second"
       check cast[int](unsafeAddr value.Date.Second) - cast[int](addr value) ==
-        int(cAbiValue(233))
+        int(cAbiValue(235))
     checkpoint "OGRSTClassId"
-    check sizeof(OGRSTClassId) == int(cAbiValue(234))
+    check sizeof(OGRSTClassId) == int(cAbiValue(236))
     checkpoint "OGRSTUnitId"
-    check sizeof(OGRSTUnitId) == int(cAbiValue(235))
+    check sizeof(OGRSTUnitId) == int(cAbiValue(237))
     checkpoint "OGRSTPenParam"
-    check sizeof(OGRSTPenParam) == int(cAbiValue(236))
+    check sizeof(OGRSTPenParam) == int(cAbiValue(238))
     checkpoint "OGRSTBrushParam"
-    check sizeof(OGRSTBrushParam) == int(cAbiValue(237))
+    check sizeof(OGRSTBrushParam) == int(cAbiValue(239))
     checkpoint "OGRSTSymbolParam"
-    check sizeof(OGRSTSymbolParam) == int(cAbiValue(238))
+    check sizeof(OGRSTSymbolParam) == int(cAbiValue(240))
     checkpoint "OGRSTLabelParam"
-    check sizeof(OGRSTLabelParam) == int(cAbiValue(239))
+    check sizeof(OGRSTLabelParam) == int(cAbiValue(241))
     checkpoint "OGRCodedValue"
-    check sizeof(OGRCodedValue) == int(cAbiValue(240))
+    check sizeof(OGRCodedValue) == int(cAbiValue(242))
     block:
       var value: OGRCodedValue
       checkpoint "OGRCodedValue.pszCode"
       check cast[int](unsafeAddr value.pszCode) - cast[int](addr value) ==
-        int(cAbiValue(241))
+        int(cAbiValue(243))
     block:
       var value: OGRCodedValue
       checkpoint "OGRCodedValue.pszValue"
       check cast[int](unsafeAddr value.pszValue) - cast[int](addr value) ==
-        int(cAbiValue(242))
+        int(cAbiValue(244))
     checkpoint "OGRFieldDomainType"
-    check sizeof(OGRFieldDomainType) == int(cAbiValue(243))
+    check sizeof(OGRFieldDomainType) == int(cAbiValue(245))
     checkpoint "OGRFieldDomainSplitPolicy"
-    check sizeof(OGRFieldDomainSplitPolicy) == int(cAbiValue(244))
+    check sizeof(OGRFieldDomainSplitPolicy) == int(cAbiValue(246))
     checkpoint "OGRFieldDomainMergePolicy"
-    check sizeof(OGRFieldDomainMergePolicy) == int(cAbiValue(245))
+    check sizeof(OGRFieldDomainMergePolicy) == int(cAbiValue(247))
     checkpoint "OGRGeometryTypeCounter"
-    check sizeof(OGRGeometryTypeCounter) == int(cAbiValue(246))
+    check sizeof(OGRGeometryTypeCounter) == int(cAbiValue(248))
     block:
       var value: OGRGeometryTypeCounter
       checkpoint "OGRGeometryTypeCounter.eGeomType"
       check cast[int](unsafeAddr value.eGeomType) - cast[int](addr value) ==
-        int(cAbiValue(247))
+        int(cAbiValue(249))
     block:
       var value: OGRGeometryTypeCounter
       checkpoint "OGRGeometryTypeCounter.nCount"
       check cast[int](unsafeAddr value.nCount) - cast[int](addr value) ==
-        int(cAbiValue(248))
+        int(cAbiValue(250))
     checkpoint "GDALDataType"
-    check sizeof(GDALDataType) == int(cAbiValue(249))
+    check sizeof(GDALDataType) == int(cAbiValue(251))
     checkpoint "GDALAsyncStatusType"
-    check sizeof(GDALAsyncStatusType) == int(cAbiValue(250))
+    check sizeof(GDALAsyncStatusType) == int(cAbiValue(252))
     checkpoint "GDALAccess"
-    check sizeof(GDALAccess) == int(cAbiValue(251))
+    check sizeof(GDALAccess) == int(cAbiValue(253))
     checkpoint "GDALRWFlag"
-    check sizeof(GDALRWFlag) == int(cAbiValue(252))
+    check sizeof(GDALRWFlag) == int(cAbiValue(254))
     checkpoint "GDALRIOResampleAlg"
-    check sizeof(GDALRIOResampleAlg) == int(cAbiValue(253))
+    check sizeof(GDALRIOResampleAlg) == int(cAbiValue(255))
     checkpoint "GDALRasterIOExtraArg"
-    check sizeof(GDALRasterIOExtraArg) == int(cAbiValue(254))
+    check sizeof(GDALRasterIOExtraArg) == int(cAbiValue(256))
     block:
       var value: GDALRasterIOExtraArg
       checkpoint "GDALRasterIOExtraArg.nVersion"
       check cast[int](unsafeAddr value.nVersion) - cast[int](addr value) ==
-        int(cAbiValue(255))
+        int(cAbiValue(257))
     block:
       var value: GDALRasterIOExtraArg
       checkpoint "GDALRasterIOExtraArg.eResampleAlg"
       check cast[int](unsafeAddr value.eResampleAlg) - cast[int](addr value) ==
-        int(cAbiValue(256))
+        int(cAbiValue(258))
     block:
       var value: GDALRasterIOExtraArg
       checkpoint "GDALRasterIOExtraArg.pfnProgress"
       check cast[int](unsafeAddr value.pfnProgress) - cast[int](addr value) ==
-        int(cAbiValue(257))
+        int(cAbiValue(259))
     block:
       var value: GDALRasterIOExtraArg
       checkpoint "GDALRasterIOExtraArg.pProgressData"
       check cast[int](unsafeAddr value.pProgressData) - cast[int](addr value) ==
-        int(cAbiValue(258))
+        int(cAbiValue(260))
     block:
       var value: GDALRasterIOExtraArg
       checkpoint "GDALRasterIOExtraArg.bFloatingPointWindowValidity"
       check cast[int](unsafeAddr value.bFloatingPointWindowValidity) -
-        cast[int](addr value) == int(cAbiValue(259))
+        cast[int](addr value) == int(cAbiValue(261))
     block:
       var value: GDALRasterIOExtraArg
       checkpoint "GDALRasterIOExtraArg.dfXOff"
       check cast[int](unsafeAddr value.dfXOff) - cast[int](addr value) ==
-        int(cAbiValue(260))
+        int(cAbiValue(262))
     block:
       var value: GDALRasterIOExtraArg
       checkpoint "GDALRasterIOExtraArg.dfYOff"
       check cast[int](unsafeAddr value.dfYOff) - cast[int](addr value) ==
-        int(cAbiValue(261))
+        int(cAbiValue(263))
     block:
       var value: GDALRasterIOExtraArg
       checkpoint "GDALRasterIOExtraArg.dfXSize"
       check cast[int](unsafeAddr value.dfXSize) - cast[int](addr value) ==
-        int(cAbiValue(262))
+        int(cAbiValue(264))
     block:
       var value: GDALRasterIOExtraArg
       checkpoint "GDALRasterIOExtraArg.dfYSize"
       check cast[int](unsafeAddr value.dfYSize) - cast[int](addr value) ==
-        int(cAbiValue(263))
+        int(cAbiValue(265))
     block:
       var value: GDALRasterIOExtraArg
       checkpoint "GDALRasterIOExtraArg.bUseOnlyThisScale"
       check cast[int](unsafeAddr value.bUseOnlyThisScale) - cast[int](addr value) ==
-        int(cAbiValue(264))
+        int(cAbiValue(266))
     block:
       var value: GDALRasterIOExtraArg
       checkpoint "GDALRasterIOExtraArg.bOperateInBufType"
       check cast[int](unsafeAddr value.bOperateInBufType) - cast[int](addr value) ==
-        int(cAbiValue(265))
+        int(cAbiValue(267))
     checkpoint "GDALColorInterp"
-    check sizeof(GDALColorInterp) == int(cAbiValue(266))
+    check sizeof(GDALColorInterp) == int(cAbiValue(268))
     checkpoint "GDALPaletteInterp"
-    check sizeof(GDALPaletteInterp) == int(cAbiValue(267))
+    check sizeof(GDALPaletteInterp) == int(cAbiValue(269))
     checkpoint "GSpacing"
-    check sizeof(GSpacing) == int(cAbiValue(268))
+    check sizeof(GSpacing) == int(cAbiValue(270))
     checkpoint "GDALExtendedDataTypeClass"
-    check sizeof(GDALExtendedDataTypeClass) == int(cAbiValue(269))
+    check sizeof(GDALExtendedDataTypeClass) == int(cAbiValue(271))
     checkpoint "GDALExtendedDataTypeSubType"
-    check sizeof(GDALExtendedDataTypeSubType) == int(cAbiValue(270))
+    check sizeof(GDALExtendedDataTypeSubType) == int(cAbiValue(272))
     checkpoint "GDAL_GCP"
-    check sizeof(GDAL_GCP) == int(cAbiValue(271))
+    check sizeof(GDAL_GCP) == int(cAbiValue(273))
     block:
       var value: GDAL_GCP
       checkpoint "GDAL_GCP.pszId"
       check cast[int](unsafeAddr value.pszId) - cast[int](addr value) ==
-        int(cAbiValue(272))
+        int(cAbiValue(274))
     block:
       var value: GDAL_GCP
       checkpoint "GDAL_GCP.pszInfo"
       check cast[int](unsafeAddr value.pszInfo) - cast[int](addr value) ==
-        int(cAbiValue(273))
+        int(cAbiValue(275))
     block:
       var value: GDAL_GCP
       checkpoint "GDAL_GCP.dfGCPPixel"
       check cast[int](unsafeAddr value.dfGCPPixel) - cast[int](addr value) ==
-        int(cAbiValue(274))
+        int(cAbiValue(276))
     block:
       var value: GDAL_GCP
       checkpoint "GDAL_GCP.dfGCPLine"
       check cast[int](unsafeAddr value.dfGCPLine) - cast[int](addr value) ==
-        int(cAbiValue(275))
+        int(cAbiValue(277))
     block:
       var value: GDAL_GCP
       checkpoint "GDAL_GCP.dfGCPX"
       check cast[int](unsafeAddr value.dfGCPX) - cast[int](addr value) ==
-        int(cAbiValue(276))
+        int(cAbiValue(278))
     block:
       var value: GDAL_GCP
       checkpoint "GDAL_GCP.dfGCPY"
       check cast[int](unsafeAddr value.dfGCPY) - cast[int](addr value) ==
-        int(cAbiValue(277))
+        int(cAbiValue(279))
     block:
       var value: GDAL_GCP
       checkpoint "GDAL_GCP.dfGCPZ"
       check cast[int](unsafeAddr value.dfGCPZ) - cast[int](addr value) ==
-        int(cAbiValue(278))
+        int(cAbiValue(280))
     checkpoint "GDALQueryLoggerFunc"
-    check sizeof(GDALQueryLoggerFunc) == int(cAbiValue(279))
+    check sizeof(GDALQueryLoggerFunc) == int(cAbiValue(281))
     checkpoint "GDALDerivedPixelFunc"
-    check sizeof(GDALDerivedPixelFunc) == int(cAbiValue(280))
+    check sizeof(GDALDerivedPixelFunc) == int(cAbiValue(282))
     checkpoint "GDALDerivedPixelFuncWithArgs"
-    check sizeof(GDALDerivedPixelFuncWithArgs) == int(cAbiValue(281))
+    check sizeof(GDALDerivedPixelFuncWithArgs) == int(cAbiValue(283))
     checkpoint "VRTPDWorkingDataPtr"
-    check sizeof(VRTPDWorkingDataPtr) == int(cAbiValue(282))
+    check sizeof(VRTPDWorkingDataPtr) == int(cAbiValue(284))
     checkpoint "GDALVRTProcessedDatasetFuncInit"
-    check sizeof(GDALVRTProcessedDatasetFuncInit) == int(cAbiValue(283))
+    check sizeof(GDALVRTProcessedDatasetFuncInit) == int(cAbiValue(285))
     checkpoint "GDALVRTProcessedDatasetFuncFree"
-    check sizeof(GDALVRTProcessedDatasetFuncFree) == int(cAbiValue(284))
+    check sizeof(GDALVRTProcessedDatasetFuncFree) == int(cAbiValue(286))
     checkpoint "GDALVRTProcessedDatasetFuncProcess"
-    check sizeof(GDALVRTProcessedDatasetFuncProcess) == int(cAbiValue(285))
+    check sizeof(GDALVRTProcessedDatasetFuncProcess) == int(cAbiValue(287))
     checkpoint "GDALRasterAlgebraUnaryOperation"
-    check sizeof(GDALRasterAlgebraUnaryOperation) == int(cAbiValue(286))
+    check sizeof(GDALRasterAlgebraUnaryOperation) == int(cAbiValue(288))
     checkpoint "GDALRasterAlgebraBinaryOperation"
-    check sizeof(GDALRasterAlgebraBinaryOperation) == int(cAbiValue(287))
+    check sizeof(GDALRasterAlgebraBinaryOperation) == int(cAbiValue(289))
     checkpoint "GDALRPCInfoV1"
-    check sizeof(GDALRPCInfoV1) == int(cAbiValue(288))
+    check sizeof(GDALRPCInfoV1) == int(cAbiValue(290))
     block:
       var value: GDALRPCInfoV1
       checkpoint "GDALRPCInfoV1.dfLINE_OFF"
       check cast[int](unsafeAddr value.dfLINE_OFF) - cast[int](addr value) ==
-        int(cAbiValue(289))
+        int(cAbiValue(291))
     block:
       var value: GDALRPCInfoV1
       checkpoint "GDALRPCInfoV1.dfSAMP_OFF"
       check cast[int](unsafeAddr value.dfSAMP_OFF) - cast[int](addr value) ==
-        int(cAbiValue(290))
+        int(cAbiValue(292))
     block:
       var value: GDALRPCInfoV1
       checkpoint "GDALRPCInfoV1.dfLAT_OFF"
       check cast[int](unsafeAddr value.dfLAT_OFF) - cast[int](addr value) ==
-        int(cAbiValue(291))
+        int(cAbiValue(293))
     block:
       var value: GDALRPCInfoV1
       checkpoint "GDALRPCInfoV1.dfLONG_OFF"
       check cast[int](unsafeAddr value.dfLONG_OFF) - cast[int](addr value) ==
-        int(cAbiValue(292))
+        int(cAbiValue(294))
     block:
       var value: GDALRPCInfoV1
       checkpoint "GDALRPCInfoV1.dfHEIGHT_OFF"
       check cast[int](unsafeAddr value.dfHEIGHT_OFF) - cast[int](addr value) ==
-        int(cAbiValue(293))
+        int(cAbiValue(295))
     block:
       var value: GDALRPCInfoV1
       checkpoint "GDALRPCInfoV1.dfLINE_SCALE"
       check cast[int](unsafeAddr value.dfLINE_SCALE) - cast[int](addr value) ==
-        int(cAbiValue(294))
+        int(cAbiValue(296))
     block:
       var value: GDALRPCInfoV1
       checkpoint "GDALRPCInfoV1.dfSAMP_SCALE"
       check cast[int](unsafeAddr value.dfSAMP_SCALE) - cast[int](addr value) ==
-        int(cAbiValue(295))
+        int(cAbiValue(297))
     block:
       var value: GDALRPCInfoV1
       checkpoint "GDALRPCInfoV1.dfLAT_SCALE"
       check cast[int](unsafeAddr value.dfLAT_SCALE) - cast[int](addr value) ==
-        int(cAbiValue(296))
+        int(cAbiValue(298))
     block:
       var value: GDALRPCInfoV1
       checkpoint "GDALRPCInfoV1.dfLONG_SCALE"
       check cast[int](unsafeAddr value.dfLONG_SCALE) - cast[int](addr value) ==
-        int(cAbiValue(297))
+        int(cAbiValue(299))
     block:
       var value: GDALRPCInfoV1
       checkpoint "GDALRPCInfoV1.dfHEIGHT_SCALE"
       check cast[int](unsafeAddr value.dfHEIGHT_SCALE) - cast[int](addr value) ==
-        int(cAbiValue(298))
+        int(cAbiValue(300))
     block:
       var value: GDALRPCInfoV1
       checkpoint "GDALRPCInfoV1.adfLINE_NUM_COEFF"
       check cast[int](unsafeAddr value.adfLINE_NUM_COEFF) - cast[int](addr value) ==
-        int(cAbiValue(299))
+        int(cAbiValue(301))
     block:
       var value: GDALRPCInfoV1
       checkpoint "GDALRPCInfoV1.adfLINE_DEN_COEFF"
       check cast[int](unsafeAddr value.adfLINE_DEN_COEFF) - cast[int](addr value) ==
-        int(cAbiValue(300))
+        int(cAbiValue(302))
     block:
       var value: GDALRPCInfoV1
       checkpoint "GDALRPCInfoV1.adfSAMP_NUM_COEFF"
       check cast[int](unsafeAddr value.adfSAMP_NUM_COEFF) - cast[int](addr value) ==
-        int(cAbiValue(301))
+        int(cAbiValue(303))
     block:
       var value: GDALRPCInfoV1
       checkpoint "GDALRPCInfoV1.adfSAMP_DEN_COEFF"
       check cast[int](unsafeAddr value.adfSAMP_DEN_COEFF) - cast[int](addr value) ==
-        int(cAbiValue(302))
+        int(cAbiValue(304))
     block:
       var value: GDALRPCInfoV1
       checkpoint "GDALRPCInfoV1.dfMIN_LONG"
       check cast[int](unsafeAddr value.dfMIN_LONG) - cast[int](addr value) ==
-        int(cAbiValue(303))
+        int(cAbiValue(305))
     block:
       var value: GDALRPCInfoV1
       checkpoint "GDALRPCInfoV1.dfMIN_LAT"
       check cast[int](unsafeAddr value.dfMIN_LAT) - cast[int](addr value) ==
-        int(cAbiValue(304))
+        int(cAbiValue(306))
     block:
       var value: GDALRPCInfoV1
       checkpoint "GDALRPCInfoV1.dfMAX_LONG"
       check cast[int](unsafeAddr value.dfMAX_LONG) - cast[int](addr value) ==
-        int(cAbiValue(305))
+        int(cAbiValue(307))
     block:
       var value: GDALRPCInfoV1
       checkpoint "GDALRPCInfoV1.dfMAX_LAT"
       check cast[int](unsafeAddr value.dfMAX_LAT) - cast[int](addr value) ==
-        int(cAbiValue(306))
+        int(cAbiValue(308))
     checkpoint "GDALRPCInfoV2"
-    check sizeof(GDALRPCInfoV2) == int(cAbiValue(307))
+    check sizeof(GDALRPCInfoV2) == int(cAbiValue(309))
     block:
       var value: GDALRPCInfoV2
       checkpoint "GDALRPCInfoV2.dfLINE_OFF"
       check cast[int](unsafeAddr value.dfLINE_OFF) - cast[int](addr value) ==
-        int(cAbiValue(308))
+        int(cAbiValue(310))
     block:
       var value: GDALRPCInfoV2
       checkpoint "GDALRPCInfoV2.dfSAMP_OFF"
       check cast[int](unsafeAddr value.dfSAMP_OFF) - cast[int](addr value) ==
-        int(cAbiValue(309))
+        int(cAbiValue(311))
     block:
       var value: GDALRPCInfoV2
       checkpoint "GDALRPCInfoV2.dfLAT_OFF"
       check cast[int](unsafeAddr value.dfLAT_OFF) - cast[int](addr value) ==
-        int(cAbiValue(310))
+        int(cAbiValue(312))
     block:
       var value: GDALRPCInfoV2
       checkpoint "GDALRPCInfoV2.dfLONG_OFF"
       check cast[int](unsafeAddr value.dfLONG_OFF) - cast[int](addr value) ==
-        int(cAbiValue(311))
+        int(cAbiValue(313))
     block:
       var value: GDALRPCInfoV2
       checkpoint "GDALRPCInfoV2.dfHEIGHT_OFF"
       check cast[int](unsafeAddr value.dfHEIGHT_OFF) - cast[int](addr value) ==
-        int(cAbiValue(312))
+        int(cAbiValue(314))
     block:
       var value: GDALRPCInfoV2
       checkpoint "GDALRPCInfoV2.dfLINE_SCALE"
       check cast[int](unsafeAddr value.dfLINE_SCALE) - cast[int](addr value) ==
-        int(cAbiValue(313))
+        int(cAbiValue(315))
     block:
       var value: GDALRPCInfoV2
       checkpoint "GDALRPCInfoV2.dfSAMP_SCALE"
       check cast[int](unsafeAddr value.dfSAMP_SCALE) - cast[int](addr value) ==
-        int(cAbiValue(314))
+        int(cAbiValue(316))
     block:
       var value: GDALRPCInfoV2
       checkpoint "GDALRPCInfoV2.dfLAT_SCALE"
       check cast[int](unsafeAddr value.dfLAT_SCALE) - cast[int](addr value) ==
-        int(cAbiValue(315))
+        int(cAbiValue(317))
     block:
       var value: GDALRPCInfoV2
       checkpoint "GDALRPCInfoV2.dfLONG_SCALE"
       check cast[int](unsafeAddr value.dfLONG_SCALE) - cast[int](addr value) ==
-        int(cAbiValue(316))
+        int(cAbiValue(318))
     block:
       var value: GDALRPCInfoV2
       checkpoint "GDALRPCInfoV2.dfHEIGHT_SCALE"
       check cast[int](unsafeAddr value.dfHEIGHT_SCALE) - cast[int](addr value) ==
-        int(cAbiValue(317))
+        int(cAbiValue(319))
     block:
       var value: GDALRPCInfoV2
       checkpoint "GDALRPCInfoV2.adfLINE_NUM_COEFF"
       check cast[int](unsafeAddr value.adfLINE_NUM_COEFF) - cast[int](addr value) ==
-        int(cAbiValue(318))
+        int(cAbiValue(320))
     block:
       var value: GDALRPCInfoV2
       checkpoint "GDALRPCInfoV2.adfLINE_DEN_COEFF"
       check cast[int](unsafeAddr value.adfLINE_DEN_COEFF) - cast[int](addr value) ==
-        int(cAbiValue(319))
+        int(cAbiValue(321))
     block:
       var value: GDALRPCInfoV2
       checkpoint "GDALRPCInfoV2.adfSAMP_NUM_COEFF"
       check cast[int](unsafeAddr value.adfSAMP_NUM_COEFF) - cast[int](addr value) ==
-        int(cAbiValue(320))
+        int(cAbiValue(322))
     block:
       var value: GDALRPCInfoV2
       checkpoint "GDALRPCInfoV2.adfSAMP_DEN_COEFF"
       check cast[int](unsafeAddr value.adfSAMP_DEN_COEFF) - cast[int](addr value) ==
-        int(cAbiValue(321))
+        int(cAbiValue(323))
     block:
       var value: GDALRPCInfoV2
       checkpoint "GDALRPCInfoV2.dfMIN_LONG"
       check cast[int](unsafeAddr value.dfMIN_LONG) - cast[int](addr value) ==
-        int(cAbiValue(322))
+        int(cAbiValue(324))
     block:
       var value: GDALRPCInfoV2
       checkpoint "GDALRPCInfoV2.dfMIN_LAT"
       check cast[int](unsafeAddr value.dfMIN_LAT) - cast[int](addr value) ==
-        int(cAbiValue(323))
+        int(cAbiValue(325))
     block:
       var value: GDALRPCInfoV2
       checkpoint "GDALRPCInfoV2.dfMAX_LONG"
       check cast[int](unsafeAddr value.dfMAX_LONG) - cast[int](addr value) ==
-        int(cAbiValue(324))
+        int(cAbiValue(326))
     block:
       var value: GDALRPCInfoV2
       checkpoint "GDALRPCInfoV2.dfMAX_LAT"
       check cast[int](unsafeAddr value.dfMAX_LAT) - cast[int](addr value) ==
-        int(cAbiValue(325))
+        int(cAbiValue(327))
     block:
       var value: GDALRPCInfoV2
       checkpoint "GDALRPCInfoV2.dfERR_BIAS"
       check cast[int](unsafeAddr value.dfERR_BIAS) - cast[int](addr value) ==
-        int(cAbiValue(326))
+        int(cAbiValue(328))
     block:
       var value: GDALRPCInfoV2
       checkpoint "GDALRPCInfoV2.dfERR_RAND"
       check cast[int](unsafeAddr value.dfERR_RAND) - cast[int](addr value) ==
-        int(cAbiValue(327))
+        int(cAbiValue(329))
     checkpoint "GDALColorEntry"
-    check sizeof(GDALColorEntry) == int(cAbiValue(328))
+    check sizeof(GDALColorEntry) == int(cAbiValue(330))
     block:
       var value: GDALColorEntry
       checkpoint "GDALColorEntry.c1"
       check cast[int](unsafeAddr value.c1) - cast[int](addr value) == int(
-        cAbiValue(329)
+        cAbiValue(331)
       )
     block:
       var value: GDALColorEntry
       checkpoint "GDALColorEntry.c2"
       check cast[int](unsafeAddr value.c2) - cast[int](addr value) == int(
-        cAbiValue(330)
+        cAbiValue(332)
       )
     block:
       var value: GDALColorEntry
       checkpoint "GDALColorEntry.c3"
       check cast[int](unsafeAddr value.c3) - cast[int](addr value) == int(
-        cAbiValue(331)
+        cAbiValue(333)
       )
     block:
       var value: GDALColorEntry
       checkpoint "GDALColorEntry.c4"
       check cast[int](unsafeAddr value.c4) - cast[int](addr value) == int(
-        cAbiValue(332)
+        cAbiValue(334)
       )
     checkpoint "GDALRATFieldType"
-    check sizeof(GDALRATFieldType) == int(cAbiValue(333))
+    check sizeof(GDALRATFieldType) == int(cAbiValue(335))
     checkpoint "GDALRATFieldUsage"
-    check sizeof(GDALRATFieldUsage) == int(cAbiValue(334))
+    check sizeof(GDALRATFieldUsage) == int(cAbiValue(336))
     checkpoint "GDALRATTableType"
-    check sizeof(GDALRATTableType) == int(cAbiValue(335))
+    check sizeof(GDALRATTableType) == int(cAbiValue(337))
     checkpoint "GDALRATDateTime"
-    check sizeof(GDALRATDateTime) == int(cAbiValue(336))
+    check sizeof(GDALRATDateTime) == int(cAbiValue(338))
     block:
       var value: GDALRATDateTime
       checkpoint "GDALRATDateTime.nYear"
       check cast[int](unsafeAddr value.nYear) - cast[int](addr value) ==
-        int(cAbiValue(337))
+        int(cAbiValue(339))
     block:
       var value: GDALRATDateTime
       checkpoint "GDALRATDateTime.nMonth"
       check cast[int](unsafeAddr value.nMonth) - cast[int](addr value) ==
-        int(cAbiValue(338))
+        int(cAbiValue(340))
     block:
       var value: GDALRATDateTime
       checkpoint "GDALRATDateTime.nDay"
       check cast[int](unsafeAddr value.nDay) - cast[int](addr value) ==
-        int(cAbiValue(339))
+        int(cAbiValue(341))
     block:
       var value: GDALRATDateTime
       checkpoint "GDALRATDateTime.nHour"
       check cast[int](unsafeAddr value.nHour) - cast[int](addr value) ==
-        int(cAbiValue(340))
+        int(cAbiValue(342))
     block:
       var value: GDALRATDateTime
       checkpoint "GDALRATDateTime.nMinute"
       check cast[int](unsafeAddr value.nMinute) - cast[int](addr value) ==
-        int(cAbiValue(341))
+        int(cAbiValue(343))
     block:
       var value: GDALRATDateTime
       checkpoint "GDALRATDateTime.fSecond"
       check cast[int](unsafeAddr value.fSecond) - cast[int](addr value) ==
-        int(cAbiValue(342))
+        int(cAbiValue(344))
     block:
       var value: GDALRATDateTime
       checkpoint "GDALRATDateTime.nTimeZoneHour"
       check cast[int](unsafeAddr value.nTimeZoneHour) - cast[int](addr value) ==
-        int(cAbiValue(343))
+        int(cAbiValue(345))
     block:
       var value: GDALRATDateTime
       checkpoint "GDALRATDateTime.nTimeZoneMinute"
       check cast[int](unsafeAddr value.nTimeZoneMinute) - cast[int](addr value) ==
-        int(cAbiValue(344))
+        int(cAbiValue(346))
     block:
       var value: GDALRATDateTime
       checkpoint "GDALRATDateTime.bPositiveTimeZone"
       check cast[int](unsafeAddr value.bPositiveTimeZone) - cast[int](addr value) ==
-        int(cAbiValue(345))
+        int(cAbiValue(347))
     block:
       var value: GDALRATDateTime
       checkpoint "GDALRATDateTime.bIsValid"
       check cast[int](unsafeAddr value.bIsValid) - cast[int](addr value) ==
-        int(cAbiValue(346))
+        int(cAbiValue(348))
     checkpoint "GDALRelationshipCardinality"
-    check sizeof(GDALRelationshipCardinality) == int(cAbiValue(347))
+    check sizeof(GDALRelationshipCardinality) == int(cAbiValue(349))
     checkpoint "GDALRelationshipType"
-    check sizeof(GDALRelationshipType) == int(cAbiValue(348))
+    check sizeof(GDALRelationshipType) == int(cAbiValue(350))
     checkpoint "GDALTileOrganization"
-    check sizeof(GDALTileOrganization) == int(cAbiValue(349))
+    check sizeof(GDALTileOrganization) == int(cAbiValue(351))
     checkpoint "GDALMDArrayRawBlockInfo"
-    check sizeof(GDALMDArrayRawBlockInfo) == int(cAbiValue(350))
+    check sizeof(GDALMDArrayRawBlockInfo) == int(cAbiValue(352))
     block:
       var value: GDALMDArrayRawBlockInfo
       checkpoint "GDALMDArrayRawBlockInfo.pszFilename"
       check cast[int](unsafeAddr value.pszFilename) - cast[int](addr value) ==
-        int(cAbiValue(351))
+        int(cAbiValue(353))
     block:
       var value: GDALMDArrayRawBlockInfo
       checkpoint "GDALMDArrayRawBlockInfo.nOffset"
       check cast[int](unsafeAddr value.nOffset) - cast[int](addr value) ==
-        int(cAbiValue(352))
+        int(cAbiValue(354))
     block:
       var value: GDALMDArrayRawBlockInfo
       checkpoint "GDALMDArrayRawBlockInfo.nSize"
       check cast[int](unsafeAddr value.nSize) - cast[int](addr value) ==
-        int(cAbiValue(353))
+        int(cAbiValue(355))
     block:
       var value: GDALMDArrayRawBlockInfo
       checkpoint "GDALMDArrayRawBlockInfo.papszInfo"
       check cast[int](unsafeAddr value.papszInfo) - cast[int](addr value) ==
-        int(cAbiValue(354))
+        int(cAbiValue(356))
     block:
       var value: GDALMDArrayRawBlockInfo
       checkpoint "GDALMDArrayRawBlockInfo.pabyInlineData"
       check cast[int](unsafeAddr value.pabyInlineData) - cast[int](addr value) ==
-        int(cAbiValue(355))
+        int(cAbiValue(357))
     checkpoint "GDALAdbcLoadDriverFunc"
-    check sizeof(GDALAdbcLoadDriverFunc) == int(cAbiValue(356))
+    check sizeof(GDALAdbcLoadDriverFunc) == int(cAbiValue(358))
     checkpoint "GDALTransformerFunc"
-    check sizeof(GDALTransformerFunc) == int(cAbiValue(357))
+    check sizeof(GDALTransformerFunc) == int(cAbiValue(359))
     checkpoint "GDALTransformerInfo"
-    check sizeof(GDALTransformerInfo) == int(cAbiValue(358))
+    check sizeof(GDALTransformerInfo) == int(cAbiValue(360))
     block:
       var value: GDALTransformerInfo
       checkpoint "GDALTransformerInfo.abySignature"
       check cast[int](unsafeAddr value.abySignature) - cast[int](addr value) ==
-        int(cAbiValue(359))
+        int(cAbiValue(361))
     block:
       var value: GDALTransformerInfo
       checkpoint "GDALTransformerInfo.pszClassName"
       check cast[int](unsafeAddr value.pszClassName) - cast[int](addr value) ==
-        int(cAbiValue(360))
+        int(cAbiValue(362))
     block:
       var value: GDALTransformerInfo
       checkpoint "GDALTransformerInfo.pfnTransform"
       check cast[int](unsafeAddr value.pfnTransform) - cast[int](addr value) ==
-        int(cAbiValue(361))
+        int(cAbiValue(363))
     block:
       var value: GDALTransformerInfo
       checkpoint "GDALTransformerInfo.pfnCleanup"
       check cast[int](unsafeAddr value.pfnCleanup) - cast[int](addr value) ==
-        int(cAbiValue(362))
+        int(cAbiValue(364))
     block:
       var value: GDALTransformerInfo
       checkpoint "GDALTransformerInfo.pfnSerialize"
       check cast[int](unsafeAddr value.pfnSerialize) - cast[int](addr value) ==
-        int(cAbiValue(363))
+        int(cAbiValue(365))
     block:
       var value: GDALTransformerInfo
       checkpoint "GDALTransformerInfo.pfnCreateSimilar"
       check cast[int](unsafeAddr value.pfnCreateSimilar) - cast[int](addr value) ==
-        int(cAbiValue(364))
+        int(cAbiValue(366))
     checkpoint "GDALContourWriter"
-    check sizeof(GDALContourWriter) == int(cAbiValue(365))
+    check sizeof(GDALContourWriter) == int(cAbiValue(367))
     checkpoint "GDALContourGeneratorH"
-    check sizeof(GDALContourGeneratorH) == int(cAbiValue(366))
+    check sizeof(GDALContourGeneratorH) == int(cAbiValue(368))
     checkpoint "OGRContourWriterInfo"
-    check sizeof(OGRContourWriterInfo) == int(cAbiValue(367))
+    check sizeof(OGRContourWriterInfo) == int(cAbiValue(369))
     block:
       var value: OGRContourWriterInfo
       checkpoint "OGRContourWriterInfo.hLayer"
       check cast[int](unsafeAddr value.hLayer) - cast[int](addr value) ==
-        int(cAbiValue(368))
+        int(cAbiValue(370))
     block:
       var value: OGRContourWriterInfo
       checkpoint "OGRContourWriterInfo.adfGeoTransform"
       check cast[int](unsafeAddr value.adfGeoTransform) - cast[int](addr value) ==
-        int(cAbiValue(369))
+        int(cAbiValue(371))
     block:
       var value: OGRContourWriterInfo
       checkpoint "OGRContourWriterInfo.nElevField"
       check cast[int](unsafeAddr value.nElevField) - cast[int](addr value) ==
-        int(cAbiValue(370))
+        int(cAbiValue(372))
     block:
       var value: OGRContourWriterInfo
       checkpoint "OGRContourWriterInfo.nElevFieldMin"
       check cast[int](unsafeAddr value.nElevFieldMin) - cast[int](addr value) ==
-        int(cAbiValue(371))
+        int(cAbiValue(373))
     block:
       var value: OGRContourWriterInfo
       checkpoint "OGRContourWriterInfo.nElevFieldMax"
       check cast[int](unsafeAddr value.nElevFieldMax) - cast[int](addr value) ==
-        int(cAbiValue(372))
+        int(cAbiValue(374))
     block:
       var value: OGRContourWriterInfo
       checkpoint "OGRContourWriterInfo.nIDField"
       check cast[int](unsafeAddr value.nIDField) - cast[int](addr value) ==
-        int(cAbiValue(373))
+        int(cAbiValue(375))
     block:
       var value: OGRContourWriterInfo
       checkpoint "OGRContourWriterInfo.nNextID"
       check cast[int](unsafeAddr value.nNextID) - cast[int](addr value) ==
-        int(cAbiValue(374))
+        int(cAbiValue(376))
     block:
       var value: OGRContourWriterInfo
       checkpoint "OGRContourWriterInfo.nWrittenFeatureCountSinceLastCommit"
       check cast[int](unsafeAddr value.nWrittenFeatureCountSinceLastCommit) -
-        cast[int](addr value) == int(cAbiValue(375))
+        cast[int](addr value) == int(cAbiValue(377))
     block:
       var value: OGRContourWriterInfo
       checkpoint "OGRContourWriterInfo.nTransactionCommitInterval"
       check cast[int](unsafeAddr value.nTransactionCommitInterval) -
-        cast[int](addr value) == int(cAbiValue(376))
+        cast[int](addr value) == int(cAbiValue(378))
     checkpoint "GDALViewshedMode"
-    check sizeof(GDALViewshedMode) == int(cAbiValue(377))
+    check sizeof(GDALViewshedMode) == int(cAbiValue(379))
     checkpoint "GDALViewshedOutputType"
-    check sizeof(GDALViewshedOutputType) == int(cAbiValue(378))
+    check sizeof(GDALViewshedOutputType) == int(cAbiValue(380))
     checkpoint "GDALGridAlgorithm"
-    check sizeof(GDALGridAlgorithm) == int(cAbiValue(379))
+    check sizeof(GDALGridAlgorithm) == int(cAbiValue(381))
     checkpoint "GDALGridInverseDistanceToAPowerOptions"
-    check sizeof(GDALGridInverseDistanceToAPowerOptions) == int(cAbiValue(380))
+    check sizeof(GDALGridInverseDistanceToAPowerOptions) == int(cAbiValue(382))
     block:
       var value: GDALGridInverseDistanceToAPowerOptions
       checkpoint "GDALGridInverseDistanceToAPowerOptions.nSizeOfStructure"
       check cast[int](unsafeAddr value.nSizeOfStructure) - cast[int](addr value) ==
-        int(cAbiValue(381))
+        int(cAbiValue(383))
     block:
       var value: GDALGridInverseDistanceToAPowerOptions
       checkpoint "GDALGridInverseDistanceToAPowerOptions.dfPower"
       check cast[int](unsafeAddr value.dfPower) - cast[int](addr value) ==
-        int(cAbiValue(382))
+        int(cAbiValue(384))
     block:
       var value: GDALGridInverseDistanceToAPowerOptions
       checkpoint "GDALGridInverseDistanceToAPowerOptions.dfSmoothing"
       check cast[int](unsafeAddr value.dfSmoothing) - cast[int](addr value) ==
-        int(cAbiValue(383))
+        int(cAbiValue(385))
     block:
       var value: GDALGridInverseDistanceToAPowerOptions
       checkpoint "GDALGridInverseDistanceToAPowerOptions.dfAnisotropyRatio"
       check cast[int](unsafeAddr value.dfAnisotropyRatio) - cast[int](addr value) ==
-        int(cAbiValue(384))
+        int(cAbiValue(386))
     block:
       var value: GDALGridInverseDistanceToAPowerOptions
       checkpoint "GDALGridInverseDistanceToAPowerOptions.dfAnisotropyAngle"
       check cast[int](unsafeAddr value.dfAnisotropyAngle) - cast[int](addr value) ==
-        int(cAbiValue(385))
+        int(cAbiValue(387))
     block:
       var value: GDALGridInverseDistanceToAPowerOptions
       checkpoint "GDALGridInverseDistanceToAPowerOptions.dfRadius1"
       check cast[int](unsafeAddr value.dfRadius1) - cast[int](addr value) ==
-        int(cAbiValue(386))
+        int(cAbiValue(388))
     block:
       var value: GDALGridInverseDistanceToAPowerOptions
       checkpoint "GDALGridInverseDistanceToAPowerOptions.dfRadius2"
       check cast[int](unsafeAddr value.dfRadius2) - cast[int](addr value) ==
-        int(cAbiValue(387))
+        int(cAbiValue(389))
     block:
       var value: GDALGridInverseDistanceToAPowerOptions
       checkpoint "GDALGridInverseDistanceToAPowerOptions.dfAngle"
       check cast[int](unsafeAddr value.dfAngle) - cast[int](addr value) ==
-        int(cAbiValue(388))
+        int(cAbiValue(390))
     block:
       var value: GDALGridInverseDistanceToAPowerOptions
       checkpoint "GDALGridInverseDistanceToAPowerOptions.nMaxPoints"
       check cast[int](unsafeAddr value.nMaxPoints) - cast[int](addr value) ==
-        int(cAbiValue(389))
+        int(cAbiValue(391))
     block:
       var value: GDALGridInverseDistanceToAPowerOptions
       checkpoint "GDALGridInverseDistanceToAPowerOptions.nMinPoints"
       check cast[int](unsafeAddr value.nMinPoints) - cast[int](addr value) ==
-        int(cAbiValue(390))
+        int(cAbiValue(392))
     block:
       var value: GDALGridInverseDistanceToAPowerOptions
       checkpoint "GDALGridInverseDistanceToAPowerOptions.dfNoDataValue"
       check cast[int](unsafeAddr value.dfNoDataValue) - cast[int](addr value) ==
-        int(cAbiValue(391))
+        int(cAbiValue(393))
     checkpoint "GDALGridInverseDistanceToAPowerNearestNeighborOptions"
     check sizeof(GDALGridInverseDistanceToAPowerNearestNeighborOptions) ==
-      int(cAbiValue(392))
+      int(cAbiValue(394))
     block:
       var value: GDALGridInverseDistanceToAPowerNearestNeighborOptions
       checkpoint "GDALGridInverseDistanceToAPowerNearestNeighborOptions.nSizeOfStructure"
       check cast[int](unsafeAddr value.nSizeOfStructure) - cast[int](addr value) ==
-        int(cAbiValue(393))
+        int(cAbiValue(395))
     block:
       var value: GDALGridInverseDistanceToAPowerNearestNeighborOptions
       checkpoint "GDALGridInverseDistanceToAPowerNearestNeighborOptions.dfPower"
       check cast[int](unsafeAddr value.dfPower) - cast[int](addr value) ==
-        int(cAbiValue(394))
+        int(cAbiValue(396))
     block:
       var value: GDALGridInverseDistanceToAPowerNearestNeighborOptions
       checkpoint "GDALGridInverseDistanceToAPowerNearestNeighborOptions.dfRadius"
       check cast[int](unsafeAddr value.dfRadius) - cast[int](addr value) ==
-        int(cAbiValue(395))
+        int(cAbiValue(397))
     block:
       var value: GDALGridInverseDistanceToAPowerNearestNeighborOptions
       checkpoint "GDALGridInverseDistanceToAPowerNearestNeighborOptions.dfSmoothing"
       check cast[int](unsafeAddr value.dfSmoothing) - cast[int](addr value) ==
-        int(cAbiValue(396))
+        int(cAbiValue(398))
     block:
       var value: GDALGridInverseDistanceToAPowerNearestNeighborOptions
       checkpoint "GDALGridInverseDistanceToAPowerNearestNeighborOptions.nMaxPoints"
       check cast[int](unsafeAddr value.nMaxPoints) - cast[int](addr value) ==
-        int(cAbiValue(397))
+        int(cAbiValue(399))
     block:
       var value: GDALGridInverseDistanceToAPowerNearestNeighborOptions
       checkpoint "GDALGridInverseDistanceToAPowerNearestNeighborOptions.nMinPoints"
       check cast[int](unsafeAddr value.nMinPoints) - cast[int](addr value) ==
-        int(cAbiValue(398))
+        int(cAbiValue(400))
     block:
       var value: GDALGridInverseDistanceToAPowerNearestNeighborOptions
       checkpoint "GDALGridInverseDistanceToAPowerNearestNeighborOptions.dfNoDataValue"
       check cast[int](unsafeAddr value.dfNoDataValue) - cast[int](addr value) ==
-        int(cAbiValue(399))
+        int(cAbiValue(401))
     block:
       var value: GDALGridInverseDistanceToAPowerNearestNeighborOptions
       checkpoint "GDALGridInverseDistanceToAPowerNearestNeighborOptions.nMaxPointsPerQuadrant"
       check cast[int](unsafeAddr value.nMaxPointsPerQuadrant) - cast[int](addr value) ==
-        int(cAbiValue(400))
+        int(cAbiValue(402))
     block:
       var value: GDALGridInverseDistanceToAPowerNearestNeighborOptions
       checkpoint "GDALGridInverseDistanceToAPowerNearestNeighborOptions.nMinPointsPerQuadrant"
       check cast[int](unsafeAddr value.nMinPointsPerQuadrant) - cast[int](addr value) ==
-        int(cAbiValue(401))
+        int(cAbiValue(403))
     checkpoint "GDALGridMovingAverageOptions"
-    check sizeof(GDALGridMovingAverageOptions) == int(cAbiValue(402))
+    check sizeof(GDALGridMovingAverageOptions) == int(cAbiValue(404))
     block:
       var value: GDALGridMovingAverageOptions
       checkpoint "GDALGridMovingAverageOptions.nSizeOfStructure"
       check cast[int](unsafeAddr value.nSizeOfStructure) - cast[int](addr value) ==
-        int(cAbiValue(403))
+        int(cAbiValue(405))
     block:
       var value: GDALGridMovingAverageOptions
       checkpoint "GDALGridMovingAverageOptions.dfRadius1"
       check cast[int](unsafeAddr value.dfRadius1) - cast[int](addr value) ==
-        int(cAbiValue(404))
+        int(cAbiValue(406))
     block:
       var value: GDALGridMovingAverageOptions
       checkpoint "GDALGridMovingAverageOptions.dfRadius2"
       check cast[int](unsafeAddr value.dfRadius2) - cast[int](addr value) ==
-        int(cAbiValue(405))
+        int(cAbiValue(407))
     block:
       var value: GDALGridMovingAverageOptions
       checkpoint "GDALGridMovingAverageOptions.dfAngle"
       check cast[int](unsafeAddr value.dfAngle) - cast[int](addr value) ==
-        int(cAbiValue(406))
+        int(cAbiValue(408))
     block:
       var value: GDALGridMovingAverageOptions
       checkpoint "GDALGridMovingAverageOptions.nMaxPoints"
       check cast[int](unsafeAddr value.nMaxPoints) - cast[int](addr value) ==
-        int(cAbiValue(407))
+        int(cAbiValue(409))
     block:
       var value: GDALGridMovingAverageOptions
       checkpoint "GDALGridMovingAverageOptions.nMinPoints"
       check cast[int](unsafeAddr value.nMinPoints) - cast[int](addr value) ==
-        int(cAbiValue(408))
+        int(cAbiValue(410))
     block:
       var value: GDALGridMovingAverageOptions
       checkpoint "GDALGridMovingAverageOptions.dfNoDataValue"
       check cast[int](unsafeAddr value.dfNoDataValue) - cast[int](addr value) ==
-        int(cAbiValue(409))
+        int(cAbiValue(411))
     block:
       var value: GDALGridMovingAverageOptions
       checkpoint "GDALGridMovingAverageOptions.nMaxPointsPerQuadrant"
       check cast[int](unsafeAddr value.nMaxPointsPerQuadrant) - cast[int](addr value) ==
-        int(cAbiValue(410))
+        int(cAbiValue(412))
     block:
       var value: GDALGridMovingAverageOptions
       checkpoint "GDALGridMovingAverageOptions.nMinPointsPerQuadrant"
       check cast[int](unsafeAddr value.nMinPointsPerQuadrant) - cast[int](addr value) ==
-        int(cAbiValue(411))
+        int(cAbiValue(413))
     checkpoint "GDALGridNearestNeighborOptions"
-    check sizeof(GDALGridNearestNeighborOptions) == int(cAbiValue(412))
+    check sizeof(GDALGridNearestNeighborOptions) == int(cAbiValue(414))
     block:
       var value: GDALGridNearestNeighborOptions
       checkpoint "GDALGridNearestNeighborOptions.nSizeOfStructure"
       check cast[int](unsafeAddr value.nSizeOfStructure) - cast[int](addr value) ==
-        int(cAbiValue(413))
+        int(cAbiValue(415))
     block:
       var value: GDALGridNearestNeighborOptions
       checkpoint "GDALGridNearestNeighborOptions.dfRadius1"
       check cast[int](unsafeAddr value.dfRadius1) - cast[int](addr value) ==
-        int(cAbiValue(414))
+        int(cAbiValue(416))
     block:
       var value: GDALGridNearestNeighborOptions
       checkpoint "GDALGridNearestNeighborOptions.dfRadius2"
       check cast[int](unsafeAddr value.dfRadius2) - cast[int](addr value) ==
-        int(cAbiValue(415))
+        int(cAbiValue(417))
     block:
       var value: GDALGridNearestNeighborOptions
       checkpoint "GDALGridNearestNeighborOptions.dfAngle"
       check cast[int](unsafeAddr value.dfAngle) - cast[int](addr value) ==
-        int(cAbiValue(416))
+        int(cAbiValue(418))
     block:
       var value: GDALGridNearestNeighborOptions
       checkpoint "GDALGridNearestNeighborOptions.dfNoDataValue"
       check cast[int](unsafeAddr value.dfNoDataValue) - cast[int](addr value) ==
-        int(cAbiValue(417))
+        int(cAbiValue(419))
     checkpoint "GDALGridDataMetricsOptions"
-    check sizeof(GDALGridDataMetricsOptions) == int(cAbiValue(418))
+    check sizeof(GDALGridDataMetricsOptions) == int(cAbiValue(420))
     block:
       var value: GDALGridDataMetricsOptions
       checkpoint "GDALGridDataMetricsOptions.nSizeOfStructure"
       check cast[int](unsafeAddr value.nSizeOfStructure) - cast[int](addr value) ==
-        int(cAbiValue(419))
+        int(cAbiValue(421))
     block:
       var value: GDALGridDataMetricsOptions
       checkpoint "GDALGridDataMetricsOptions.dfRadius1"
       check cast[int](unsafeAddr value.dfRadius1) - cast[int](addr value) ==
-        int(cAbiValue(420))
+        int(cAbiValue(422))
     block:
       var value: GDALGridDataMetricsOptions
       checkpoint "GDALGridDataMetricsOptions.dfRadius2"
       check cast[int](unsafeAddr value.dfRadius2) - cast[int](addr value) ==
-        int(cAbiValue(421))
+        int(cAbiValue(423))
     block:
       var value: GDALGridDataMetricsOptions
       checkpoint "GDALGridDataMetricsOptions.dfAngle"
       check cast[int](unsafeAddr value.dfAngle) - cast[int](addr value) ==
-        int(cAbiValue(422))
+        int(cAbiValue(424))
     block:
       var value: GDALGridDataMetricsOptions
       checkpoint "GDALGridDataMetricsOptions.nMinPoints"
       check cast[int](unsafeAddr value.nMinPoints) - cast[int](addr value) ==
-        int(cAbiValue(423))
+        int(cAbiValue(425))
     block:
       var value: GDALGridDataMetricsOptions
       checkpoint "GDALGridDataMetricsOptions.dfNoDataValue"
       check cast[int](unsafeAddr value.dfNoDataValue) - cast[int](addr value) ==
-        int(cAbiValue(424))
+        int(cAbiValue(426))
     block:
       var value: GDALGridDataMetricsOptions
       checkpoint "GDALGridDataMetricsOptions.nMaxPointsPerQuadrant"
       check cast[int](unsafeAddr value.nMaxPointsPerQuadrant) - cast[int](addr value) ==
-        int(cAbiValue(425))
+        int(cAbiValue(427))
     block:
       var value: GDALGridDataMetricsOptions
       checkpoint "GDALGridDataMetricsOptions.nMinPointsPerQuadrant"
       check cast[int](unsafeAddr value.nMinPointsPerQuadrant) - cast[int](addr value) ==
-        int(cAbiValue(426))
+        int(cAbiValue(428))
     checkpoint "GDALGridLinearOptions"
-    check sizeof(GDALGridLinearOptions) == int(cAbiValue(427))
+    check sizeof(GDALGridLinearOptions) == int(cAbiValue(429))
     block:
       var value: GDALGridLinearOptions
       checkpoint "GDALGridLinearOptions.nSizeOfStructure"
       check cast[int](unsafeAddr value.nSizeOfStructure) - cast[int](addr value) ==
-        int(cAbiValue(428))
+        int(cAbiValue(430))
     block:
       var value: GDALGridLinearOptions
       checkpoint "GDALGridLinearOptions.dfRadius"
       check cast[int](unsafeAddr value.dfRadius) - cast[int](addr value) ==
-        int(cAbiValue(429))
+        int(cAbiValue(431))
     block:
       var value: GDALGridLinearOptions
       checkpoint "GDALGridLinearOptions.dfNoDataValue"
       check cast[int](unsafeAddr value.dfNoDataValue) - cast[int](addr value) ==
-        int(cAbiValue(430))
+        int(cAbiValue(432))
     checkpoint "GDALTriFacet"
-    check sizeof(GDALTriFacet) == int(cAbiValue(431))
+    check sizeof(GDALTriFacet) == int(cAbiValue(433))
     block:
       var value: GDALTriFacet
       checkpoint "GDALTriFacet.anVertexIdx"
       check cast[int](unsafeAddr value.anVertexIdx) - cast[int](addr value) ==
-        int(cAbiValue(432))
+        int(cAbiValue(434))
     block:
       var value: GDALTriFacet
       checkpoint "GDALTriFacet.anNeighborIdx"
       check cast[int](unsafeAddr value.anNeighborIdx) - cast[int](addr value) ==
-        int(cAbiValue(433))
+        int(cAbiValue(435))
     checkpoint "GDALTriBarycentricCoefficients"
-    check sizeof(GDALTriBarycentricCoefficients) == int(cAbiValue(434))
+    check sizeof(GDALTriBarycentricCoefficients) == int(cAbiValue(436))
     block:
       var value: GDALTriBarycentricCoefficients
       checkpoint "GDALTriBarycentricCoefficients.dfMul1X"
       check cast[int](unsafeAddr value.dfMul1X) - cast[int](addr value) ==
-        int(cAbiValue(435))
+        int(cAbiValue(437))
     block:
       var value: GDALTriBarycentricCoefficients
       checkpoint "GDALTriBarycentricCoefficients.dfMul1Y"
       check cast[int](unsafeAddr value.dfMul1Y) - cast[int](addr value) ==
-        int(cAbiValue(436))
+        int(cAbiValue(438))
     block:
       var value: GDALTriBarycentricCoefficients
       checkpoint "GDALTriBarycentricCoefficients.dfMul2X"
       check cast[int](unsafeAddr value.dfMul2X) - cast[int](addr value) ==
-        int(cAbiValue(437))
+        int(cAbiValue(439))
     block:
       var value: GDALTriBarycentricCoefficients
       checkpoint "GDALTriBarycentricCoefficients.dfMul2Y"
       check cast[int](unsafeAddr value.dfMul2Y) - cast[int](addr value) ==
-        int(cAbiValue(438))
+        int(cAbiValue(440))
     block:
       var value: GDALTriBarycentricCoefficients
       checkpoint "GDALTriBarycentricCoefficients.dfCstX"
       check cast[int](unsafeAddr value.dfCstX) - cast[int](addr value) ==
-        int(cAbiValue(439))
+        int(cAbiValue(441))
     block:
       var value: GDALTriBarycentricCoefficients
       checkpoint "GDALTriBarycentricCoefficients.dfCstY"
       check cast[int](unsafeAddr value.dfCstY) - cast[int](addr value) ==
-        int(cAbiValue(440))
+        int(cAbiValue(442))
     checkpoint "GDALTriangulation"
-    check sizeof(GDALTriangulation) == int(cAbiValue(441))
+    check sizeof(GDALTriangulation) == int(cAbiValue(443))
     block:
       var value: GDALTriangulation
       checkpoint "GDALTriangulation.nFacets"
       check cast[int](unsafeAddr value.nFacets) - cast[int](addr value) ==
-        int(cAbiValue(442))
+        int(cAbiValue(444))
     block:
       var value: GDALTriangulation
       checkpoint "GDALTriangulation.pasFacets"
       check cast[int](unsafeAddr value.pasFacets) - cast[int](addr value) ==
-        int(cAbiValue(443))
+        int(cAbiValue(445))
     block:
       var value: GDALTriangulation
       checkpoint "GDALTriangulation.pasFacetCoefficients"
       check cast[int](unsafeAddr value.pasFacetCoefficients) - cast[int](addr value) ==
-        int(cAbiValue(444))
+        int(cAbiValue(446))
     checkpoint "VRTImageReadFunc"
-    check sizeof(VRTImageReadFunc) == int(cAbiValue(445))
+    check sizeof(VRTImageReadFunc) == int(cAbiValue(447))
     checkpoint "VRTAveragedSourceH"
-    check sizeof(VRTAveragedSourceH) == int(cAbiValue(446))
+    check sizeof(VRTAveragedSourceH) == int(cAbiValue(448))
     checkpoint "VRTAverageFilteredSourceH"
-    check sizeof(VRTAverageFilteredSourceH) == int(cAbiValue(447))
+    check sizeof(VRTAverageFilteredSourceH) == int(cAbiValue(449))
     checkpoint "VRTComplexSourceH"
-    check sizeof(VRTComplexSourceH) == int(cAbiValue(448))
+    check sizeof(VRTComplexSourceH) == int(cAbiValue(450))
     checkpoint "VRTDerivedRasterBandH"
-    check sizeof(VRTDerivedRasterBandH) == int(cAbiValue(449))
+    check sizeof(VRTDerivedRasterBandH) == int(cAbiValue(451))
     checkpoint "VRTDriverH"
-    check sizeof(VRTDriverH) == int(cAbiValue(450))
+    check sizeof(VRTDriverH) == int(cAbiValue(452))
     checkpoint "VRTFilteredSourceH"
-    check sizeof(VRTFilteredSourceH) == int(cAbiValue(451))
+    check sizeof(VRTFilteredSourceH) == int(cAbiValue(453))
     checkpoint "VRTFuncSourceH"
-    check sizeof(VRTFuncSourceH) == int(cAbiValue(452))
+    check sizeof(VRTFuncSourceH) == int(cAbiValue(454))
     checkpoint "VRTKernelFilteredSourceH"
-    check sizeof(VRTKernelFilteredSourceH) == int(cAbiValue(453))
+    check sizeof(VRTKernelFilteredSourceH) == int(cAbiValue(455))
     checkpoint "VRTRasterBandH"
-    check sizeof(VRTRasterBandH) == int(cAbiValue(454))
+    check sizeof(VRTRasterBandH) == int(cAbiValue(456))
     checkpoint "VRTRawRasterBandH"
-    check sizeof(VRTRawRasterBandH) == int(cAbiValue(455))
+    check sizeof(VRTRawRasterBandH) == int(cAbiValue(457))
     checkpoint "VRTSimpleSourceH"
-    check sizeof(VRTSimpleSourceH) == int(cAbiValue(456))
+    check sizeof(VRTSimpleSourceH) == int(cAbiValue(458))
     checkpoint "VRTSourceH"
-    check sizeof(VRTSourceH) == int(cAbiValue(457))
+    check sizeof(VRTSourceH) == int(cAbiValue(459))
     checkpoint "VRTWarpedDatasetH"
-    check sizeof(VRTWarpedDatasetH) == int(cAbiValue(458))
+    check sizeof(VRTWarpedDatasetH) == int(cAbiValue(460))
     checkpoint "VRTWarpedRasterBandH"
-    check sizeof(VRTWarpedRasterBandH) == int(cAbiValue(459))
+    check sizeof(VRTWarpedRasterBandH) == int(cAbiValue(461))
     checkpoint "VRTDatasetH"
-    check sizeof(VRTDatasetH) == int(cAbiValue(460))
+    check sizeof(VRTDatasetH) == int(cAbiValue(462))
     checkpoint "VRTSourcedRasterBandH"
-    check sizeof(VRTSourcedRasterBandH) == int(cAbiValue(461))
+    check sizeof(VRTSourcedRasterBandH) == int(cAbiValue(463))
     checkpoint "GDALAlgorithmArgType"
-    check sizeof(GDALAlgorithmArgType) == int(cAbiValue(462))
+    check sizeof(GDALAlgorithmArgType) == int(cAbiValue(464))
     checkpoint "GDALArgDatasetValueH"
-    check sizeof(GDALArgDatasetValueH) == int(cAbiValue(463))
+    check sizeof(GDALArgDatasetValueH) == int(cAbiValue(465))
     checkpoint "GDALAlgorithmArgH"
-    check sizeof(GDALAlgorithmArgH) == int(cAbiValue(464))
+    check sizeof(GDALAlgorithmArgH) == int(cAbiValue(466))
     checkpoint "GDALAlgorithmH"
-    check sizeof(GDALAlgorithmH) == int(cAbiValue(465))
+    check sizeof(GDALAlgorithmH) == int(cAbiValue(467))
     checkpoint "GDALAlgorithmRegistryH"
-    check sizeof(GDALAlgorithmRegistryH) == int(cAbiValue(466))
+    check sizeof(GDALAlgorithmRegistryH) == int(cAbiValue(468))
     checkpoint "GDALArgDatasetType"
-    check sizeof(GDALArgDatasetType) == int(cAbiValue(467))
+    check sizeof(GDALArgDatasetType) == int(cAbiValue(469))
     checkpoint "GDALGridFunction"
-    check sizeof(GDALGridFunction) == int(cAbiValue(468))
+    check sizeof(GDALGridFunction) == int(cAbiValue(470))
     checkpoint "GDALPansharpenAlg"
-    check sizeof(GDALPansharpenAlg) == int(cAbiValue(469))
+    check sizeof(GDALPansharpenAlg) == int(cAbiValue(471))
     checkpoint "GDALPansharpenOptions"
-    check sizeof(GDALPansharpenOptions) == int(cAbiValue(470))
+    check sizeof(GDALPansharpenOptions) == int(cAbiValue(472))
     block:
       var value: GDALPansharpenOptions
       checkpoint "GDALPansharpenOptions.ePansharpenAlg"
       check cast[int](unsafeAddr value.ePansharpenAlg) - cast[int](addr value) ==
-        int(cAbiValue(471))
+        int(cAbiValue(473))
     block:
       var value: GDALPansharpenOptions
       checkpoint "GDALPansharpenOptions.eResampleAlg"
       check cast[int](unsafeAddr value.eResampleAlg) - cast[int](addr value) ==
-        int(cAbiValue(472))
+        int(cAbiValue(474))
     block:
       var value: GDALPansharpenOptions
       checkpoint "GDALPansharpenOptions.nBitDepth"
       check cast[int](unsafeAddr value.nBitDepth) - cast[int](addr value) ==
-        int(cAbiValue(473))
+        int(cAbiValue(475))
     block:
       var value: GDALPansharpenOptions
       checkpoint "GDALPansharpenOptions.nWeightCount"
       check cast[int](unsafeAddr value.nWeightCount) - cast[int](addr value) ==
-        int(cAbiValue(474))
+        int(cAbiValue(476))
     block:
       var value: GDALPansharpenOptions
       checkpoint "GDALPansharpenOptions.padfWeights"
       check cast[int](unsafeAddr value.padfWeights) - cast[int](addr value) ==
-        int(cAbiValue(475))
+        int(cAbiValue(477))
     block:
       var value: GDALPansharpenOptions
       checkpoint "GDALPansharpenOptions.hPanchroBand"
       check cast[int](unsafeAddr value.hPanchroBand) - cast[int](addr value) ==
-        int(cAbiValue(476))
+        int(cAbiValue(478))
     block:
       var value: GDALPansharpenOptions
       checkpoint "GDALPansharpenOptions.nInputSpectralBands"
       check cast[int](unsafeAddr value.nInputSpectralBands) - cast[int](addr value) ==
-        int(cAbiValue(477))
+        int(cAbiValue(479))
     block:
       var value: GDALPansharpenOptions
       checkpoint "GDALPansharpenOptions.pahInputSpectralBands"
       check cast[int](unsafeAddr value.pahInputSpectralBands) - cast[int](addr value) ==
-        int(cAbiValue(478))
+        int(cAbiValue(480))
     block:
       var value: GDALPansharpenOptions
       checkpoint "GDALPansharpenOptions.nOutPansharpenedBands"
       check cast[int](unsafeAddr value.nOutPansharpenedBands) - cast[int](addr value) ==
-        int(cAbiValue(479))
+        int(cAbiValue(481))
     block:
       var value: GDALPansharpenOptions
       checkpoint "GDALPansharpenOptions.panOutPansharpenedBands"
       check cast[int](unsafeAddr value.panOutPansharpenedBands) - cast[int](addr value) ==
-        int(cAbiValue(480))
+        int(cAbiValue(482))
     block:
       var value: GDALPansharpenOptions
       checkpoint "GDALPansharpenOptions.bHasNoData"
       check cast[int](unsafeAddr value.bHasNoData) - cast[int](addr value) ==
-        int(cAbiValue(481))
+        int(cAbiValue(483))
     block:
       var value: GDALPansharpenOptions
       checkpoint "GDALPansharpenOptions.dfNoData"
       check cast[int](unsafeAddr value.dfNoData) - cast[int](addr value) ==
-        int(cAbiValue(482))
+        int(cAbiValue(484))
     block:
       var value: GDALPansharpenOptions
       checkpoint "GDALPansharpenOptions.nThreads"
       check cast[int](unsafeAddr value.nThreads) - cast[int](addr value) ==
-        int(cAbiValue(483))
+        int(cAbiValue(485))
     checkpoint "GDALPansharpenOperationH"
-    check sizeof(GDALPansharpenOperationH) == int(cAbiValue(484))
+    check sizeof(GDALPansharpenOperationH) == int(cAbiValue(486))
     checkpoint "GDALResampleAlg"
-    check sizeof(GDALResampleAlg) == int(cAbiValue(485))
+    check sizeof(GDALResampleAlg) == int(cAbiValue(487))
     checkpoint "GDALMaskFunc"
-    check sizeof(GDALMaskFunc) == int(cAbiValue(486))
+    check sizeof(GDALMaskFunc) == int(cAbiValue(488))
     checkpoint "GWKTieStrategy"
-    check sizeof(GWKTieStrategy) == int(cAbiValue(487))
+    check sizeof(GWKTieStrategy) == int(cAbiValue(489))
     checkpoint "GDALWarpOptions"
-    check sizeof(GDALWarpOptions) == int(cAbiValue(488))
+    check sizeof(GDALWarpOptions) == int(cAbiValue(490))
     block:
       var value: GDALWarpOptions
       checkpoint "GDALWarpOptions.papszWarpOptions"
       check cast[int](unsafeAddr value.papszWarpOptions) - cast[int](addr value) ==
-        int(cAbiValue(489))
+        int(cAbiValue(491))
     block:
       var value: GDALWarpOptions
       checkpoint "GDALWarpOptions.dfWarpMemoryLimit"
       check cast[int](unsafeAddr value.dfWarpMemoryLimit) - cast[int](addr value) ==
-        int(cAbiValue(490))
+        int(cAbiValue(492))
     block:
       var value: GDALWarpOptions
       checkpoint "GDALWarpOptions.eResampleAlg"
       check cast[int](unsafeAddr value.eResampleAlg) - cast[int](addr value) ==
-        int(cAbiValue(491))
+        int(cAbiValue(493))
     block:
       var value: GDALWarpOptions
       checkpoint "GDALWarpOptions.eWorkingDataType"
       check cast[int](unsafeAddr value.eWorkingDataType) - cast[int](addr value) ==
-        int(cAbiValue(492))
+        int(cAbiValue(494))
     block:
       var value: GDALWarpOptions
       checkpoint "GDALWarpOptions.hSrcDS"
       check cast[int](unsafeAddr value.hSrcDS) - cast[int](addr value) ==
-        int(cAbiValue(493))
+        int(cAbiValue(495))
     block:
       var value: GDALWarpOptions
       checkpoint "GDALWarpOptions.hDstDS"
       check cast[int](unsafeAddr value.hDstDS) - cast[int](addr value) ==
-        int(cAbiValue(494))
+        int(cAbiValue(496))
     block:
       var value: GDALWarpOptions
       checkpoint "GDALWarpOptions.nBandCount"
       check cast[int](unsafeAddr value.nBandCount) - cast[int](addr value) ==
-        int(cAbiValue(495))
+        int(cAbiValue(497))
     block:
       var value: GDALWarpOptions
       checkpoint "GDALWarpOptions.panSrcBands"
       check cast[int](unsafeAddr value.panSrcBands) - cast[int](addr value) ==
-        int(cAbiValue(496))
+        int(cAbiValue(498))
     block:
       var value: GDALWarpOptions
       checkpoint "GDALWarpOptions.panDstBands"
       check cast[int](unsafeAddr value.panDstBands) - cast[int](addr value) ==
-        int(cAbiValue(497))
+        int(cAbiValue(499))
     block:
       var value: GDALWarpOptions
       checkpoint "GDALWarpOptions.nSrcAlphaBand"
       check cast[int](unsafeAddr value.nSrcAlphaBand) - cast[int](addr value) ==
-        int(cAbiValue(498))
+        int(cAbiValue(500))
     block:
       var value: GDALWarpOptions
       checkpoint "GDALWarpOptions.nDstAlphaBand"
       check cast[int](unsafeAddr value.nDstAlphaBand) - cast[int](addr value) ==
-        int(cAbiValue(499))
+        int(cAbiValue(501))
     block:
       var value: GDALWarpOptions
       checkpoint "GDALWarpOptions.padfSrcNoDataReal"
       check cast[int](unsafeAddr value.padfSrcNoDataReal) - cast[int](addr value) ==
-        int(cAbiValue(500))
+        int(cAbiValue(502))
     block:
       var value: GDALWarpOptions
       checkpoint "GDALWarpOptions.padfSrcNoDataImag"
       check cast[int](unsafeAddr value.padfSrcNoDataImag) - cast[int](addr value) ==
-        int(cAbiValue(501))
+        int(cAbiValue(503))
     block:
       var value: GDALWarpOptions
       checkpoint "GDALWarpOptions.padfDstNoDataReal"
       check cast[int](unsafeAddr value.padfDstNoDataReal) - cast[int](addr value) ==
-        int(cAbiValue(502))
+        int(cAbiValue(504))
     block:
       var value: GDALWarpOptions
       checkpoint "GDALWarpOptions.padfDstNoDataImag"
       check cast[int](unsafeAddr value.padfDstNoDataImag) - cast[int](addr value) ==
-        int(cAbiValue(503))
+        int(cAbiValue(505))
     block:
       var value: GDALWarpOptions
       checkpoint "GDALWarpOptions.pfnProgress"
       check cast[int](unsafeAddr value.pfnProgress) - cast[int](addr value) ==
-        int(cAbiValue(504))
+        int(cAbiValue(506))
     block:
       var value: GDALWarpOptions
       checkpoint "GDALWarpOptions.pProgressArg"
       check cast[int](unsafeAddr value.pProgressArg) - cast[int](addr value) ==
-        int(cAbiValue(505))
+        int(cAbiValue(507))
     block:
       var value: GDALWarpOptions
       checkpoint "GDALWarpOptions.pfnTransformer"
       check cast[int](unsafeAddr value.pfnTransformer) - cast[int](addr value) ==
-        int(cAbiValue(506))
+        int(cAbiValue(508))
     block:
       var value: GDALWarpOptions
       checkpoint "GDALWarpOptions.pTransformerArg"
       check cast[int](unsafeAddr value.pTransformerArg) - cast[int](addr value) ==
-        int(cAbiValue(507))
+        int(cAbiValue(509))
     block:
       var value: GDALWarpOptions
       checkpoint "GDALWarpOptions.papfnSrcPerBandValidityMaskFunc"
       check cast[int](unsafeAddr value.papfnSrcPerBandValidityMaskFunc) -
-        cast[int](addr value) == int(cAbiValue(508))
+        cast[int](addr value) == int(cAbiValue(510))
     block:
       var value: GDALWarpOptions
       checkpoint "GDALWarpOptions.papSrcPerBandValidityMaskFuncArg"
       check cast[int](unsafeAddr value.papSrcPerBandValidityMaskFuncArg) -
-        cast[int](addr value) == int(cAbiValue(509))
+        cast[int](addr value) == int(cAbiValue(511))
     block:
       var value: GDALWarpOptions
       checkpoint "GDALWarpOptions.pfnSrcValidityMaskFunc"
       check cast[int](unsafeAddr value.pfnSrcValidityMaskFunc) - cast[int](addr value) ==
-        int(cAbiValue(510))
+        int(cAbiValue(512))
     block:
       var value: GDALWarpOptions
       checkpoint "GDALWarpOptions.pSrcValidityMaskFuncArg"
       check cast[int](unsafeAddr value.pSrcValidityMaskFuncArg) - cast[int](addr value) ==
-        int(cAbiValue(511))
+        int(cAbiValue(513))
     block:
       var value: GDALWarpOptions
       checkpoint "GDALWarpOptions.pfnSrcDensityMaskFunc"
       check cast[int](unsafeAddr value.pfnSrcDensityMaskFunc) - cast[int](addr value) ==
-        int(cAbiValue(512))
+        int(cAbiValue(514))
     block:
       var value: GDALWarpOptions
       checkpoint "GDALWarpOptions.pSrcDensityMaskFuncArg"
       check cast[int](unsafeAddr value.pSrcDensityMaskFuncArg) - cast[int](addr value) ==
-        int(cAbiValue(513))
+        int(cAbiValue(515))
     block:
       var value: GDALWarpOptions
       checkpoint "GDALWarpOptions.pfnDstDensityMaskFunc"
       check cast[int](unsafeAddr value.pfnDstDensityMaskFunc) - cast[int](addr value) ==
-        int(cAbiValue(514))
+        int(cAbiValue(516))
     block:
       var value: GDALWarpOptions
       checkpoint "GDALWarpOptions.pDstDensityMaskFuncArg"
       check cast[int](unsafeAddr value.pDstDensityMaskFuncArg) - cast[int](addr value) ==
-        int(cAbiValue(515))
+        int(cAbiValue(517))
     block:
       var value: GDALWarpOptions
       checkpoint "GDALWarpOptions.pfnDstValidityMaskFunc"
       check cast[int](unsafeAddr value.pfnDstValidityMaskFunc) - cast[int](addr value) ==
-        int(cAbiValue(516))
+        int(cAbiValue(518))
     block:
       var value: GDALWarpOptions
       checkpoint "GDALWarpOptions.pDstValidityMaskFuncArg"
       check cast[int](unsafeAddr value.pDstValidityMaskFuncArg) - cast[int](addr value) ==
-        int(cAbiValue(517))
+        int(cAbiValue(519))
     block:
       var value: GDALWarpOptions
       checkpoint "GDALWarpOptions.pfnPreWarpChunkProcessor"
       check cast[int](unsafeAddr value.pfnPreWarpChunkProcessor) - cast[int](addr value) ==
-        int(cAbiValue(518))
+        int(cAbiValue(520))
     block:
       var value: GDALWarpOptions
       checkpoint "GDALWarpOptions.pPreWarpProcessorArg"
       check cast[int](unsafeAddr value.pPreWarpProcessorArg) - cast[int](addr value) ==
-        int(cAbiValue(519))
+        int(cAbiValue(521))
     block:
       var value: GDALWarpOptions
       checkpoint "GDALWarpOptions.pfnPostWarpChunkProcessor"
       check cast[int](unsafeAddr value.pfnPostWarpChunkProcessor) - cast[int](addr value) ==
-        int(cAbiValue(520))
+        int(cAbiValue(522))
     block:
       var value: GDALWarpOptions
       checkpoint "GDALWarpOptions.pPostWarpProcessorArg"
       check cast[int](unsafeAddr value.pPostWarpProcessorArg) - cast[int](addr value) ==
-        int(cAbiValue(521))
+        int(cAbiValue(523))
     block:
       var value: GDALWarpOptions
       checkpoint "GDALWarpOptions.hCutline"
       check cast[int](unsafeAddr value.hCutline) - cast[int](addr value) ==
-        int(cAbiValue(522))
+        int(cAbiValue(524))
     block:
       var value: GDALWarpOptions
       checkpoint "GDALWarpOptions.dfCutlineBlendDist"
       check cast[int](unsafeAddr value.dfCutlineBlendDist) - cast[int](addr value) ==
-        int(cAbiValue(523))
+        int(cAbiValue(525))
     block:
       var value: GDALWarpOptions
       checkpoint "GDALWarpOptions.eTieStrategy"
       check cast[int](unsafeAddr value.eTieStrategy) - cast[int](addr value) ==
-        int(cAbiValue(524))
+        int(cAbiValue(526))
     checkpoint "GDALWarpOperationH"
-    check sizeof(GDALWarpOperationH) == int(cAbiValue(525))
+    check sizeof(GDALWarpOperationH) == int(cAbiValue(527))
     checkpoint "FilterFuncType"
-    check sizeof(FilterFuncType) == int(cAbiValue(526))
+    check sizeof(FilterFuncType) == int(cAbiValue(528))
     checkpoint "FilterFunc4ValuesType"
-    check sizeof(FilterFunc4ValuesType) == int(cAbiValue(527))
+    check sizeof(FilterFunc4ValuesType) == int(cAbiValue(529))
     checkpoint "GNMDirection"
-    check sizeof(GNMDirection) == int(cAbiValue(528))
+    check sizeof(GNMDirection) == int(cAbiValue(530))
     checkpoint "GNMGraphAlgorithmType"
-    check sizeof(GNMGraphAlgorithmType) == int(cAbiValue(529))
+    check sizeof(GNMGraphAlgorithmType) == int(cAbiValue(531))
     checkpoint "OGRGeocodingSessionH"
-    check sizeof(OGRGeocodingSessionH) == int(cAbiValue(530))
+    check sizeof(OGRGeocodingSessionH) == int(cAbiValue(532))
     checkpoint "OGRAxisOrientation"
-    check sizeof(OGRAxisOrientation) == int(cAbiValue(531))
+    check sizeof(OGRAxisOrientation) == int(cAbiValue(533))
     checkpoint "OSRAxisMappingStrategy"
-    check sizeof(OSRAxisMappingStrategy) == int(cAbiValue(532))
+    check sizeof(OSRAxisMappingStrategy) == int(cAbiValue(534))
     checkpoint "OSRCRSType"
-    check sizeof(OSRCRSType) == int(cAbiValue(533))
+    check sizeof(OSRCRSType) == int(cAbiValue(535))
     checkpoint "OSRCRSInfo"
-    check sizeof(OSRCRSInfo) == int(cAbiValue(534))
+    check sizeof(OSRCRSInfo) == int(cAbiValue(536))
     block:
       var value: OSRCRSInfo
       checkpoint "OSRCRSInfo.pszAuthName"
       check cast[int](unsafeAddr value.pszAuthName) - cast[int](addr value) ==
-        int(cAbiValue(535))
+        int(cAbiValue(537))
     block:
       var value: OSRCRSInfo
       checkpoint "OSRCRSInfo.pszCode"
       check cast[int](unsafeAddr value.pszCode) - cast[int](addr value) ==
-        int(cAbiValue(536))
+        int(cAbiValue(538))
     block:
       var value: OSRCRSInfo
       checkpoint "OSRCRSInfo.pszName"
       check cast[int](unsafeAddr value.pszName) - cast[int](addr value) ==
-        int(cAbiValue(537))
+        int(cAbiValue(539))
     block:
       var value: OSRCRSInfo
       checkpoint "OSRCRSInfo.eType"
       check cast[int](unsafeAddr value.eType) - cast[int](addr value) ==
-        int(cAbiValue(538))
+        int(cAbiValue(540))
     block:
       var value: OSRCRSInfo
       checkpoint "OSRCRSInfo.bDeprecated"
       check cast[int](unsafeAddr value.bDeprecated) - cast[int](addr value) ==
-        int(cAbiValue(539))
+        int(cAbiValue(541))
     block:
       var value: OSRCRSInfo
       checkpoint "OSRCRSInfo.bBboxValid"
       check cast[int](unsafeAddr value.bBboxValid) - cast[int](addr value) ==
-        int(cAbiValue(540))
+        int(cAbiValue(542))
     block:
       var value: OSRCRSInfo
       checkpoint "OSRCRSInfo.dfWestLongitudeDeg"
       check cast[int](unsafeAddr value.dfWestLongitudeDeg) - cast[int](addr value) ==
-        int(cAbiValue(541))
+        int(cAbiValue(543))
     block:
       var value: OSRCRSInfo
       checkpoint "OSRCRSInfo.dfSouthLatitudeDeg"
       check cast[int](unsafeAddr value.dfSouthLatitudeDeg) - cast[int](addr value) ==
-        int(cAbiValue(542))
+        int(cAbiValue(544))
     block:
       var value: OSRCRSInfo
       checkpoint "OSRCRSInfo.dfEastLongitudeDeg"
       check cast[int](unsafeAddr value.dfEastLongitudeDeg) - cast[int](addr value) ==
-        int(cAbiValue(543))
+        int(cAbiValue(545))
     block:
       var value: OSRCRSInfo
       checkpoint "OSRCRSInfo.dfNorthLatitudeDeg"
       check cast[int](unsafeAddr value.dfNorthLatitudeDeg) - cast[int](addr value) ==
-        int(cAbiValue(544))
+        int(cAbiValue(546))
     block:
       var value: OSRCRSInfo
       checkpoint "OSRCRSInfo.pszAreaName"
       check cast[int](unsafeAddr value.pszAreaName) - cast[int](addr value) ==
-        int(cAbiValue(545))
+        int(cAbiValue(547))
     block:
       var value: OSRCRSInfo
       checkpoint "OSRCRSInfo.pszProjectionMethod"
       check cast[int](unsafeAddr value.pszProjectionMethod) - cast[int](addr value) ==
-        int(cAbiValue(546))
+        int(cAbiValue(548))
     block:
       var value: OSRCRSInfo
       checkpoint "OSRCRSInfo.pszCelestialBodyName"
       check cast[int](unsafeAddr value.pszCelestialBodyName) - cast[int](addr value) ==
-        int(cAbiValue(547))
+        int(cAbiValue(549))
     checkpoint "C_CPLList"
-    check sizeof(C_CPLList) == int(cAbiValue(548))
+    check sizeof(C_CPLList) == int(cAbiValue(550))
     block:
       var value: C_CPLList
       checkpoint "struct _CPLList.pData"
       check cast[int](unsafeAddr value.pData) - cast[int](addr value) ==
-        int(cAbiValue(549))
+        int(cAbiValue(551))
     block:
       var value: C_CPLList
       checkpoint "struct _CPLList.psNext"
       check cast[int](unsafeAddr value.psNext) - cast[int](addr value) ==
-        int(cAbiValue(550))
+        int(cAbiValue(552))
     checkpoint "ArrowSchema"
-    check sizeof(ArrowSchema) == int(cAbiValue(551))
+    check sizeof(ArrowSchema) == int(cAbiValue(553))
     block:
       var value: ArrowSchema
       checkpoint "struct ArrowSchema.format"
       check cast[int](unsafeAddr value.format) - cast[int](addr value) ==
-        int(cAbiValue(552))
+        int(cAbiValue(554))
     block:
       var value: ArrowSchema
       checkpoint "struct ArrowSchema.name"
       check cast[int](unsafeAddr value.name) - cast[int](addr value) ==
-        int(cAbiValue(553))
+        int(cAbiValue(555))
     block:
       var value: ArrowSchema
       checkpoint "struct ArrowSchema.metadata"
       check cast[int](unsafeAddr value.metadata) - cast[int](addr value) ==
-        int(cAbiValue(554))
+        int(cAbiValue(556))
     block:
       var value: ArrowSchema
       checkpoint "struct ArrowSchema.flags"
       check cast[int](unsafeAddr value.flags) - cast[int](addr value) ==
-        int(cAbiValue(555))
+        int(cAbiValue(557))
     block:
       var value: ArrowSchema
       checkpoint "struct ArrowSchema.n_children"
       check cast[int](unsafeAddr value.n_children) - cast[int](addr value) ==
-        int(cAbiValue(556))
+        int(cAbiValue(558))
     block:
       var value: ArrowSchema
       checkpoint "struct ArrowSchema.children"
       check cast[int](unsafeAddr value.children) - cast[int](addr value) ==
-        int(cAbiValue(557))
+        int(cAbiValue(559))
     block:
       var value: ArrowSchema
       checkpoint "struct ArrowSchema.dictionary"
       check cast[int](unsafeAddr value.dictionary) - cast[int](addr value) ==
-        int(cAbiValue(558))
+        int(cAbiValue(560))
     block:
       var value: ArrowSchema
       checkpoint "struct ArrowSchema.release"
       check cast[int](unsafeAddr value.release) - cast[int](addr value) ==
-        int(cAbiValue(559))
+        int(cAbiValue(561))
     block:
       var value: ArrowSchema
       checkpoint "struct ArrowSchema.private_data"
       check cast[int](unsafeAddr value.private_data) - cast[int](addr value) ==
-        int(cAbiValue(560))
+        int(cAbiValue(562))
     checkpoint "ArrowArray"
-    check sizeof(ArrowArray) == int(cAbiValue(561))
+    check sizeof(ArrowArray) == int(cAbiValue(563))
     block:
       var value: ArrowArray
       checkpoint "struct ArrowArray.length"
       check cast[int](unsafeAddr value.length) - cast[int](addr value) ==
-        int(cAbiValue(562))
+        int(cAbiValue(564))
     block:
       var value: ArrowArray
       checkpoint "struct ArrowArray.null_count"
       check cast[int](unsafeAddr value.null_count) - cast[int](addr value) ==
-        int(cAbiValue(563))
+        int(cAbiValue(565))
     block:
       var value: ArrowArray
       checkpoint "struct ArrowArray.offset"
       check cast[int](unsafeAddr value.offset) - cast[int](addr value) ==
-        int(cAbiValue(564))
+        int(cAbiValue(566))
     block:
       var value: ArrowArray
       checkpoint "struct ArrowArray.n_buffers"
       check cast[int](unsafeAddr value.n_buffers) - cast[int](addr value) ==
-        int(cAbiValue(565))
+        int(cAbiValue(567))
     block:
       var value: ArrowArray
       checkpoint "struct ArrowArray.n_children"
       check cast[int](unsafeAddr value.n_children) - cast[int](addr value) ==
-        int(cAbiValue(566))
+        int(cAbiValue(568))
     block:
       var value: ArrowArray
       checkpoint "struct ArrowArray.buffers"
       check cast[int](unsafeAddr value.buffers) - cast[int](addr value) ==
-        int(cAbiValue(567))
+        int(cAbiValue(569))
     block:
       var value: ArrowArray
       checkpoint "struct ArrowArray.children"
       check cast[int](unsafeAddr value.children) - cast[int](addr value) ==
-        int(cAbiValue(568))
+        int(cAbiValue(570))
     block:
       var value: ArrowArray
       checkpoint "struct ArrowArray.dictionary"
       check cast[int](unsafeAddr value.dictionary) - cast[int](addr value) ==
-        int(cAbiValue(569))
+        int(cAbiValue(571))
     block:
       var value: ArrowArray
       checkpoint "struct ArrowArray.release"
       check cast[int](unsafeAddr value.release) - cast[int](addr value) ==
-        int(cAbiValue(570))
+        int(cAbiValue(572))
     block:
       var value: ArrowArray
       checkpoint "struct ArrowArray.private_data"
       check cast[int](unsafeAddr value.private_data) - cast[int](addr value) ==
-        int(cAbiValue(571))
+        int(cAbiValue(573))
     checkpoint "ArrowArrayStream"
-    check sizeof(ArrowArrayStream) == int(cAbiValue(572))
+    check sizeof(ArrowArrayStream) == int(cAbiValue(574))
     block:
       var value: ArrowArrayStream
       checkpoint "struct ArrowArrayStream.get_schema"
       check cast[int](unsafeAddr value.get_schema) - cast[int](addr value) ==
-        int(cAbiValue(573))
+        int(cAbiValue(575))
     block:
       var value: ArrowArrayStream
       checkpoint "struct ArrowArrayStream.get_next"
       check cast[int](unsafeAddr value.get_next) - cast[int](addr value) ==
-        int(cAbiValue(574))
+        int(cAbiValue(576))
     block:
       var value: ArrowArrayStream
       checkpoint "struct ArrowArrayStream.get_last_error"
       check cast[int](unsafeAddr value.get_last_error) - cast[int](addr value) ==
-        int(cAbiValue(575))
+        int(cAbiValue(577))
     block:
       var value: ArrowArrayStream
       checkpoint "struct ArrowArrayStream.release"
       check cast[int](unsafeAddr value.release) - cast[int](addr value) ==
-        int(cAbiValue(576))
+        int(cAbiValue(578))
     block:
       var value: ArrowArrayStream
       checkpoint "struct ArrowArrayStream.private_data"
       check cast[int](unsafeAddr value.private_data) - cast[int](addr value) ==
-        int(cAbiValue(577))
+        int(cAbiValue(579))

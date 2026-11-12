@@ -22,9 +22,24 @@ if include is None:
 manifest = json.loads(Path('src/ngis/gdal/bindings.json').read_text())
 source = Path('src/ngis/gdal/macros.nim').read_text()
 implemented = set(re.findall(r'(?m)^\s*(?:proc|func|template)\s+(\w+)\*', source))
-annotations = re.compile(r'^(?:CPL_(?:PRINT_FUNC_FORMAT|SCAN_FUNC_FORMAT|FORMAT_STRING|SCANF_FORMAT_STRING|STATIC_ASSERT.*|WARN_DEPRECATED|DISALLOW_COPY_ASSIGN|REINTERPRET_CAST|STATIC_CAST|UNLIKELY)|UNREFERENCED_PARAM|__has_attribute)$')
-idioms = re.compile(r'^(?:OGR_FOR_EACH_FEATURE_(?:BEGIN|END)|CPL_ARRAYSIZE|CPLAssert(?:AlwaysEval)?|VALIDATE_POINTER[01]|CPLDebug.*|CPLErrorOnce|VSIDebug[1-4])$')
-cpp = re.compile(r'^(?:GDAL_DEFINE_.*|SRCVAL|DB2_V72_.*|CPL(?:Lock|Mutex)Holder.*)$')
+# Each exclusion is reviewed individually; new names must fail the inventory gate.
+annotations = {
+    'CPL_PRINT_FUNC_FORMAT', 'CPL_SCAN_FUNC_FORMAT', 'CPL_FORMAT_STRING',
+    'CPL_SCANF_FORMAT_STRING', 'CPL_STATIC_ASSERT', 'CPL_STATIC_ASSERT_IF_AVAILABLE',
+    'CPL_WARN_DEPRECATED', 'CPL_DISALLOW_COPY_ASSIGN', 'CPL_REINTERPRET_CAST',
+    'CPL_STATIC_CAST', 'CPL_UNLIKELY', 'UNREFERENCED_PARAM', '__has_attribute',
+}
+control_flow = {'OGR_FOR_EACH_FEATURE_BEGIN', 'OGR_FOR_EACH_FEATURE_END',
+                'VALIDATE_POINTER0', 'VALIDATE_POINTER1'}
+internal = {
+    'CPLDebugOnce', 'CPLErrorOnce', 'VSIDebug1', 'VSIDebug2', 'VSIDebug3', 'VSIDebug4',
+    'CPLLockHolderD', 'CPLLockHolderOptionalLockD', 'CPLMutexHolderD',
+    'CPLMutexHolderExD', 'CPLMutexHolderOptionalLockD', 'GDAL_DEFINE_ARITHOP',
+    'GDAL_DEFINE_COMPARISON', 'GDAL_DEFINE_CONVERSION', 'SRCVAL',
+    'DB2_V72_FIX_BYTE_ORDER', 'DB2_V72_UNFIX_BYTE_ORDER',
+}
+# These are exported functions when the special WITHOUT_CPLDEBUG switch is absent.
+native_functions = {'CPLDebug', 'CPLDebugProgress'}
 macros = defaultdict(set)
 for header in manifest['headers']:
     path = include / header
@@ -35,12 +50,16 @@ for header in manifest['headers']:
 items = {}
 for name, headers in sorted(macros.items()):
     category = ('implemented' if name in implemented else
-                'compiler_annotation_or_cast' if annotations.match(name) else
-                'nim_idiom_or_control_flow' if idioms.match(name) else
-                'cpp_or_internal' if cpp.match(name) else 'unimplemented')
+                'native_function' if name in native_functions else
+                'compiler_annotation_or_cast' if name in annotations else
+                'control_flow' if name in control_flow else
+                'cpp_or_internal' if name in internal else 'unimplemented')
     items[name] = {'category': category, 'headers': sorted(headers)}
 result = {'scope': 'Function-like definitions in listed headers, including inactive preprocessor branches; object-like macros are in bindings.json.', 'macros': items}
 args.output.write_text(json.dumps(result, indent=2) + '\n')
 from collections import Counter
 print(dict(Counter(item['category'] for item in items.values())))
 print('Unimplemented:', ', '.join(name for name, item in items.items() if item['category'] == 'unimplemented'))
+
+if any(item['category'] == 'unimplemented' for item in items.values()):
+    raise SystemExit(1)

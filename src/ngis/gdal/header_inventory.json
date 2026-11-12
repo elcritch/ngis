@@ -1,0 +1,417 @@
+{
+  "gdal_version": "3.13.3",
+  "headers": {
+    "cpl_atomic_ops.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "cpl_auto_close.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "cpl_compressor.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "cpl_config.h": {
+      "category": "configuration",
+      "reason": "Generated platform and build configuration; not an independent API surface."
+    },
+    "cpl_config_extras.h": {
+      "category": "configuration",
+      "reason": "Generated platform and build configuration; not an independent API surface."
+    },
+    "cpl_conv.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "cpl_csv.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "cpl_error.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "cpl_float.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "cpl_hash_set.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "cpl_http.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "cpl_json.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "cpl_list.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "cpl_minixml.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "cpl_multiproc.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "cpl_odbc.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "cpl_port.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "cpl_progress.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "cpl_quad_tree.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "cpl_spawn.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "cpl_string.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "cpl_time.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "cpl_virtualmem.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "cpl_vsi.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "cpl_vsi_error.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "cpl_vsi_virtual.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "cplkeywordparser.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "gdal.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "gdal_adbc.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "gdal_alg.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "gdal_alg_priv.h": {
+      "category": "private",
+      "reason": "Private implementation or plugin interface; declarations are implementation-specific or documentation-suppressed."
+    },
+    "gdal_asyncreader.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "gdal_colortable.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "gdal_computedrasterband.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "gdal_cpp_functions.h": {
+      "category": "private",
+      "reason": "Private implementation or plugin interface; declarations are implementation-specific or documentation-suppressed."
+    },
+    "gdal_csv.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "gdal_dataset.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "gdal_defaultoverviews.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "gdal_driver.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "gdal_drivermanager.h": {
+      "category": "cpp_internal",
+      "reason": "C++ driver implementation interfaces; exported C-linkage helpers use C++ objects or are documentation-suppressed, not standalone public C API."
+    },
+    "gdal_frmts.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "gdal_fwd.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "gdal_gcp.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "gdal_geotransform.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "gdal_majorobject.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "gdal_maskbands.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "gdal_mdreader.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "gdal_mem.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "gdal_minmax_element.hpp": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "gdal_multidim.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "gdal_multidim_cpp.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "gdal_multidomainmetadata.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "gdal_openinfo.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "gdal_pam.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "gdal_pam_multidim.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "gdal_priv.h": {
+      "category": "private",
+      "reason": "Private implementation or plugin interface; declarations are implementation-specific or documentation-suppressed."
+    },
+    "gdal_priv_templates.hpp": {
+      "category": "private",
+      "reason": "Private implementation or plugin interface; declarations are implementation-specific or documentation-suppressed."
+    },
+    "gdal_proxy.h": {
+      "category": "private",
+      "reason": "Private implementation or plugin interface; declarations are implementation-specific or documentation-suppressed."
+    },
+    "gdal_raster_cpp.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "gdal_rasterband.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "gdal_rasterblock.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "gdal_rat.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "gdal_relationship.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "gdal_simplesurf.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "gdal_thread_pool.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "gdal_typetraits.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "gdal_utils.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "gdal_vector_cpp.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "gdal_version.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "gdal_vrt.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "gdalalgorithm.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "gdalalgorithm_c.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "gdalalgorithm_cpp.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "gdalcachedpixelaccessor.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "gdalgeorefpamdataset.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "gdalgrid.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "gdalgrid_priv.h": {
+      "category": "private",
+      "reason": "Private implementation or plugin interface; declarations are implementation-specific or documentation-suppressed."
+    },
+    "gdaljp2abstractdataset.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "gdaljp2metadata.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "gdalpansharpen.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "gdalsubdatasetinfo.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "gdalwarper.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "geoheif.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "gnm.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "gnm_api.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "gnmgraph.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "memdataset.h": {
+      "category": "cpp_internal",
+      "reason": "C++ driver implementation interfaces; exported C-linkage helpers use C++ objects or are documentation-suppressed, not standalone public C API."
+    },
+    "ogr_api.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "ogr_core.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "ogr_feature.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "ogr_featurestyle.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "ogr_geocoding.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "ogr_geomcoordinateprecision.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "ogr_geometry.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "ogr_p.h": {
+      "category": "private",
+      "reason": "Private implementation or plugin interface; declarations are implementation-specific or documentation-suppressed."
+    },
+    "ogr_recordbatch.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "ogr_refcountedptr.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "ogr_spatialref.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "ogr_srs_api.h": {
+      "category": "public_c",
+      "reason": "Included in the GDAL public C header surface and audited for active declarations."
+    },
+    "ogr_swq.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "ogrsf_frmts.h": {
+      "category": "cpp_internal",
+      "reason": "C++ driver implementation interfaces; exported C-linkage helpers use C++ objects or are documentation-suppressed, not standalone public C API."
+    },
+    "rawdataset.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    },
+    "vrtdataset.h": {
+      "category": "cpp",
+      "reason": "C++ classes, templates or C++ helper declarations; no standalone public C API."
+    }
+  }
+}

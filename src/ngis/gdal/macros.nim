@@ -82,16 +82,44 @@ template wkbSetM*(x: untyped): untyped =
   OGR_GT_SetM(x)
 
 # Byte-oriented pointer helpers support the unaligned addresses accepted by C.
-func CPL_SWAP16*(x: uint16): uint16 =
-  (x shl 8) or (x shr 8)
+template CPL_SWAP16*(x: untyped): untyped =
+  cast[uint16]((uint32(cast[uint16](x)) shl 8) or (uint32(cast[uint16](x)) shr 8))
 
-func CPL_SWAP32*(x: uint32): uint32 =
+func swap32(x: uint32): uint32 =
   ((x and 0xff'u32) shl 24) or ((x and 0xff00'u32) shl 8) or ((x shr 8) and 0xff00'u32) or
     (x shr 24)
 
-func CPL_SWAP64*(x: uint64): uint64 =
-  (uint64(CPL_SWAP32(uint32(x and 0xffff_ffff'u64))) shl 32) or
-    uint64(CPL_SWAP32(uint32(x shr 32)))
+func swap64(x: uint64): uint64 =
+  (uint64(swap32(uint32(x and 0xffff_ffff'u64))) shl 32) or
+    uint64(swap32(uint32(x shr 32)))
+
+template CPL_SWAP32*(x: untyped): untyped =
+  swap32(cast[uint32](x))
+
+template CPL_SWAP64*(x: untyped): untyped =
+  swap64(cast[uint64](x))
+
+template CPL_ARRAYSIZE*(a: untyped): untyped =
+  (sizeof(a) div sizeof(a[0]))
+
+template CPLAssert*(expr: untyped) =
+  when defined(debug):
+    if not (expr):
+      c_CPLAssert(
+        astToStr(expr),
+        instantiationInfo().filename.cstring,
+        cint(instantiationInfo().line),
+      )
+
+template CPLAssertAlwaysEval*(expr: untyped) =
+  when defined(debug):
+    CPLAssert(expr)
+  else:
+    discard expr
+
+template CPLDebugOnly*(args: varargs[untyped]) =
+  when defined(debug) or defined(gdalDebug):
+    CPLDebug(args)
 
 proc swapBytes(p: pointer, n: int) =
   let bytes = cast[ptr UncheckedArray[byte]](p)
@@ -118,10 +146,10 @@ when cpuEndian == littleEndian:
     x
 
   template CPL_MSBWORD16*(x: untyped): untyped =
-    CPL_SWAP16(uint16(x))
+    CPL_SWAP16(x)
 
   template CPL_MSBWORD32*(x: untyped): untyped =
-    CPL_SWAP32(uint32(x))
+    CPL_SWAP32(x)
 
   template CPL_LSBPTR16*(p: untyped) =
     discard
@@ -149,10 +177,10 @@ else:
     x
 
   template CPL_LSBWORD16*(x: untyped): untyped =
-    CPL_SWAP16(uint16(x))
+    CPL_SWAP16(x)
 
   template CPL_LSBWORD32*(x: untyped): untyped =
-    CPL_SWAP32(uint32(x))
+    CPL_SWAP32(x)
 
   template CPL_MSBPTR16*(p: untyped) =
     discard
@@ -172,12 +200,20 @@ else:
   template CPL_LSBPTR64*(p: untyped) =
     CPL_SWAP64PTR(p)
 
-func CPL_LSBUINT16PTR*(p: pointer): uint16 =
-  let b = cast[ptr UncheckedArray[byte]](p)
-  uint16(b[0]) or (uint16(b[1]) shl 8)
-func CPL_LSBUINT32PTR*(p: pointer): uint32 =
-  let b = cast[ptr UncheckedArray[byte]](p)
-  uint32(b[0]) or (uint32(b[1]) shl 8) or (uint32(b[2]) shl 16) or (uint32(b[3]) shl 24)
+template CPL_LSBUINT16PTR*(p: untyped): untyped =
+  (
+    uint16(cast[ptr UncheckedArray[byte]](p)[0]) or
+    (uint16(cast[ptr UncheckedArray[byte]](p)[1]) shl 8)
+  )
+
+template CPL_LSBUINT32PTR*(p: untyped): untyped =
+  (
+    uint32(cast[ptr UncheckedArray[byte]](p)[0]) or
+    (uint32(cast[ptr UncheckedArray[byte]](p)[1]) shl 8) or
+    (uint32(cast[ptr UncheckedArray[byte]](p)[2]) shl 16) or
+    (uint32(cast[ptr UncheckedArray[byte]](p)[3]) shl 24)
+  )
+
 template CPL_LSBSINT16PTR*(p: untyped): untyped =
   cast[int16](CPL_LSBUINT16PTR(p))
 
@@ -236,13 +272,13 @@ template STARTS_WITH_CI*(a, b: untyped): untyped =
 
 import std/math
 template CPLIsNan*(x: untyped): untyped =
-  (classify(x) == fcNan)
+  (classify(float64(x)) == fcNan)
 
 template CPLIsInf*(x: untyped): untyped =
-  (classify(x) in {fcInf, fcNegInf})
+  (classify(float64(x)) in {fcInf, fcNegInf})
 
 template CPLIsFinite*(x: untyped): untyped =
-  (classify(x) notin {fcNan, fcInf, fcNegInf})
+  (classify(float64(x)) notin {fcNan, fcInf, fcNegInf})
 
 template CPLIsEqual*(x, y: untyped): untyped =
   (abs(x - y) < 0.0000000000001)

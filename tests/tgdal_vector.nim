@@ -98,3 +98,17 @@ suite "Owned vector objects":
     let point = newPoint(1.0, 2.0)
     point.transform(conversion)
     check abs(point.x - 1.0) < 1e-10
+
+  test "geometry retains a CRS after its original owner closes":
+    let reference = newSpatialReference("EPSG:4326")
+    let point = newPoint(1, 2)
+    point.setSpatialReference(reference)
+    reference.close()
+    reference.close()
+    expect ValueError:
+      discard reference.rawHandle
+    let retained = point.spatialReference
+    check OSRIsGeographic(retained.rawHandle) != 0
+    check retained.toWkt.len > 0
+    point.close()
+    check OSRIsGeographic(retained.rawHandle) != 0

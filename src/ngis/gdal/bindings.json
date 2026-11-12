@@ -1,9 +1,15 @@
 {
   "counts": {
     "constants": 937,
-    "functions": 2261,
+    "functions": 2257,
     "types": 310
   },
+  "excluded_cpp_functions": [
+    "CPLGreatestCommonDivisor",
+    "CPLParseRFC822DateTime",
+    "CPLUnixTimeToYMDHMS",
+    "CPLYMDHMSToUnixTime"
+  ],
   "functions": {
     "CPLAcquireLock": {
       "header": "cpl_multiproc.h",
@@ -625,11 +631,6 @@
       "signature": "const char *(const CPLXMLNode *, const char *, const char *)",
       "symbol": "CPLGetXMLValue"
     },
-    "CPLGreatestCommonDivisor": {
-      "header": "cpl_float.h",
-      "signature": "double (double, double)",
-      "symbol": "CPLGreatestCommonDivisor"
-    },
     "CPLHTTPCleanup": {
       "header": "cpl_http.h",
       "signature": "void (void)",
@@ -929,11 +930,6 @@
       "header": "cpl_string.h",
       "signature": "const char *(const char *, char **, char)",
       "symbol": "CPLParseNameValueSep"
-    },
-    "CPLParseRFC822DateTime": {
-      "header": "cpl_time.h",
-      "signature": "int (const char *, int *, int *, int *, int *, int *, int *, int *, int *)",
-      "symbol": "CPLParseRFC822DateTime"
     },
     "CPLParseXMLFile": {
       "header": "cpl_minixml.h",
@@ -1470,11 +1466,6 @@
       "signature": "char *(const char *, int *, int)",
       "symbol": "CPLUnescapeString"
     },
-    "CPLUnixTimeToYMDHMS": {
-      "header": "cpl_time.h",
-      "signature": "struct tm *(GIntBig, struct tm *)",
-      "symbol": "CPLUnixTimeToYMDHMS"
-    },
     "CPLUnlinkTree": {
       "header": "cpl_conv.h",
       "signature": "int (const char *)",
@@ -1589,11 +1580,6 @@
       "header": "cpl_minixml.h",
       "signature": "size_t (const CPLXMLNode *)",
       "symbol": "CPLXMLNodeGetRAMUsageEstimate"
-    },
-    "CPLYMDHMSToUnixTime": {
-      "header": "cpl_time.h",
-      "signature": "GIntBig (const struct tm *)",
-      "symbol": "CPLYMDHMSToUnixTime"
     },
     "CPLZLibDeflate": {
       "header": "cpl_conv.h",

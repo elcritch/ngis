@@ -11,6 +11,7 @@ import sys
 import tempfile
 
 from clang import cindex as ci
+from clang_support import configure_clang
 import generate_bindings as bindings
 
 
@@ -21,11 +22,7 @@ def main():
     args = parser.parse_args()
     include = args.include or pathlib.Path(subprocess.check_output(
         ['gdal-config', '--prefix'], text=True).strip()) / 'include'
-    if args.libclang:
-        ci.Config.set_library_file(args.libclang)
-    elif sys.platform == 'darwin':
-        ci.Config.set_library_file('/Library/Developer/CommandLineTools/usr/lib/libclang.dylib')
-    ci.Config.set_compatibility_check(False)
+    configure_clang(args.libclang)
     flags = ['-x', 'c', '-std=c11', '-I' + str(include)]
     if sys.platform == 'darwin':
         flags += ['-isysroot', subprocess.check_output(['xcrun', '--show-sdk-path'], text=True).strip()]
@@ -37,10 +34,11 @@ def main():
         if errors:
             raise RuntimeError('\n'.join(errors))
         def public(node):
-            return node.location.file and pathlib.Path(node.location.file.name).parent.resolve() == include.resolve()
+            return node.location.file and pathlib.Path(node.location.file.name).parent.resolve() == include.resolve() and pathlib.Path(node.location.file.name).name in bindings.HEADERS
         nodes = [n for n in tu.cursor.get_children() if public(n)]
         binding_text = (bindings.ROOT / 'src/ngis/gdal/bindings.nim').read_text()
-        nim_types = set(re.findall(r'^(?:  |type )(\w+)\*(?:\s|\{|=)', binding_text, re.M))
+        binding_text += '\n' + (bindings.ROOT / 'src/ngis/gdal/systemtypes.nim').read_text()
+        nim_types = set(re.findall(r'^(?:\s{2,}|type )(\w+)\*(?:\s|\{|=)', binding_text, re.M))
         incomplete = set(re.findall(r'^(?:  |type )(\w+)\* \{\.[^\n]*incompleteStruct', binding_text, re.M))
         aliases = dict(re.findall(r'^(?:  |type )(\w+)\* = (\w+)\s*$', binding_text, re.M))
         while True:

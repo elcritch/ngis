@@ -2,13 +2,13 @@
   "scope": "Function-like definitions in listed headers, including inactive preprocessor branches; object-like macros are in bindings.json.",
   "macros": {
     "CPLAssert": {
-      "category": "nim_idiom_or_control_flow",
+      "category": "implemented",
       "headers": [
         "cpl_error.h"
       ]
     },
     "CPLAssertAlwaysEval": {
-      "category": "nim_idiom_or_control_flow",
+      "category": "implemented",
       "headers": [
         "cpl_error.h"
       ]
@@ -26,31 +26,31 @@
       ]
     },
     "CPLDebug": {
-      "category": "nim_idiom_or_control_flow",
+      "category": "native_function",
       "headers": [
         "cpl_error.h"
       ]
     },
     "CPLDebugOnce": {
-      "category": "nim_idiom_or_control_flow",
+      "category": "cpp_or_internal",
       "headers": [
         "cpl_error.h"
       ]
     },
     "CPLDebugOnly": {
-      "category": "nim_idiom_or_control_flow",
+      "category": "implemented",
       "headers": [
         "cpl_error.h"
       ]
     },
     "CPLDebugProgress": {
-      "category": "nim_idiom_or_control_flow",
+      "category": "native_function",
       "headers": [
         "cpl_error.h"
       ]
     },
     "CPLErrorOnce": {
-      "category": "nim_idiom_or_control_flow",
+      "category": "cpp_or_internal",
       "headers": [
         "cpl_error.h"
       ]
@@ -116,7 +116,7 @@
       ]
     },
     "CPL_ARRAYSIZE": {
-      "category": "nim_idiom_or_control_flow",
+      "category": "implemented",
       "headers": [
         "cpl_port.h"
       ]
@@ -417,13 +417,13 @@
       ]
     },
     "OGR_FOR_EACH_FEATURE_BEGIN": {
-      "category": "nim_idiom_or_control_flow",
+      "category": "control_flow",
       "headers": [
         "ogr_api.h"
       ]
     },
     "OGR_FOR_EACH_FEATURE_END": {
-      "category": "nim_idiom_or_control_flow",
+      "category": "control_flow",
       "headers": [
         "ogr_api.h"
       ]
@@ -465,37 +465,37 @@
       ]
     },
     "VALIDATE_POINTER0": {
-      "category": "nim_idiom_or_control_flow",
+      "category": "control_flow",
       "headers": [
         "cpl_error.h"
       ]
     },
     "VALIDATE_POINTER1": {
-      "category": "nim_idiom_or_control_flow",
+      "category": "control_flow",
       "headers": [
         "cpl_error.h"
       ]
     },
     "VSIDebug1": {
-      "category": "nim_idiom_or_control_flow",
+      "category": "cpp_or_internal",
       "headers": [
         "cpl_vsi.h"
       ]
     },
     "VSIDebug2": {
-      "category": "nim_idiom_or_control_flow",
+      "category": "cpp_or_internal",
       "headers": [
         "cpl_vsi.h"
       ]
     },
     "VSIDebug3": {
-      "category": "nim_idiom_or_control_flow",
+      "category": "cpp_or_internal",
       "headers": [
         "cpl_vsi.h"
       ]
     },
     "VSIDebug4": {
-      "category": "nim_idiom_or_control_flow",
+      "category": "cpp_or_internal",
       "headers": [
         "cpl_vsi.h"
       ]

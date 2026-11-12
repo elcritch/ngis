@@ -62,6 +62,10 @@ suite "GDAL C macro equivalents":
     check CPLAtomicDec(addr value) == 0
 
   test "byte swaps and unaligned endian reads":
+    check CPL_SWAP16(-1) == 0xffff'u16
+    check CPL_SWAP16(0x123456) == 0x5634'u16
+    check CPL_SWAP32(-2) == 0xfeffffff'u32
+    check CPL_SWAP64(-2) == 0xfeffffffffffffff'u64
     check CPL_SWAP16(0x1234'u16) == 0x3412'u16
     check CPL_SWAP32(0x12345678'u32) == cSwap32(0x12345678'u32)
     check CPL_SWAP64(0x0123456789abcdef'u64) == 0xefcdab8967452301'u64
@@ -96,3 +100,45 @@ suite "GDAL C macro equivalents":
     let copy = VSI_STRDUP_VERBOSE("hello")
     check $copy == "hello"
     CPLFree(copy)
+
+  test "macro evaluation, array size, and float overloads":
+    var calls = 0
+    proc nextValue(): int =
+      inc calls
+      0x1234
+
+    check CPL_SWAP16(nextValue()) == 0x3412'u16
+    check calls == 2
+    calls = 0
+    check CPL_SWAP32(nextValue()) == 0x34120000'u32
+    check calls == 1
+    var bytes = [0xff'u8, 0x80, 0x00, 0x80]
+    proc nextPointer(): pointer =
+      inc calls
+      addr bytes[0]
+
+    calls = 0
+    check CPL_LSBUINT32PTR(nextPointer()) == 0x800080ff'u32
+    check calls == 4
+    check CPL_LSBSINT16PTR(addr bytes[0]) == cast[int16](0x80ff'u16)
+    check CPL_LSBSINT32PTR(addr bytes[0]) == cast[int32](0x800080ff'u32)
+    check CPL_ARRAYSIZE(bytes) == 4
+    check CPLIsNan(NaN.float32)
+    check CPLIsInf(Inf.float32)
+    check CPLIsFinite(1.0'f32)
+    calls = 0
+    CPL_LSBPTR16(nextPointer())
+    when cpuEndian == littleEndian:
+      check calls == 0
+    else:
+      check calls == 1
+    calls = 0
+    CPLAssertAlwaysEval(nextValue() != 0)
+    check calls == 1
+    calls = 0
+    CPLAssert(nextValue() != 0)
+    when defined(debug):
+      check calls == 1
+    else:
+      check calls == 0
+    CPLDebugOnly("ngis", "%d", 1.cint)

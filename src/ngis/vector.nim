@@ -48,6 +48,34 @@ proc rawHandle*(l: Layer): OGRLayerH =
   discard l.dataset.rawHandle
   l.handle
 
+proc close*(g: Geometry) =
+  if g != nil and g.handle != nil:
+    let handle = g.handle
+    g.handle = nil
+    OGR_G_DestroyGeometry(handle)
+
+proc close*(f: Feature) =
+  if f != nil and f.handle != nil:
+    let handle = f.handle
+    f.handle = nil
+    OGR_F_Destroy(handle)
+
+proc setSpatialReference*(g: Geometry, reference: SpatialReference) =
+  ## Assigns a CRS without changing coordinates. GDAL retains its own reference.
+  OGR_G_AssignSpatialReference(g.rawHandle, reference.rawHandle)
+
+proc spatialReference*(g: Geometry): SpatialReference =
+  let handle = OGR_G_GetSpatialReference(g.rawHandle)
+  if handle == nil:
+    raise newException(ValueError, "geometry has no spatial reference")
+  adoptSpatialReference(OSRClone(handle))
+
+proc spatialReference*(layer: Layer): SpatialReference =
+  let handle = OGR_L_GetSpatialRef(layer.rawHandle)
+  if handle == nil:
+    raise newException(ValueError, "layer has no spatial reference")
+  adoptSpatialReference(OSRClone(handle))
+
 proc wrapGeometry(h: OGRGeometryH): Geometry =
   if h == nil:
     raise newException(ValueError, "could not create geometry")
@@ -59,6 +87,14 @@ proc wrapFeature(h: OGRFeatureH): Feature =
     raise newException(IOError, "could not create feature")
   new(result)
   result.handle = h
+
+proc adoptGeometry*(handle: OGRGeometryH): Geometry =
+  ## Takes ownership of a native geometry. Do not destroy the handle separately.
+  wrapGeometry(handle)
+
+proc adoptFeature*(handle: OGRFeatureH): Feature =
+  ## Takes ownership of a native feature. Do not destroy the handle separately.
+  wrapFeature(handle)
 
 proc newGeometry*(kind: OGRwkbGeometryType): Geometry =
   wrapGeometry(OGR_G_CreateGeometry(kind))
