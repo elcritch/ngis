@@ -1,12 +1,4 @@
-## GDAL raster, vector, spatial-reference, and utility APIs with automatic cleanup.
-## Import `ngis/gdal` directly when only the raw C ABI is needed.
-import
-  ngis/[
-    gdal, datasets, drivers, raster, rasterextras, vector, vectorextras, spatialrefs,
-    schemadomains, multidim, operations, utilities, algorithms, asyncio, advanced, cpl,
-    vsi, memory, plugins, progress, processes, networks,
-  ]
-export
-  gdal, datasets, drivers, raster, rasterextras, vector, vectorextras, spatialrefs,
-  schemadomains, multidim, operations, utilities, algorithms, asyncio, advanced, cpl,
-  vsi, memory, plugins, progress, processes, networks
+## GDAL workflows with automatic cleanup, plus the complete raw C API.
+## Import `ngis/api` for the high-level API, or `ngis/gdal` for raw bindings.
+import ngis/[api, gdal]
+export api, gdal

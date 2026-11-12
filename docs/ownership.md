@@ -2,6 +2,8 @@
 
 The Nim wrappers manage native handles automatically. Most owners share their native resource when copied; `close` releases it once and invalidates all aliases of that owner. Repeated closes are harmless. Use `close` for deterministic release, or let the last owner release the resource. Check each module's API for the few wrappers with different contracts.
 
+`RasterGrid`, `ArrayData`, coordinates, bounds, field specifications, and field values are Nim values. They own their strings and sequences independently of native resources. Reading feature values, metadata, or a cloned geometry component does not leave a borrowed native pointer in these results. The synchronous processing helpers retain progress closures through the native call, capture callback exceptions, and release the closure when the operation returns.
+
 A `rawHandle` is borrowed: keep the corresponding owner alive and open while using it, and do not free or retain it beyond that lifetime. An `adopt` factory takes ownership of an independently owned handle and will call its matching GDAL release function. Do not adopt borrowed handles or adopt the same handle twice. The raw C API retains GDAL's original ownership contracts.
 
 Bands and layers borrow their dataset: closing the dataset invalidates those views. XML nodes retain their tree but become invalid when it closes or a tree mutation invalidates nodes; reacquire them after mutation. Algorithm arguments retain their algorithm, and dataset-value views retain their argument; closing a parent invalidates the dependent views. Approximate transformers retain their base and stop working if it is closed.

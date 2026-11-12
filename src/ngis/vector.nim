@@ -158,6 +158,29 @@ proc layer*(ds: Dataset, name: string): Layer =
     raise newException(KeyError, "layer not found: " & name)
   Layer(dataset: ds, handle: h)
 
+proc layerCount*(dataset: Dataset): int =
+  ## Number of vector layers in this dataset.
+  int(GDALDatasetGetLayerCount(dataset.rawHandle))
+
+proc layer*(dataset: Dataset, index: Natural): Layer =
+  ## Required zero-based layer lookup. Invalid indices raise KeyError.
+  let handle = dataset.rawHandle
+  if index >= int(GDALDatasetGetLayerCount(handle)):
+    raise newException(KeyError, "layer index is out of range: " & $index)
+  let layer = GDALDatasetGetLayer(handle, cint(index))
+  if layer == nil:
+    raise gdalError("could not access dataset layer")
+  Layer(dataset: dataset, handle: layer)
+
+proc hasLayer*(dataset: Dataset, name: string): bool =
+  validateText(name, "layer name")
+  GDALDatasetGetLayerByName(dataset.rawHandle, name.cstring) != nil
+
+iterator layers*(dataset: Dataset): Layer =
+  ## Visits layers in driver order. Each view retains the dataset owner.
+  for index in 0 ..< dataset.layerCount:
+    yield dataset.layer(index)
+
 proc createLayer*(
     ds: Dataset, name: string, kind: OGRwkbGeometryType, srs: SpatialReference = nil
 ): Layer =

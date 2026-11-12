@@ -56,7 +56,7 @@ proc checked(s: string): cstring =
     raise newException(ValueError, "text contains a NUL byte")
   s.cstring
 
-proc createMultiDimDataset*(driverName, path: string): Dataset =
+proc createMultiDimDataset*(driverName = "MEM", path = ""): Dataset =
   GDALAllRegister()
   let driver = GDALGetDriverByName(checked(driverName))
   if driver == nil:

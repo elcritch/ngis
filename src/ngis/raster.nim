@@ -65,13 +65,18 @@ proc validateWindow(band: RasterBand, x, y, width, height: int): int =
     raise newException(ValueError, "raster window is too large")
   width * height
 
+proc checkRasterStatus(status: CPLErr, context: string) =
+  # Keep native enum comparison outside generics: callers need not import raw operators.
+  if status != CE_None:
+    raise gdalError(context)
+
 proc read*[T](band: RasterBand, x, y, width, height: int): seq[T] =
   ## Read a window in row-major order, converting to T when needed.
   let count = validateWindow(band, x, y, width, height)
   if count > high(int) div sizeof(T):
     raise newException(ValueError, "raster buffer is too large")
   result = newSeq[T](count)
-  if GDALRasterIO(
+  let status = GDALRasterIO(
     rawHandle(band),
     GF_Read,
     cint(x),
@@ -84,8 +89,8 @@ proc read*[T](band: RasterBand, x, y, width, height: int): seq[T] =
     dataType(T),
     0,
     0,
-  ) != CE_None:
-    raise gdalError("could not read raster window")
+  )
+  checkRasterStatus(status, "could not read raster window")
 
 proc read*[T](band: RasterBand): seq[T] =
   let dimensions = band.size
@@ -96,7 +101,7 @@ proc write*[T](band: RasterBand, values: openArray[T], x, y, width, height: int)
   let count = validateWindow(band, x, y, width, height)
   if values.len != count:
     raise newException(ValueError, "raster buffer length does not match window")
-  if GDALRasterIO(
+  let status = GDALRasterIO(
     rawHandle(band),
     GF_Write,
     cint(x),
@@ -109,8 +114,8 @@ proc write*[T](band: RasterBand, values: openArray[T], x, y, width, height: int)
     dataType(T),
     0,
     0,
-  ) != CE_None:
-    raise gdalError("could not write raster window")
+  )
+  checkRasterStatus(status, "could not write raster window")
 
 proc write*[T](band: RasterBand, values: openArray[T]) =
   let dimensions = band.size

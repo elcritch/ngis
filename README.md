@@ -1,6 +1,6 @@
 # ngis
 
-Work with GDAL rasters, vector data, multidimensional arrays, and coordinate systems from Nim. ngis provides automatic resource cleanup for common workflows and direct access to the GDAL C API when you need finer control.
+Work with GDAL rasters, vector data, multidimensional arrays, and coordinate systems from Nim. Use typed grids, feature values, geometry operations, iterators, and processing options with automatic resource cleanup. The complete GDAL C API is available alongside the high-level API.
 
 ## Install
 
@@ -15,56 +15,64 @@ Run `atlas install` in your project. GDAL must be available at runtime. On macOS
 ## Raster quick start
 
 ```nim
-import ngis
+import ngis/api
 
-let image = createDataset("MEM", "", 2, 2, dataType = GDT_Float32)
-let pixels = image.band()
-pixels.write([1'f32, 2, 3, 4])
-echo read[float32](pixels)
+let image = createRaster(float32, 2, 2)
+var pixels = initRasterGrid(2, 2, @[1'f32, 2, 3, 4])
+pixels[1, 0] = 12.5
+image.band().write(pixels)
+echo readGrid[float32](image.band())[1, 0]
+for window in image.band().tiles(256, 256):
+  echo readGrid[float32](image.band(), window).len
 ```
 
 ## Vector data
 
 ```nim
-import ngis
+import ngis/api
 
-let data = createDataset("MEM", "", 0, 0, bands = 0)
-let places = data.createLayer("places", wkbPoint, newSpatialReference(4326))
-places.addField("name", OFTString)
+let data = createVector()
+let crs = newSpatialReference(4326, AxisOrder.traditionalGis)
+let places = data.createLayer("places", GeometryKind.point, crs)
+places.addField(FieldSpec(name: "name", kind: fkString))
 let feature = places.newFeature()
-feature["name"] = "Harbour"
+feature.setField("name", "Harbour")
 feature.setGeometry(newPoint(33.0, 35.0))
 places.add(feature)
 for place in places:
-  echo place["name"], ": ", place.geometry.toWkt()
+  echo place.fieldValue("name").text, ": ", place.geometry.toWkt()
 ```
 
-Coordinate transformations use GDAL's axis-order rules for the selected CRS.
+Use `AxisOrder.traditionalGis` for longitude/latitude or easting/northing coordinate order. Without an explicit axis order, GDAL follows the selected CRS's authority order.
 
 ## Multidimensional arrays
 
 ```nim
-import ngis
+import ngis/api
 
-let data = createMultiDimDataset("MEM", "")
+let data = createMultiDimDataset()
 let root = data.rootGroup()
 let time = root.createDimension("time", 3)
-let temperature = root.createArray("temperature", [time], numericType(GDT_Float32))
+let temperature = root.createArray("temperature", [time], float32)
 temperature.write([18'f32, 19, 20])
-echo temperature.read(float32)
+echo root["temperature"].readArrayData(float32)[1]
 ```
 
 ## Algorithms and utilities
 
-Use command-line-style GDAL utility options or inspect and run registered algorithms:
+Copy, crop, resize, and reproject using Nim configuration values:
 
 ```nim
-import ngis
+import std/options
+import ngis/api
 
-let source = createDataset("MEM", "", 2, 2)
-source.band().write([1'u8, 2, 3, 4])
-let copy = translate(source, "", ["-of", "MEM"])
-echo read[uint8](copy.band())
+let source = createRaster(uint8, 2, 2)
+source.band().write(initRasterGrid(2, 2, @[1'u8, 2, 3, 4]))
+let copy = source.copyRaster(config = TranslateConfig(
+  outputSize: some(initRasterOutputSize(4, 4)),
+  resampling: RasterResampling.bilinear,
+))
+echo readGrid[uint8](copy.band())[3, 3]
 
 let algorithm = globalAlgorithmRegistry().instantiate(["raster", "info"])
 algorithm.argument("input").set([source])
@@ -79,17 +87,19 @@ CPL and virtual filesystem helpers are available too: `parseXml`, `newStringList
 
 | Area | Modules and resources |
 | --- | --- |
-| Datasets and drivers | `datasets`, `drivers`: datasets, registered drivers and owned unregistered drivers |
-| Raster | `raster`, `rasterextras`, `asyncio`: bands, color and attribute tables, async readers |
-| Vector and schema | `vector`, `vectorextras`, `schemadomains`: features, geometries, prepared geometries, styles, field domains and relationships |
-| Coordinates and arrays | `spatialrefs`, `schemadomains`, `multidim`: CRS, coordinate operations, groups, arrays, dimensions and attributes |
-| Processing | `operations`, `utilities`, `algorithms`, `advanced`: utilities, algorithm registry and arguments, transformers, warping, gridding and pansharpening |
+| Datasets and drivers | `datasets`, `datasetops`, `drivers`: opening options, metadata, CRS properties, datasets and drivers |
+| Raster | `raster`, `rasterio`, `rasterextras`, `asyncio`: typed grids, tiles, resampling, bands, tables and async readers |
+| Vector and schema | `vector`, `features`, `geometryops`, `vectorextras`, `schemadomains`: typed fields, geometry construction and operations, prepared geometries, styles, domains and relationships |
+| Coordinates and arrays | `coordinates`, `spatialrefs`, `multidim`, `arrayops`: bounds, affine mapping, CRS transformations, typed arrays, slices and attributes |
+| Processing | `processing`, `operations`, `utilities`, `algorithms`, `advanced`: typed conversion and reprojection, progress closures, utilities, transformers, gridding and pansharpening |
 | Specialised resources | `coordinateprecision`, `geocoding`, `triangulation`, `contours`, `subdatasets`, `computedbands`: precision models, geocoding results, meshes, streaming contours, subdataset descriptions and computed bands |
 | CPL and I/O | `cpl`, `vsi`, `memory`, `progress`, `plugins`, `processes`: XML, HTTP, compression, containers, synchronization, virtual files, ZIP archives, buffers, callbacks and processes |
 | Networks | `networks`: GNM networks, when the installed GDAL build includes GNM |
 | Raw C API | `gdal`: generated GDAL, OGR, OSR, CPL and VSI declarations and macro equivalents |
 
-`import ngis` exports these modules; `import ngis/gdal` imports only the raw bindings. The owning Nim API covers common resource families and workflows, but does not provide a one-to-one wrapper for every C function. For other calls, use the C API directly; `rawHandle` borrows from an owner, and `adopt` factories take ownership of compatible independently owned handles. Keep owners alive for any borrowed handles. See [ownership and lifetimes](docs/ownership.md) for details.
+`import ngis/api` exports the high-level modules. `import ngis` also exports the raw bindings for compatibility; `import ngis/gdal` imports only the raw bindings. See the [Nim API guide](docs/api.md) for field values, array slices, metadata, geometry operations, and progress callbacks.
+
+The owning Nim API covers common resource families and workflows, but does not provide a one-to-one wrapper for every C function. For other calls, use the C API directly; `rawHandle` borrows from an owner, and `adopt` factories take ownership of compatible independently owned handles. Keep owners alive for any borrowed handles. See [ownership and lifetimes](docs/ownership.md) for details.
 
 The raw bindings target GDAL 3.13.3's public C headers. They do not wrap the GDAL C++ API; symbols for optional drivers and features depend on the installed build. See [binding generation and checks](docs/bindings.md) for the API boundary and development workflow.
 
