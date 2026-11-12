@@ -57,6 +57,12 @@ jobs:
           test "$(gdal-config --version)" = 3.13.3
           atlas-run tests
 
+      - name: Test explicit runtime loading
+        shell: micromamba-shell {0}
+        run: |
+          export LD_LIBRARY_PATH="$CONDA_PREFIX/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+          atlas-run tests gdal_runtime -- -d:gdalRuntime
+
       - name: Compile examples
         shell: micromamba-shell {0}
         run: atlas-run tests --compile-only examples/all_compile.nim

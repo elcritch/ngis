@@ -99,7 +99,7 @@ def nim_proc(text):
 
 def nim_functions(source):
     found = {}
-    pattern = re.compile(r'^proc\s+(`?\w+`?)\*\s*\(', re.M)
+    pattern = re.compile(r'^[ \t]*proc\s+(`?\w+`?)\*\s*\(', re.M)
     for match in pattern.finditer(source):
         name = match.group(1).strip('`')
         end = close_paren(source, match.end() - 1)
@@ -253,7 +253,7 @@ def shape_failures(c_functions, aliases, alias_nodes, nim, source, selected):
         if expected_call not in callback[2]:
             failures.append(f"{name}: callback requires {expected_call}, got {callback[2]}")
     for name in sorted(selected):
-        nim_name = "c" + name if name.startswith("_") else name
+        nim_name = selected[name].get("nim_name", "c" + name if name.startswith("_") else name)
         if name not in c_functions or nim_name not in nim:
             if nim_name not in nim: failures.append(f"{name}: missing Nim declaration")
             continue
@@ -334,9 +334,28 @@ def main():
     for name in sorted(c_decls.keys() - functions.keys() - cpp_only):
         failures.append(f"{name}: C-linkage declaration missing from manifest")
     source = args.bindings.read_text()
+    nim = nim_functions(source)
+    imports = re.search(r'^gdalImports:\s*\n((?:[ \t]+[^\n]*\n|\n)*)', source, re.M)
+    imported = nim_functions(imports.group(1)) if imports else {}
+    for name, info in functions.items():
+        nim_name = info.get("nim_name", "c" + name if name.startswith("_") else name)
+        if nim_name not in imported:
+            failures.append(f"{name}: declaration missing from gdalImports block")
+            continue
+        pragmas = imported[nim_name][2]
+        symbol = re.search(r'\bimportc\s*:\s*"([^"]+)"', pragmas)
+        if not symbol or symbol.group(1) != info["symbol"]:
+            failures.append(f"{name}: incorrect importc symbol in declaration")
+        if re.search(r'\bdynlib\b', pragmas):
+            failures.append(f"{name}: dynlib pragma bypasses runtime loader")
+    if imports:
+        outside = source[:imports.start()] + source[imports.end():]
+        for name, (_, _, pragmas) in nim_functions(outside).items():
+            if re.search(r'\bimportc\b', pragmas):
+                failures.append(f"{name}: importc declaration outside gdalImports")
     c_functions, aliases, alias_nodes = c_nodes(tus[0], include)
     shape_errors, checked_params, callbacks = shape_failures(
-        c_functions, aliases, alias_nodes, nim_functions(source), source, functions)
+        c_functions, aliases, alias_nodes, nim, source, functions)
     failures.extend(shape_errors)
     if failures:
         print("\n".join(failures), file=sys.stderr)

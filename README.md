@@ -10,7 +10,21 @@ Install Nim 2.2 or later and the GDAL 3.13.3 development headers and shared libr
 requires "https://github.com/elcritch/ngis"
 ```
 
-Run `atlas install` in your project. GDAL must be available at runtime. On macOS ngis uses the Homebrew GDAL prefix when available; Linux uses `libgdal.so`. Use `-d:gdalLib=/path/to/libgdal` when compiling to select another shared library. The currently tested platforms are macOS arm64 and 64-bit Linux; Windows needs native ABI validation.
+Run `atlas install` in your project. By default ngis tries to load GDAL at import time using platform library names and, on macOS, Homebrew locations. Use `-d:gdalLib=/path/to/libgdal` when compiling to select a library (`gdalDynlib` is also accepted and takes precedence). The currently tested platforms are macOS arm64 and 64-bit Linux; Windows needs native ABI validation.
+
+For applications that can operate without GDAL, compile with `-d:gdalRuntime` (or request ngis's Atlas `runtime` feature) and load it explicitly before using GDAL or starting workers that use it:
+
+```nim
+import ngis/api
+
+try:
+  loadGdal() # Or loadGdal(path = "/path/to/libgdal")
+  echo gdalLibraryPath()
+except GdalLoadError as error:
+  echo "GDAL unavailable: ", error.msg
+```
+
+`isGdalLoaded()` reports whether loading succeeded. Failed loads can be retried; a successful load remains in use for the process lifetime. Optional symbols missing from the library remain nil, so check them before calling. Explicit loading controls runtime availability; building still requires GDAL development headers. See [binding generation and checks](docs/bindings.md) for details.
 
 ## Raster quick start
 

@@ -26,7 +26,7 @@ template GDAL_COMPUTE_VERSION*(major, minor, revision: untyped): untyped =
   ((major) * 1_000_000 + (minor) * 10_000 + (revision) * 100)
 
 template GDAL_CHECK_VERSION*(component: untyped): untyped =
-  GDALCheckVersion(GDAL_VERSION_MAJOR, GDAL_VERSION_MINOR, component)
+  GDALCheckVersionRaw(GDAL_VERSION_MAJOR, GDAL_VERSION_MINOR, component)
 
 template INIT_RASTERIO_EXTRA_ARG*(arg: untyped) =
   arg.nVersion = RASTERIO_EXTRA_ARG_CURRENT_VERSION
@@ -284,37 +284,37 @@ template CPLIsEqual*(x, y: untyped): untyped =
   (abs(x - y) < 0.0000000000001)
 
 template VSI_MALLOC_VERBOSE*(size: untyped): untyped =
-  VSIMallocVerbose(
+  VSIMallocVerboseRaw(
     size, instantiationInfo().filename.cstring, cint(instantiationInfo().line)
   )
 
 template VSI_MALLOC_ALIGNED_AUTO_VERBOSE*(size: untyped): untyped =
-  VSIMallocAlignedAutoVerbose(
+  VSIMallocAlignedAutoVerboseRaw(
     size, instantiationInfo().filename.cstring, cint(instantiationInfo().line)
   )
 
 template VSI_MALLOC2_VERBOSE*(a, b: untyped): untyped =
-  VSIMalloc2Verbose(
+  VSIMalloc2VerboseRaw(
     a, b, instantiationInfo().filename.cstring, cint(instantiationInfo().line)
   )
 
 template VSI_MALLOC3_VERBOSE*(a, b, c: untyped): untyped =
-  VSIMalloc3Verbose(
+  VSIMalloc3VerboseRaw(
     a, b, c, instantiationInfo().filename.cstring, cint(instantiationInfo().line)
   )
 
 template VSI_CALLOC_VERBOSE*(a, b: untyped): untyped =
-  VSICallocVerbose(
+  VSICallocVerboseRaw(
     a, b, instantiationInfo().filename.cstring, cint(instantiationInfo().line)
   )
 
 template VSI_REALLOC_VERBOSE*(p, size: untyped): untyped =
-  VSIReallocVerbose(
+  VSIReallocVerboseRaw(
     p, size, instantiationInfo().filename.cstring, cint(instantiationInfo().line)
   )
 
 template VSI_STRDUP_VERBOSE*(s: untyped): untyped =
-  VSIStrdupVerbose(
+  VSIStrdupVerboseRaw(
     s, instantiationInfo().filename.cstring, cint(instantiationInfo().line)
   )
 

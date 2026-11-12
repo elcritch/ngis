@@ -11,13 +11,14 @@
 ##   echo readGrid[float32](image.band())[1, 0]
 import
   ./[
-    datasets, datasetops, drivers, raster, rasterio, rasterextras, vector, features,
-    geometryops, vectorextras, spatialrefs, coordinates, schemadomains, multidim,
-    arrayops, operations, processing, utilities, algorithms, asyncio, advanced, cpl,
-    vsi, memory, plugins, progress, processes, networks,
+    runtime, datasets, datasetops, drivers, raster, rasterio, rasterextras, vector,
+    features, geometryops, vectorextras, spatialrefs, coordinates, schemadomains,
+    multidim, arrayops, operations, processing, utilities, algorithms, asyncio,
+    advanced, cpl, vsi, memory, plugins, progress, processes, networks,
   ]
 export
   datasets, datasetops, drivers, raster, rasterio, rasterextras, vector, features,
   geometryops, vectorextras, spatialrefs, coordinates, schemadomains, multidim,
   arrayops, operations, processing, utilities, algorithms, asyncio, advanced, cpl, vsi,
   memory, plugins, progress, processes, networks
+export runtime except registerGdalImports

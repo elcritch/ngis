@@ -3,6 +3,8 @@ import ngis/api
 
 static:
   doAssert not declared(GDALOpenEx)
+  doAssert declared(loadGdal)
+  doAssert not declared(registerGdalImports)
 
 suite "high-level API":
   test "typed raster, resampling and copy":

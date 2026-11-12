@@ -29,6 +29,11 @@ CPP_ONLY_FUNCTIONS = {
     "CPLGreatestCommonDivisor", "CPLUnixTimeToYMDHMS",
     "CPLYMDHMSToUnixTime", "CPLParseRFC822DateTime",
 }
+NIM_FUNCTION_NAMES = {"CPLsprintf": "CPLsprintfBuffer", "CPLSPrintf": "CPLSPrintfText"}
+for name in ("GDALCheckVersion", "VSIMallocVerbose", "VSIMallocAlignedAutoVerbose",
+             "VSIMalloc2Verbose", "VSIMalloc3Verbose", "VSICallocVerbose",
+             "VSIReallocVerbose", "VSIStrdupVerbose"):
+    NIM_FUNCTION_NAMES[name] = name + "Raw"
 KEYWORDS = set("addr and as asm bind block break case cast concept const continue converter defer discard distinct div do elif else end enum except export finally for from func if import in include interface is isnot iterator let macro method mixin mod nil not notin object of or out proc ptr raise ref return shl shr static template try tuple type using var when while with without xor yield".split())
 
 def identifier(name):
@@ -185,10 +190,13 @@ def main():
             prefix = tokens[:tokens.index(n.spelling)] if n.spelling in tokens else tokens
             call="gdalCall" if "CPL_STDCALL" in prefix else "cdecl"
             symbol = {"RPCInfoV1ToMD": "RPCInfoToMD", "GDALCreateRPCTransformerV1": "GDALCreateRPCTransformer", "GDALExtractRPCInfoV1": "GDALExtractRPCInfo"}.get(n.spelling, n.spelling)
-            pragmas=call + ', importc: "'+symbol+'", dynlib: gdalLib, raises: []'
+            nim_name = NIM_FUNCTION_NAMES.get(n.spelling, n.spelling)
+            pragmas=call + ', importc: "'+symbol+'", raises: []'
             if n.type.kind == ci.TypeKind.FUNCTIONPROTO and n.type.is_function_variadic(): pragmas+=", varargs"
             functions[n.spelling]={"header":pathlib.Path(n.location.file.name).name, "signature":n.type.spelling, "symbol": symbol,
-                "nim":"proc "+identifier(n.spelling)+"*("+", ".join(params)+")"+(": "+result if result!="void" else "")+" {."+pragmas+".}"}
+                "nim":"proc "+identifier(nim_name)+"*("+", ".join(params)+")"+(": "+result if result!="void" else "")+" {."+pragmas+".}"}
+            if nim_name != n.spelling:
+                functions[n.spelling]["nim_name"] = nim_name
         constants={}
         evaluated={}
         for n in nodes:
@@ -259,7 +267,7 @@ def main():
                 continue
             header="<sys/stat.h>" if "stat" in cname else "<time.h>" if cname=="tm" else "<stdio.h>"
             system_types.append('  '+name+'* {.importc: "struct '+cname+'", header: "'+header+'", bycopy.} = object')
-        banner="## Generated from GDAL 3.13.3 public C headers. Do not edit.\n## Regenerate with scripts/generate_bindings.py; see bindings.json for coverage.\nimport ./[library, systemtypes]\nexport library, systemtypes\n\nwhen defined(windows) and defined(i386):\n  {.pragma: gdalCall, stdcall.}\nelse:\n  {.pragma: gdalCall, cdecl.}\n\n"
+        banner="## Generated from GDAL 3.13.3 public C headers. Do not edit.\n## Regenerate with scripts/generate_bindings.py; see bindings.json for coverage.\nimport ./[library, systemtypes]\nimport ./private/imports\nexport library, systemtypes\n\nwhen defined(windows) and defined(i386):\n  {.pragma: gdalCall, stdcall.}\nelse:\n  {.pragma: gdalCall, cdecl.}\n\n"
         platform_types = '''when defined(windows):
   type
     CPL_FILE_HANDLE* = pointer
@@ -276,7 +284,7 @@ else:
     CPL_FRMT_GB_WITHOUT_PREFIX* = "ll"
 '''
         enum_ops = "\n".join("proc `==`*(a, b: " + identifier(name) + "): bool {.borrow.}\nproc `$`*(value: " + identifier(name) + "): string {.borrow.}" for name in enum_aliases)
-        output=banner+platform_types+"type\n"+"\n".join(system_types+declarations)+"\n\n"+enum_ops+"\n\nconst\n"+"\n".join("  "+identifier(n)+"* = "+v for n,v in sorted(constants.items()))+"\n\n"+"\n".join(f["nim"] for f in functions.values())+"\n"
+        output=banner+platform_types+"type\n"+"\n".join(system_types+declarations)+"\n\n"+enum_ops+"\n\nconst\n"+"\n".join("  "+identifier(n)+"* = "+v for n,v in sorted(constants.items()))+"\n\ngdalImports:\n"+"\n".join("  "+f["nim"] for f in functions.values())+"\n\nwhen not gdalRuntimeEnabled:\n  try:\n    loadGdal()\n  except GdalLoadError:\n    discard\n"
         dest=ROOT/"src/ngis/gdal"
         (dest/"bindings.nim").write_text(output)
         macro_coverage = {}

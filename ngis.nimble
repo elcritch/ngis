@@ -6,3 +6,6 @@ srcDir        = "src"
 
 requires "nim >= 2.2.0"
 
+feature "runtime":
+  discard
+

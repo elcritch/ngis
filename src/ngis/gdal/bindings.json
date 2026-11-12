@@ -1183,6 +1183,7 @@
     },
     "CPLSPrintf": {
       "header": "cpl_string.h",
+      "nim_name": "CPLSPrintfText",
       "signature": "const char *(const char *, ...)",
       "symbol": "CPLSPrintf"
     },
@@ -1613,6 +1614,7 @@
     },
     "CPLsprintf": {
       "header": "cpl_string.h",
+      "nim_name": "CPLsprintfBuffer",
       "signature": "int (char *, const char *, ...)",
       "symbol": "CPLsprintf"
     },
@@ -2733,6 +2735,7 @@
     },
     "GDALCheckVersion": {
       "header": "ogr_core.h",
+      "nim_name": "GDALCheckVersionRaw",
       "signature": "int (int, int, const char *)",
       "symbol": "GDALCheckVersion"
     },
@@ -10528,6 +10531,7 @@
     },
     "VSICallocVerbose": {
       "header": "cpl_vsi.h",
+      "nim_name": "VSICallocVerboseRaw",
       "signature": "void *(size_t, size_t, const char *, int)",
       "symbol": "VSICallocVerbose"
     },
@@ -11028,6 +11032,7 @@
     },
     "VSIMalloc2Verbose": {
       "header": "cpl_vsi.h",
+      "nim_name": "VSIMalloc2VerboseRaw",
       "signature": "void *(size_t, size_t, const char *, int)",
       "symbol": "VSIMalloc2Verbose"
     },
@@ -11038,6 +11043,7 @@
     },
     "VSIMalloc3Verbose": {
       "header": "cpl_vsi.h",
+      "nim_name": "VSIMalloc3VerboseRaw",
       "signature": "void *(size_t, size_t, size_t, const char *, int)",
       "symbol": "VSIMalloc3Verbose"
     },
@@ -11053,11 +11059,13 @@
     },
     "VSIMallocAlignedAutoVerbose": {
       "header": "cpl_vsi.h",
+      "nim_name": "VSIMallocAlignedAutoVerboseRaw",
       "signature": "void *(size_t, const char *, int)",
       "symbol": "VSIMallocAlignedAutoVerbose"
     },
     "VSIMallocVerbose": {
       "header": "cpl_vsi.h",
+      "nim_name": "VSIMallocVerboseRaw",
       "signature": "void *(size_t, const char *, int)",
       "symbol": "VSIMallocVerbose"
     },
@@ -11148,6 +11156,7 @@
     },
     "VSIReallocVerbose": {
       "header": "cpl_vsi.h",
+      "nim_name": "VSIReallocVerboseRaw",
       "signature": "void *(void *, size_t, const char *, int)",
       "symbol": "VSIReallocVerbose"
     },
@@ -11233,6 +11242,7 @@
     },
     "VSIStrdupVerbose": {
       "header": "cpl_vsi.h",
+      "nim_name": "VSIStrdupVerboseRaw",
       "signature": "char *(const char *, const char *, int)",
       "symbol": "VSIStrdupVerbose"
     },
