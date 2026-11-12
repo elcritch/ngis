@@ -40,6 +40,28 @@ for window in image.band().tiles(256, 256):
   echo readGrid[float32](image.band(), window).len
 ```
 
+## Map images
+
+Compute reprojection and clipping once, then reuse the pixel lookup for each layer:
+
+```nim
+import ngis/api
+
+let source = initRasterLayout(2, 2, initBounds(10, 40, 12, 42), "EPSG:4326")
+let target = initRasterLayout(512, 512, initBounds(9.9, 39.9, 12.1, 42.1), "EPSG:4326")
+let lookup = initRasterLookup(source, target)
+let colors = [
+  Rgba8(r: 220, g: 60, b: 50, a: 255), Rgba8(r: 240, g: 180, b: 40, a: 255),
+  Rgba8(r: 80, g: 170, b: 80, a: 255), Rgba8(r: 60, g: 110, b: 210, a: 255),
+]
+var pixels = lookup.colorize(colors)
+lookup.colorize(colors, pixels) # Reuse storage for another layer's colors.
+```
+
+`initRasterLookup` uses exact nearest-neighbor reprojection. Pass `clip = boundary` with geometry already in the target CRS to retain holes and disconnected parts at output resolution. Set `sourceRows = RasterRowOrder.bottomUp` for analytical grids whose row zero is at the southern edge. `colorize` accepts per-cell hatch flags and an `initHatchStyle` value.
+
+The output is contiguous straight RGBA, ready for Pixie's `encodePng` or another encoder. Pixie is an optional application dependency; see the complete [PNG example](examples/render_pixie.nim) and [rendering API guide](docs/api.md#map-rendering).
+
 ## Vector data
 
 ```nim
@@ -103,6 +125,7 @@ CPL and virtual filesystem helpers are available too: `parseXml`, `newStringList
 | --- | --- |
 | Datasets and drivers | `datasets`, `datasetops`, `drivers`: opening options, metadata, CRS properties, datasets and drivers |
 | Raster | `raster`, `rasterio`, `rasterextras`, `asyncio`: typed grids, tiles, resampling, bands, tables and async readers |
+| Map rendering | `rendering`: georeferenced layouts, reusable pixel lookups, output-resolution masks, RGBA colors and hatching |
 | Vector and schema | `vector`, `features`, `geometryops`, `vectorextras`, `schemadomains`: typed fields, geometry construction and operations, prepared geometries, styles, domains and relationships |
 | Coordinates and arrays | `coordinates`, `spatialrefs`, `multidim`, `arrayops`: bounds, affine mapping, CRS transformations, typed arrays, slices and attributes |
 | Processing | `processing`, `operations`, `utilities`, `algorithms`, `advanced`: typed conversion and reprojection, progress closures, utilities, transformers, gridding and pansharpening |

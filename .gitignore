@@ -16,6 +16,9 @@ nimcache/
 *.dSYM/
 tests/output/
 
+# Local experiment outputs and generated reports.
+/output/
+
 # Editor, OS, and tool noise.
 .nimdex/
 __pycache__/

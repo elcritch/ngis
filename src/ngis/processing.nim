@@ -27,6 +27,15 @@ type
     resampling*: RasterResampling
     sourceNoData*, targetNoData*: Option[float64]
     creationOptions*: seq[string]
+    coordinateOperation*: string
+      ## Optional PROJ pipeline, including any required axis swaps.
+    errorThreshold*: Option[float64]
+      ## Approximation tolerance in source pixels; 0 is exact.
+    memoryLimitMiB*: Option[float64]
+      ## Warp working memory, separate from GDAL's block cache.
+    threadCount*: Option[int]
+      ## Positive computation thread count; none keeps GDAL's default.
+    verticalShift*: Option[bool] ## none selects GDAL's automatic elevation adjustment.
 
   ProgressCallback* = proc(complete: float64, message: string): bool {.closure.}
     ## Return false to cancel. Exceptions are re-raised after control returns from GDAL.
@@ -202,6 +211,28 @@ proc warp*(
     args.add ["-s_srs", config.sourceCrs]
   if config.targetCrs.len > 0:
     args.add ["-t_srs", config.targetCrs]
+  validateCString(config.coordinateOperation, "coordinate operation")
+  if config.coordinateOperation.len > 0:
+    args.add ["-ct", config.coordinateOperation]
+  if config.errorThreshold.isSome:
+    let value = config.errorThreshold.get
+    if classify(value) in {fcNan, fcInf, fcNegInf} or value < 0:
+      raise
+        newException(ValueError, "warp error threshold must be finite and nonnegative")
+    args.add ["-et", $value]
+  if config.memoryLimitMiB.isSome:
+    let value = config.memoryLimitMiB.get
+    if classify(value) in {fcNan, fcInf, fcNegInf} or value <= 0:
+      raise newException(ValueError, "warp memory limit must be finite and positive")
+    args.add ["-wm", $value & "MB"]
+  if config.threadCount.isSome:
+    let value = config.threadCount.get
+    if value <= 0 or value > high(cint).int:
+      raise
+        newException(ValueError, "warp thread count is outside the GDAL integer range")
+    args.add ["-wo", "NUM_THREADS=" & $value]
+  if config.verticalShift.isSome:
+    args.add (if config.verticalShift.get: "-vshift" else: "-novshift")
   if config.bounds.isSome:
     let bounds = config.bounds.get
     for value in [bounds.minX, bounds.minY, bounds.maxX, bounds.maxY]:

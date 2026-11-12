@@ -10,6 +10,33 @@ Import `ngis/api` for Nim values and automatically managed resources. Import `ng
 
 `readGrid[T](band)` reads the full band. Pass a `RasterWindow` for a subset, and output dimensions plus `RasterResampling` to resample. `band.tiles(tileWidth, tileHeight)` yields pixel windows, clipping the final row and column to the band edges. Raster band indices are one-based; grid coordinates are zero-based.
 
+## Map rendering
+
+`RasterLayout` describes a north-up raster using width, height, outer-edge `Bounds`, and a CRS definition. Construct it with `initRasterLayout(width, height, bounds, crs)`. Bounds must have finite positive area; CRS definitions are parsed immediately. Coordinates use traditional GIS x/y order. Access `.width`, `.height`, `.bounds`, `.crs`, and `.affineTransform`, or create a georeferenced in-memory dataset with `createRaster(uint8, layout)`.
+
+`initRasterLookup(sourceLayout, targetLayout, clip = boundary)` computes an exact nearest-neighbor mapping once for a family of map layers. It warps source cell IDs and rasterizes the optional clipping geometry at the output resolution, preserving holes and multipart shapes. Clipping coordinates must already be in the target CRS; attached geometry CRS metadata does not reproject them. The source colors remain available outside the clipped area for later reuse.
+
+Source colors are flat row-major arrays, with row zero at the top by default. Set `sourceRows = RasterRowOrder.bottomUp` when analytical cell arrays start at the bottom. Output rows always start at the top. `lookup[x, y]` returns `Option[int]`: a zero-based source cell index, or `none` outside the source or clip. `lookup.items` visits those indices in output row-major order. A lookup owns its Nim buffers and retains no GDAL handles or input geometry references.
+
+Use `lookup.colorize(colors)` to allocate `seq[Rgba8]`, or `lookup.colorize(colors, pixels)` to fill an existing buffer. Colors contain exactly `lookup.sourceCellCount` entries; output storage contains exactly `lookup.len` pixels. Each `Rgba8` stores four consecutive bytes in R/G/B/A order with straight alpha. Set per-cell alpha to zero for invalid data. Pixels outside the lookup become transparent black; selected colors retain their RGB bytes even when alpha is zero. Keep input and output buffers separate.
+
+For hatching, supply a per-cell `openArray[bool]` and `style = initHatchStyle(period, thickness, brightness)`. Stripes follow `(x + y) mod period < thickness` in output pixels. Brightness multiplies RGB channels in 0..1 and truncates to bytes; alpha remains unchanged. For example, `initHatchStyle(period = 8, thickness = 1, brightness = 0.7)` draws one-pixel stripes every eight pixels.
+
+Pixie can encode the resulting buffer directly:
+
+```nim
+import pixie/fileformats/png
+
+# lookup and colors were prepared above; reuse pixels for each layer.
+var pixels = lookup.colorize(colors)
+writeFile("map.png", encodePng(lookup.width, lookup.height, 4,
+  addr pixels[0], pixels.len * sizeof(Rgba8)))
+```
+
+Add Pixie to the application's `.nimble` dependencies and run `atlas install`. ngis itself has no image-library dependency. The complete [Pixie example](../examples/render_pixie.nim) includes layout and color construction. `rasterizeMask(geometry, layout)` is also available separately, returning row-major 0/1 bytes; `allTouched = true` includes intersected edge pixels.
+
+Lookup construction defaults to one warp computation thread and 32 MiB of warp working memory, without changing process-wide GDAL settings. Override `threadCount` and `memoryLimitMiB` as needed. Pass `coordinateOperation` to freeze a PROJ pipeline across installations; include any axis swaps required by that pipeline. Recompute the lookup when source layout, output layout, clipping geometry, or coordinate operation changes. Per-layer colors, validity alpha and hatching can change freely.
+
 ## Vector fields and geometries
 
 `createVector()` creates an in-memory vector dataset. Create layers with `GeometryKind` and fields with `FieldSpec`:
@@ -60,7 +87,7 @@ Read a metadata key with `dataset.metadata(name)`, which returns `Option[string]
 
 ## Raster processing and progress
 
-`copyRaster`, `crop`, `warp`, `mosaic`, and `reproject` return owning datasets. `TranslateConfig` controls band selection, pixel windows, output size, resampling, nodata, driver, and creation options. `WarpConfig` controls source/target CRS, target bounds and size, resampling, nodata, driver, and creation options. An empty destination defaults to an in-memory result. Bounds are expressed in the target CRS; later mosaic sources take precedence in overlapping areas.
+`copyRaster`, `crop`, `warp`, `mosaic`, and `reproject` return owning datasets. `TranslateConfig` controls band selection, pixel windows, output size, resampling, nodata, driver, and creation options. `WarpConfig` controls source/target CRS, target bounds and size, resampling, nodata, driver, and creation options. It also accepts `coordinateOperation` for an explicit PROJ pipeline, `errorThreshold = some(0.0)` for exact transformations, `memoryLimitMiB`, and `threadCount`. `verticalShift` can force or disable GDAL's elevation adjustment; lookup construction disables it because cell identifiers are not elevations. Unspecified optional controls preserve GDAL's defaults. An empty destination defaults to an in-memory result. Bounds are expressed in the target CRS; later mosaic sources take precedence in overlapping areas.
 
 Pass a closure as `progress` to observe a synchronous operation:
 

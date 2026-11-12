@@ -51,6 +51,11 @@ suite "typed raster processing":
         targetCrs: "EPSG:4326",
         bounds: some(initBounds(0, 0, 2, 2)),
         outputSize: some(initRasterOutputSize(2, 2)),
+        coordinateOperation: "+proj=noop",
+        errorThreshold: some(0.0),
+        memoryLimitMiB: some(32.0),
+        threadCount: some(1),
+        verticalShift: some(false),
       )
     )
     check readGrid[uint8](same.band(1))[1, 1] == 4
@@ -150,3 +155,13 @@ suite "typed raster processing":
       discard src.warp(config = WarpConfig(targetCrs: "EPSG:4326\0bad"))
     expect ValueError:
       discard src.warp(config = WarpConfig(creationOptions: @["bad\0option"]))
+    expect ValueError:
+      discard src.warp(config = WarpConfig(coordinateOperation: "bad\0operation"))
+    for value in [-1.0, NaN, Inf]:
+      expect ValueError:
+        discard src.warp(config = WarpConfig(errorThreshold: some(value)))
+    for value in [0.0, -1.0, NaN, Inf]:
+      expect ValueError:
+        discard src.warp(config = WarpConfig(memoryLimitMiB: some(value)))
+    expect ValueError:
+      discard src.warp(config = WarpConfig(threadCount: some(0)))
