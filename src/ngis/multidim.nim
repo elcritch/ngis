@@ -238,6 +238,19 @@ template bufferKind(T: typedesc): GDALDataType =
   else:
     {.error: "unsupported multidimensional buffer type".}
 
+# GUInt64 is unsigned long long in GDAL, whereas Nim's uint64 can be
+# unsigned long on LP64 platforms. Keep the pointer conversion explicit.
+static:
+  doAssert sizeof(uint64) == sizeof(GUInt64)
+
+proc nativeIndexPointer(values: openArray[uint64]): ptr GUInt64 =
+  if values.len > 0:
+    result = cast[ptr GUInt64](unsafeAddr values[0])
+
+proc blockIndexPointer(values: openArray[uint64]): ptr uint64 =
+  if values.len > 0:
+    result = unsafeAddr values[0]
+
 proc slab(
     array: MDArray, start, count: openArray[uint64]
 ): tuple[starts: seq[uint64], counts: seq[csize_t], length: int] =
@@ -264,7 +277,7 @@ proc readSlab*[T](
   let typ = numericType(bufferKind(T))
   if GDALMDArrayRead(
     array.rawHandle,
-    (if s.starts.len == 0: nil else: addr s.starts[0]),
+    nativeIndexPointer(s.starts),
     (if s.counts.len == 0: nil else: addr s.counts[0]),
     nil,
     nil,
@@ -287,7 +300,7 @@ proc writeSlab*[T](
   let data = cast[pointer](unsafeAddr values[0])
   if GDALMDArrayWrite(
     array.rawHandle,
-    (if s.starts.len == 0: nil else: addr s.starts[0]),
+    nativeIndexPointer(s.starts),
     (if s.counts.len == 0: nil else: addr s.counts[0]),
     nil,
     nil,
@@ -317,7 +330,7 @@ proc createAttribute*(
       group.rawHandle,
       checked(name),
       csize_t(shape.len),
-      (if shape.len == 0: nil else: unsafeAddr shape[0]),
+      nativeIndexPointer(shape),
       typ.rawHandle,
       nil,
     ),
@@ -335,7 +348,7 @@ proc createAttribute*(
       array.rawHandle,
       checked(name),
       csize_t(shape.len),
-      (if shape.len == 0: nil else: unsafeAddr shape[0]),
+      nativeIndexPointer(shape),
       typ.rawHandle,
       nil,
     ),
@@ -421,9 +434,7 @@ proc rawBlockInfo*(array: MDArray, coordinates: openArray[uint64]): RawBlockInfo
     raise newException(ValueError, "block coordinate rank does not match array")
   result = newRawBlockInfo()
   if not GDALMDArrayGetRawBlockInfo(
-    array.rawHandle,
-    (if coordinates.len == 0: nil else: unsafeAddr coordinates[0]),
-    result.rawHandle,
+    array.rawHandle, blockIndexPointer(coordinates), result.rawHandle
   ):
     raise gdalError("could not get raw block information")
 
@@ -493,7 +504,7 @@ proc readStrings*(array: MDArray): seq[string] =
   let typ = stringType()
   if GDALMDArrayRead(
     array.rawHandle,
-    (if s.starts.len == 0: nil else: addr s.starts[0]),
+    nativeIndexPointer(s.starts),
     (if s.counts.len == 0: nil else: addr s.counts[0]),
     nil,
     nil,
@@ -526,7 +537,7 @@ proc write*(array: MDArray, values: openArray[string]) =
   let typ = stringType()
   if GDALMDArrayWrite(
     array.rawHandle,
-    (if s.starts.len == 0: nil else: addr s.starts[0]),
+    nativeIndexPointer(s.starts),
     (if s.counts.len == 0: nil else: addr s.counts[0]),
     nil,
     nil,
