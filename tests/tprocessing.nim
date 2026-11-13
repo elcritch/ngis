@@ -1,6 +1,7 @@
 import std/[options, unittest, math, strutils]
 import
-  ngis/[datasets, raster, rasterio, datasetops, coordinates, spatialrefs, processing]
+  ngis/gdal/
+    [datasets, raster, rasterio, datasetops, coordinates, spatialrefs, processing]
 
 proc image(width = 4, height = 4, bands = 1): Dataset =
   result = createRaster(uint8, width, height, bands)

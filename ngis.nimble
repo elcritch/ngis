@@ -1,6 +1,6 @@
-version       = "0.5.0"
+version       = "0.6.0"
 author        = "elcritch"
-description   = "Nim bindings and owning wrappers for GDAL, with standalone local mapping tools."
+description   = "GIS primitives and mapping tools for Nim, with an opt-in GDAL backend."
 license       = "MIT"
 srcDir        = "src"
 

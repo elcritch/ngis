@@ -1,5 +1,6 @@
 import std/[strutils, unittest]
-import ngis/[algorithms, datasets, spatialrefs, raster, gdal]
+import ngis/gdal/[algorithms, datasets, spatialrefs, raster]
+import ngis/gdal/api
 
 suite "owning GDAL algorithm API":
   test "registry, arguments and usage":

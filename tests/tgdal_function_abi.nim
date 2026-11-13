@@ -1,6 +1,6 @@
 ## Exercise ABI-sensitive calls against the installed GDAL library and headers.
 import std/[strutils, unittest]
-import ngis/gdal
+import ngis/gdal/api
 
 when not defined(windows):
   const gdalCflags = staticExec("gdal-config --cflags").strip

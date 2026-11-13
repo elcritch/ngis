@@ -1,5 +1,6 @@
 import std/unittest
-import ngis/[gdal, datasets, raster, rasterextras]
+import ngis/gdal/[datasets, raster, rasterextras]
+import ngis/gdal/api
 
 suite "owning raster extras":
   test "color and attribute tables survive dataset closure":

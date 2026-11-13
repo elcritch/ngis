@@ -1,5 +1,5 @@
 import std/[os, unittest]
-import ngis/gdal
+import ngis/gdal/api
 
 suite "GDAL raster C API":
   test "float raster and geotransform round trip":

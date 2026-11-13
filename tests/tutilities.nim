@@ -1,5 +1,6 @@
 import std/[unittest, strutils]
-import ngis/[gdal, datasets, raster, vector, multidim, utilities, vectorextras]
+import ngis/gdal/[datasets, raster, vector, multidim, utilities, vectorextras]
+import ngis/gdal/api
 
 suite "utility options and operations":
   test "every option owner releases and invalidates aliases":

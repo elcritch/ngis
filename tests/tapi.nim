@@ -1,5 +1,5 @@
 import std/[unittest, options, tables]
-import ngis/api
+import ngis/gdal
 
 static:
   doAssert not declared(GDALOpenEx)

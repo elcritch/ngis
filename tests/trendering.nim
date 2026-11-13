@@ -1,5 +1,5 @@
 import std/[math, options, unittest]
-import ngis/api
+import ngis/gdal
 
 proc layout(width = 2, height = 2, bounds = initBounds(0, 0, 2, 2)): RasterLayout =
   initRasterLayout(width, height, bounds, "EPSG:3857")

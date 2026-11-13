@@ -1,6 +1,6 @@
 ## Compare generated layouts with the locally installed GDAL C headers.
 import std/[strutils, unittest]
-import ngis/gdal
+import ngis/gdal/api
 
 when not defined(windows):
   const gdalCflags = staticExec("gdal-config --cflags").strip

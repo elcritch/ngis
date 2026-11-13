@@ -1,5 +1,6 @@
 import std/[os, unittest]
-import ngis
+import ngis/gdal
+import ngis/gdal/api
 
 suite "owning datasets":
   test "automatic cleanup flushes a file that can be reopened":

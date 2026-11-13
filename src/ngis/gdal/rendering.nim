@@ -1,103 +1,17 @@
-## Reusable map pixel lookups and straight RGBA buffers for external image encoders.
-##
-## Build a lookup once for an output extent, then colorize any number of layers.
-## Temporary GDAL resources are cleaned up automatically. Lookups and colors are
-## ordinary Nim values; this module does not depend on an image library.
-import std/[math, options]
+## GDAL construction of raster lookups, masks and georeferenced datasets.
+import std/options
 import ./[api, datasets, raster, rasterio, datasetops, coordinates, vector, processing]
-
-type
-  RasterLayout* = object ## A north-up raster extent in traditional GIS x/y order.
-    layoutWidth, layoutHeight: int
-    layoutBounds: Bounds
-    crsDefinition: string
-
-  RasterRowOrder* {.pure.} = enum
-    ## Row order of the source cell colors, not output pixels.
-    topDown
-    bottomUp
-
-  RasterLookup* = object ## Owned output-to-source cell mapping, reusable across layers.
-    lookupWidth, lookupHeight, cellCount: int
-    ids: seq[uint32] # Zero means outside; other values are source indices + 1.
-
-  Rgba8* = object ## Four consecutive bytes of straight (unpremultiplied) RGBA.
-    r*, g*, b*, a*: uint8
-
-  HatchStyle* = object ## Diagonal stripes aligned to output pixels.
-    stripePeriod, stripeThickness: int
-    stripeBrightness: float64
-
-static:
-  doAssert sizeof(Rgba8) == 4
-  doAssert offsetOf(Rgba8, r) == 0 and offsetOf(Rgba8, a) == 3
-
-proc checkedPixelCount(width, height: int): int =
-  if width <= 0 or height <= 0 or width > high(cint).int or height > high(cint).int or
-      width > (high(int) div 4) div height:
-    raise newException(ValueError, "invalid raster layout dimensions")
-  width * height
-
-proc validate(layout: RasterLayout) =
-  discard checkedPixelCount(layout.layoutWidth, layout.layoutHeight)
-  if layout.crsDefinition.len == 0:
-    raise newException(ValueError, "raster layout has no CRS")
-
-proc initRasterLayout*(
-    width, height: Positive, bounds: Bounds, crs: string
-): RasterLayout =
-  ## Define pixel outer edges in crs, with row zero at the northern edge.
-  ## Bounds must be finite with positive area. CRS definitions are parsed eagerly.
-  discard checkedPixelCount(width, height)
-  for value in [bounds.minX, bounds.minY, bounds.maxX, bounds.maxY]:
-    if classify(value) in {fcNan, fcInf, fcNegInf}:
-      raise newException(ValueError, "raster layout bounds must be finite")
-  let dx = (bounds.maxX - bounds.minX) / float64(width)
-  let dy = (bounds.maxY - bounds.minY) / float64(height)
-  if dx <= 0 or dy <= 0 or classify(dx) in {fcNan, fcInf, fcNegInf} or
-      classify(dy) in {fcNan, fcInf, fcNegInf}:
-    raise
-      newException(ValueError, "raster layout bounds must have positive finite area")
-  if crs.len == 0:
-    raise newException(ValueError, "raster layout requires a CRS")
-  let reference = newSpatialReference(crs, AxisOrder.traditionalGis)
-  RasterLayout(
-    layoutWidth: width,
-    layoutHeight: height,
-    layoutBounds: bounds,
-    crsDefinition: reference.toWkt,
-  )
-
-func width*(layout: RasterLayout): int =
-  layout.layoutWidth
-func height*(layout: RasterLayout): int =
-  layout.layoutHeight
-func bounds*(layout: RasterLayout): Bounds =
-  layout.layoutBounds
-proc crs*(layout: RasterLayout): lent string =
-  layout.crsDefinition
-
-proc affineTransform*(layout: RasterLayout): AffineTransform =
-  ## Return the north-up pixel-corner transform.
-  layout.validate()
-  AffineTransform(
-    originX: layout.layoutBounds.minX,
-    originY: layout.layoutBounds.maxY,
-    pixelWidth:
-      (layout.layoutBounds.maxX - layout.layoutBounds.minX) / float64(layout.width),
-    pixelHeight:
-      -(layout.layoutBounds.maxY - layout.layoutBounds.minY) / float64(layout.height),
-  )
+import ../rendering as renderingvalues
+export renderingvalues
 
 proc createRaster*[T](
     pixelType: typedesc[T], layout: RasterLayout, bands: Positive = 1
 ): Dataset =
   ## Create a georeferenced in-memory raster with this layout.
-  layout.validate()
+  discard layout.affineTransform
   result = createRaster(pixelType, layout.width, layout.height, bands)
   result.affineTransform = layout.affineTransform
-  result.spatialReference =
-    newSpatialReference(layout.crsDefinition, AxisOrder.traditionalGis)
+  result.spatialReference = newSpatialReference(layout.crs, AxisOrder.traditionalGis)
 
 proc rasterizeMask*(
     geometry: Geometry, layout: RasterLayout, allTouched = false
@@ -143,9 +57,9 @@ proc initRasterLookup*(
   ## sourceRows controls indexing into the later color/hatch arrays. Output rows
   ## always run top to bottom. No GDAL handles or geometry references are retained.
   ## An optional PROJ coordinateOperation must include any required axis swaps.
-  source.validate()
-  target.validate()
-  let count = checkedPixelCount(source.width, source.height)
+  discard source.affineTransform
+  discard target.affineTransform
+  let count = source.width * source.height
   if uint64(count) > uint64(high(uint32)):
     raise newException(ValueError, "raster lookup has too many source cells")
   let indices = createRaster(uint32, source)
@@ -159,7 +73,7 @@ proc initRasterLookup*(
   indices.band().noData = some(0.0)
   let projected = indices.warp(
     config = WarpConfig(
-      targetCrs: target.crsDefinition,
+      targetCrs: target.crs,
       bounds: some(target.bounds),
       outputSize: some(initRasterOutputSize(target.width, target.height)),
       resampling: RasterResampling.nearest,
@@ -171,95 +85,14 @@ proc initRasterLookup*(
       verticalShift: some(false), # Cell identifiers are not elevation samples.
     )
   )
-  result = RasterLookup(
-    lookupWidth: target.width,
-    lookupHeight: target.height,
-    cellCount: count,
-    ids: read[uint32](projected.band()),
-  )
+  var ids = read[uint32](projected.band())
   if clip != nil:
     let mask = rasterizeMask(clip, target)
-    for i in 0 ..< result.ids.len:
+    for i in 0 ..< ids.len:
       if mask[i] == 0:
-        result.ids[i] = 0
-  for id in result.ids:
+        ids[i] = 0
+  for id in ids:
     if uint64(id) > uint64(count):
       raise newException(IOError, "reprojection returned an invalid source cell index")
 
-func width*(lookup: RasterLookup): int =
-  lookup.lookupWidth
-func height*(lookup: RasterLookup): int =
-  lookup.lookupHeight
-func len*(lookup: RasterLookup): int =
-  lookup.ids.len
-func sourceCellCount*(lookup: RasterLookup): int =
-  lookup.cellCount
-
-proc `[]`*(lookup: RasterLookup, x, y: int): Option[int] =
-  ## Return a zero-based source color index, or none outside the source or clip.
-  if x < 0 or y < 0 or x >= lookup.width or y >= lookup.height:
-    raise newException(ValueError, "raster lookup pixel is out of range")
-  let id = lookup.ids[y * lookup.width + x]
-  if id == 0:
-    none(int)
-  else:
-    some(int(id) - 1)
-
-iterator items*(lookup: RasterLookup): Option[int] =
-  ## Visit source indices in output row-major order.
-  for id in lookup.ids:
-    yield (if id == 0: none(int) else: some(int(id) - 1))
-
-proc initHatchStyle*(
-    period: Positive = 6, thickness: Positive = 1, brightness = 0.7
-): HatchStyle =
-  ## Darken stripes where (x + y) mod period < thickness.
-  ## Brightness is a channel multiplier in 0..1, truncated to bytes. Alpha is kept.
-  if thickness > period or classify(brightness) in {fcNan, fcInf, fcNegInf} or
-      brightness < 0 or brightness > 1:
-    raise newException(ValueError, "invalid hatch style")
-  HatchStyle(
-    stripePeriod: period, stripeThickness: thickness, stripeBrightness: brightness
-  )
-
-proc colorize*(
-    lookup: RasterLookup,
-    colors: openArray[Rgba8],
-    output: var openArray[Rgba8],
-    hatch: openArray[bool] = [],
-    style = initHatchStyle(),
-) =
-  ## Fill a caller-owned RGBA buffer, which can be reused for every layer.
-  ## colors and optional hatch each contain one entry per source cell. output
-  ## contains lookup.len pixels. Masked pixels become transparent black; selected
-  ## colors preserve straight RGB and alpha. Input and output must not overlap.
-  ## A source cell can be made invisible by setting its color alpha to zero.
-  if lookup.len == 0 or colors.len != lookup.cellCount or output.len != lookup.len or
-      (hatch.len != 0 and hatch.len != lookup.cellCount):
-    raise newException(
-      ValueError, "color, hatch or output length does not match raster lookup"
-    )
-  if hatch.len != 0 and (style.stripePeriod <= 0 or style.stripeThickness <= 0):
-    raise newException(ValueError, "uninitialized hatch style")
-  for i, id in lookup.ids:
-    var color: Rgba8
-    if id != 0:
-      let cell = int(id) - 1
-      color = colors[cell]
-      if hatch.len != 0 and color.a != 0 and hatch[cell] and
-          (i mod lookup.width + i div lookup.width) mod style.stripePeriod <
-          style.stripeThickness:
-        color.r = uint8(float64(color.r) * style.stripeBrightness)
-        color.g = uint8(float64(color.g) * style.stripeBrightness)
-        color.b = uint8(float64(color.b) * style.stripeBrightness)
-    output[i] = color
-
-proc colorize*(
-    lookup: RasterLookup,
-    colors: openArray[Rgba8],
-    hatch: openArray[bool] = [],
-    style = initHatchStyle(),
-): seq[Rgba8] =
-  ## Allocate and fill a straight RGBA buffer. Use the output overload to reuse storage.
-  result = newSeq[Rgba8](lookup.len)
-  lookup.colorize(colors, result, hatch, style)
+  result = initRasterLookup(target.width, target.height, count, move(ids))

@@ -1,5 +1,6 @@
 import std/unittest
-import ngis/[gdal, datasets, vector, features]
+import ngis/gdal/[datasets, vector, features]
+import ngis/gdal/api
 
 suite "typed feature attributes":
   test "schema, values, states, and feature lifecycle":

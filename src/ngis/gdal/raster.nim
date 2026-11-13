@@ -2,13 +2,12 @@
 ## when that dataset is explicitly closed.
 import std/options
 import ./[api, datasets]
+import ../raster as rastervalues
+export RasterSize
 
-type
-  RasterBand* = object
-    owner: Dataset
-    index: int
-
-  RasterSize* = tuple[width, height: int]
+type RasterBand* = object
+  owner: Dataset
+  index: int
 
 proc band*(dataset: Dataset, index = 1): RasterBand =
   ## Return the one-based band at `index`.

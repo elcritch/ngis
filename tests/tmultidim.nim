@@ -1,5 +1,6 @@
 import std/unittest
-import ngis/[gdal, datasets, multidim]
+import ngis/gdal/[datasets, multidim]
+import ngis/gdal/api
 
 suite "owning multidimensional API":
   test "groups, dimensions, slabs and attributes survive original dataset close":

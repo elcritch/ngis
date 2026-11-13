@@ -1,5 +1,5 @@
 import std/unittest
-import ngis/[datasets, raster, rasterio]
+import ngis/gdal/[datasets, raster, rasterio]
 
 suite "raster grids and windows":
   test "typed grids round trip and tile edges":

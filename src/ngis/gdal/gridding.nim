@@ -1,40 +1,11 @@
 ## GDAL IDW over metric grids, with a separate nearest-reading coverage mask.
-import std/[algorithm, math]
+import std/math
 import ./algorithms
-import ../metricgrid
-export MetricSample, GridSpec
-
-type IdwGridOptions* = object ## GDAL interpolation and output coverage policy.
-  power*: float = 2.0 ## Finite positive exponent; no smoothing is applied.
-  neighbors*: int = 0 ## Zero uses all locations; positive values select the nearest k.
-  coverageRadius*: float = Inf ## Positive nearest-location cutoff; Inf disables it.
-  noData*: float = NaN ## Value for uncovered cells or an empty set of observations.
+import ../gridding as gridvalues
+export gridvalues
 
 func finite(value: float): bool =
   classify(value) notin {fcNan, fcInf, fcNegInf}
-
-func compareSamples(a, b: MetricSample): int =
-  result = cmp(a.x, b.x)
-  if result == 0:
-    result = cmp(a.y, b.y)
-  if result == 0:
-    result = cmp(a.value, b.value)
-
-proc locationMeans(samples: openArray[MetricSample]): seq[MetricSample] =
-  var ordered: seq[MetricSample]
-  for sample in samples:
-    if finite(sample.x) and finite(sample.y) and finite(sample.value):
-      ordered.add(sample)
-  ordered.sort(compareSamples)
-  var count = 0
-  for sample in ordered:
-    if result.len > 0 and sample.x == result[^1].x and sample.y == result[^1].y:
-      count.inc()
-      result[^1].value =
-        result[^1].value * ((count - 1).float / count.float) + sample.value / count.float
-    else:
-      count = 1
-      result.add(sample)
 
 proc gridIdw*(
     samples: openArray[MetricSample],
@@ -61,7 +32,7 @@ proc gridIdw*(
       classify(options.coverageRadius) in {fcNan, fcNegInf} or
       options.coverageRadius <= 0 or classify(options.noData) in {fcInf, fcNegInf}:
     raise newException(ValueError, "invalid or oversized IDW grid input")
-  let locations = locationMeans(samples)
+  let locations = locationMeans(samples, maxSamples)
   if locations.len == 0:
     result = newSeq[float64](spec.columns * spec.rows)
     for value in result.mitems:

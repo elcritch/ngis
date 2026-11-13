@@ -3,10 +3,6 @@ import ./[api, spatialrefs]
 import ../coordinatevalues
 export spatialrefs, coordinatevalues
 
-type AxisOrder* {.pure.} = enum
-  authority
-  traditionalGis
-
 proc `axisOrder=`*(reference: SpatialReference, order: AxisOrder) =
   ## Set explicitly; without this setter GDAL's default axis order applies.
   reference.axisMappingStrategy = (

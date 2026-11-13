@@ -1,5 +1,6 @@
 import std/unittest
-import ngis/[gdal, datasets, vector, vectorextras]
+import ngis/gdal/[datasets, vector, vectorextras]
+import ngis/gdal/api
 
 suite "vector resources":
   test "schema definitions copy their fields":

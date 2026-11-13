@@ -4,6 +4,8 @@ import ./api
 import ./datasets
 import ./spatialrefs
 import ./private/resources
+import ../coordinatevalues
+export Point3D
 
 type
   AlgorithmRegistry* = ref object
@@ -348,9 +350,6 @@ type
 
   GridContext* = ref object
     resource: NativeResource[ptr GDALGridContext]
-
-  Point3D* = object
-    x*, y*, z*: float64
 
 proc releaseTransformer(h: pointer) {.nimcall, raises: [].} =
   GDALDestroyTransformer(h)

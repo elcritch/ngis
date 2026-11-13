@@ -1,5 +1,5 @@
 import std/[unittest, os]
-import ngis/processes
+import ngis/gdal/processes
 
 if paramCount() > 0 and paramStr(1) == "child":
   stdout.write("hello")

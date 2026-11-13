@@ -1,5 +1,5 @@
 import std/[algorithm, math, random, unittest]
-import ngis/[algorithms, gridding]
+import ngis/gdal/[algorithms, gridding]
 
 proc scanIdw(
     samples: openArray[MetricSample], x, y, power: float, neighbors: int

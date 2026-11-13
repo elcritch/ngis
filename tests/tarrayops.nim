@@ -1,5 +1,5 @@
 import std/unittest
-import ngis/[datasets, multidim, arrayops]
+import ngis/gdal/[datasets, multidim, arrayops]
 
 suite "multidimensional array workflows":
   test "typed arrays, slices, lookup, iteration and retained handles":

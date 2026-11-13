@@ -1,5 +1,6 @@
 import std/[unittest, strutils]
-import ngis/[gdal, datasets, raster, advanced, multidim]
+import ngis/gdal/[datasets, raster, advanced, multidim]
+import ngis/gdal/api
 
 proc writer(
     level: cdouble, count: cint, x, y: ptr cdouble, data: pointer

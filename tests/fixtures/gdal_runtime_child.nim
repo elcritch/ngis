@@ -1,5 +1,6 @@
 import std/[os, assertions]
-import ngis/[api, gdal]
+import ngis/gdal
+import ngis/gdal/api
 
 let mode = paramStr(1)
 let path = paramStr(2)

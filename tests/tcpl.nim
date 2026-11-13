@@ -1,5 +1,6 @@
 import std/[unittest, strutils, os]
-import ngis/[gdal, cpl]
+import ngis/gdal/[cpl]
+import ngis/gdal/api
 
 proc hashPointer(p: pointer): culong {.cdecl, raises: [].} =
   CPLHashSetHashPointer(p)

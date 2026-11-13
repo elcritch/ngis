@@ -1,11 +1,15 @@
 # High-level Nim API
 
-Import `ngis/api` for Nim values and automatically managed resources. Import `ngis/gdal/api` separately when a workflow needs a raw C call. `import ngis` continues to expose both layers.
+Import `ngis` or `ngis/api` for backend-independent types and utilities. Neither
+requires GDAL headers or a shared library. Import `ngis/gdal` explicitly for owning
+GDAL datasets, file I/O, reprojection and native operations. Import `ngis/gdal/api`
+separately when a workflow needs a raw C call.
 
-Individual owning modules use paths such as `ngis/gdal/datasets`,
-`ngis/gdal/rasterio`, and `ngis/gdal/gridding`. Their previous top-level paths remain
-compatibility imports. The raw C declarations live in `ngis/gdal/api/`; the old
-`ngis/gdal` facade continues to export the raw API.
+Shared raster/array buffers, coordinates, field values, geometry kinds, rendering
+values and interpolation policy live directly under `ngis/`. GDAL modules such as
+`ngis/gdal/datasets`, `ngis/gdal/rasterio`, and `ngis/gdal/gridding` consume those
+same types. Former top-level backend imports have been removed. The native workflow
+examples below opt in to the GDAL backend.
 
 ## Raster pixels and windows
 
@@ -17,7 +21,7 @@ compatibility imports. The raw C declarations live in `ngis/gdal/api/`; the old
 
 ## Map rendering
 
-`RasterLayout` describes a north-up raster using width, height, outer-edge `Bounds`, and a CRS definition. Construct it with `initRasterLayout(width, height, bounds, crs)`. Bounds must have finite positive area; CRS definitions are parsed immediately. Coordinates use traditional GIS x/y order. Access `.width`, `.height`, `.bounds`, `.crs`, and `.affineTransform`, or create a georeferenced in-memory dataset with `createRaster(uint8, layout)`.
+`RasterLayout` describes a north-up raster using width, height, outer-edge `Bounds`, and a CRS definition. Construct it with `initRasterLayout(width, height, bounds, crs)`. Bounds must have finite positive area; CRS definitions are retained as supplied and parsed by the backend when used. Coordinates use traditional GIS x/y order. Access `.width`, `.height`, `.bounds`, `.crs`, and `.affineTransform`, or create a georeferenced in-memory dataset with `createRaster(uint8, layout)`.
 
 `initRasterLookup(sourceLayout, targetLayout, clip = boundary)` computes an exact nearest-neighbor mapping once for a family of map layers. It warps source cell IDs and rasterizes the optional clipping geometry at the output resolution, preserving holes and multipart shapes. Clipping coordinates must already be in the target CRS; attached geometry CRS metadata does not reproject them. The source colors remain available outside the clipped area for later reuse.
 
@@ -47,7 +51,7 @@ Lookup construction defaults to one warp computation thread and 32 MiB of warp w
 `createVector()` creates an in-memory vector dataset. Create layers with `GeometryKind` and fields with `FieldSpec`:
 
 ```nim
-import ngis/api
+import ngis/gdal
 
 let data = createVector()
 let layer = data.createLayer("stations", GeometryKind.point)
@@ -73,9 +77,9 @@ Construct geometry using `newPoint`, `newLineString`, `newPolygon` with optional
 For GPS projections, sparse observation grids, local interpolation, and prepared
 polygon queries, see the [local mapping guide](local_mapping.md). `ngis/mapping`
 exports these tools without GDAL and supports JavaScript. They are also available
-through `ngis/api` and share its `Coordinate` type.
+through `ngis` and `ngis/api`, and share their `Coordinate` type with the GDAL backend.
 
-`gridding.gridIdw(samples, spec, IdwGridOptions(...))` uses GDAL to interpolate every
+`gridIdw(samples, spec, IdwGridOptions(...))` from `ngis/gdal/gridding` uses GDAL to interpolate every
 metric grid cell from original sample positions, with configurable power and all
 or nearest-k locations. Its coverage radius masks output separately from the
 contributor search. See [GDAL IDW grids](local_mapping.md#gdal-idw-grids).
@@ -107,7 +111,7 @@ Read a metadata key with `dataset.metadata(name)`, which returns `Option[string]
 Pass a closure as `progress` to observe a synchronous operation:
 
 ```nim
-import ngis/api
+import ngis/gdal
 
 let source = createRaster(uint8, 2, 2)
 var calls = 0

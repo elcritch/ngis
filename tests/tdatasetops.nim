@@ -1,5 +1,6 @@
 import std/[options, tables, unittest]
-import ngis/[coordinates, datasetops, datasets, drivers, gdal, raster, vector]
+import ngis/gdal/[coordinates, datasetops, datasets, drivers, raster, vector]
+import ngis/gdal/api
 
 suite "dataset conveniences":
   test "open and update a GTiff with explicit options":

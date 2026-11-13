@@ -40,7 +40,7 @@ suite "GDAL vector C API":
     check OSRIsSame(srs, clone) != 0
     check OSRGetAxisMappingStrategy(clone) == OAMS_TRADITIONAL_GIS_ORDER
 
-import ngis/[datasets, vector]
+import ngis/gdal/[datasets, vector]
 
 suite "Owned vector objects":
   test "create and read features from an in-memory layer":

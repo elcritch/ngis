@@ -4,11 +4,12 @@ The generated raw bindings target GDAL **3.13.3** public C headers. `src/ngis/gd
 
 Import `ngis/gdal/api` for the raw C API. Its declarations and supporting modules
 live under `src/ngis/gdal/api/`; owning wrappers live directly under
-`src/ngis/gdal/`. The `ngis/gdal` facade remains a compatibility raw import.
+`src/ngis/gdal/`. The `ngis/gdal` entry point opts into the owning backend. The default `ngis` and
+`ngis/api` imports do not import GDAL or require its headers.
 
 ## Runtime loading
 
-Importing `ngis/api`, `ngis/gdal/api` or `ngis` attempts to load GDAL automatically by default. Discovery uses platform library names and macOS Homebrew fallback locations at runtime. `-d:gdalLib=/path/to/libgdal` selects a library at compile time; `-d:gdalDynlib=...` is an alternative override with precedence over `gdalLib`. An explicit `loadGdal(path)` overrides either define.
+Importing `ngis/gdal` or `ngis/gdal/api` attempts to load GDAL automatically by default. Discovery uses platform library names and macOS Homebrew fallback locations at runtime. `-d:gdalLib=/path/to/libgdal` selects a library at compile time; `-d:gdalDynlib=...` is an alternative override with precedence over `gdalLib`. An explicit `loadGdal(path)` overrides either define.
 
 Compile with `-d:gdalRuntime`, `-d:feature.ngis.runtime`, or `-d:features.ngis.runtime` to skip import-time loading. Atlas consumers can request the `runtime` feature. Call `loadGdal()` or `loadGdal(path = "/path/to/libgdal")` before any GDAL call and before starting workers that use GDAL. Failure raises catchable `GdalLoadError` and can be retried. `isGdalLoaded()` and `gdalLibraryPath()` report the load state and selected path. Repeated loads are idempotent; a successful library stays loaded for the process lifetime and cannot be replaced. Symbols absent from the loaded library remain nil: check an optional procedure before calling it. Loading controls runtime availability, not all build dependencies: for example, `VSIStatBufL` still requires a GDAL header.
 

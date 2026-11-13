@@ -1,6 +1,6 @@
 ## Exercise explicit runtime loading without letting failures poison a retry.
 import std/[os, osproc, tempfiles, unittest]
-import ngis/gdal
+import ngis/gdal/api
 
 const expectMissing {.booldefine.} = false
 

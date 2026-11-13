@@ -1,5 +1,5 @@
 import std/[unittest, math]
-import ngis/coordinates
+import ngis/gdal/coordinates
 
 suite "coordinate values":
   test "bounds include touching edges":

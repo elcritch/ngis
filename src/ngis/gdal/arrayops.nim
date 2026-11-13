@@ -1,73 +1,7 @@
-## Typed multidimensional arrays, slices, and owned row-major values.
+## GDAL multidimensional I/O using shared array and slice values.
 import ./[api, multidim]
-
-type
-  ArraySlice* = object
-    starts, counts: seq[uint64]
-
-  ArrayData*[T] = object
-    dimensions: seq[uint64]
-    values: seq[T]
-
-proc elementCount(shape: openArray[uint64]): int =
-  result = 1
-  for size in shape:
-    if size == 0 or size > uint64(high(int)) or result > high(int) div int(size):
-      raise newException(ValueError, "invalid array shape")
-    result *= int(size)
-
-proc initArraySlice*(starts, counts: openArray[uint64]): ArraySlice =
-  ## Construct a slice; array bounds are checked when it is used.
-  if starts.len != counts.len:
-    raise newException(ValueError, "slice start and count ranks differ")
-  discard elementCount(counts)
-  ArraySlice(starts: @starts, counts: @counts)
-
-proc start*(slice: ArraySlice): seq[uint64] =
-  slice.starts
-
-proc count*(slice: ArraySlice): seq[uint64] =
-  slice.counts
-
-proc initArrayData*[T](shape: openArray[uint64]): ArrayData[T] =
-  let count = elementCount(shape)
-  if count > high(int) div sizeof(T):
-    raise newException(ValueError, "array buffer is too large")
-  ArrayData[T](dimensions: @shape, values: newSeq[T](count))
-
-proc initArrayData*[T](shape: openArray[uint64], values: sink seq[T]): ArrayData[T] =
-  if elementCount(shape) != values.len:
-    raise newException(ValueError, "array buffer length does not match shape")
-  ArrayData[T](dimensions: @shape, values: values)
-
-proc shape*[T](data: ArrayData[T]): seq[uint64] =
-  data.dimensions
-
-proc len*[T](data: ArrayData[T]): int =
-  data.values.len
-
-proc offset[T](data: ArrayData[T], indices: openArray[int]): int =
-  if elementCount(data.dimensions) != data.values.len:
-    raise newException(ValueError, "invalid array data")
-  if indices.len != data.dimensions.len:
-    raise newException(ValueError, "array index rank does not match shape")
-  for i, index in indices:
-    if index < 0 or uint64(index) >= data.dimensions[i]:
-      raise newException(ValueError, "array index is out of bounds")
-    result = result * int(data.dimensions[i]) + index
-
-proc `[]`*[T](data: ArrayData[T], indices: varargs[int]): T =
-  data.values[data.offset(indices)]
-
-proc `[]=`*[T](data: var ArrayData[T], indices: varargs[int], value: T) =
-  data.values[data.offset(indices)] = value
-
-proc `[]=`*[T](data: var ArrayData[T], value: T) =
-  data.values[data.offset([])] = value
-
-iterator items*[T](data: ArrayData[T]): T =
-  for value in data.values:
-    yield value
+import ../arrayops as arrayvalues
+export arrayvalues
 
 proc hasKey*(group: Group, name: string): bool =
   ## Report whether an array with this name is present.
@@ -121,10 +55,10 @@ proc createArray*[T](
   group.createArray(name, dims, numericType(primitiveType(T)))
 
 proc read*[T](array: MDArray, slice: ArraySlice, elementType: typedesc[T]): seq[T] =
-  array.readSlab(slice.starts, slice.counts, T)
+  array.readSlab(slice.start, slice.count, T)
 
 proc write*[T](array: MDArray, slice: ArraySlice, values: openArray[T]) =
-  array.writeSlab(slice.starts, slice.counts, values)
+  array.writeSlab(slice.start, slice.count, values)
 
 proc readArrayData*[T](array: MDArray, elementType: typedesc[T]): ArrayData[T] =
   initArrayData(array.shape, array.read(T))
@@ -132,14 +66,14 @@ proc readArrayData*[T](array: MDArray, elementType: typedesc[T]): ArrayData[T] =
 proc readArrayData*[T](
     array: MDArray, slice: ArraySlice, elementType: typedesc[T]
 ): ArrayData[T] =
-  initArrayData(slice.counts, array.read(slice, T))
+  initArrayData(slice.count, array.read(slice, T))
 
 proc write*[T](array: MDArray, data: ArrayData[T]) =
-  if array.shape != data.dimensions or elementCount(data.dimensions) != data.values.len:
+  if array.shape != data.shape or arrayElementCount(data.shape) != data.len:
     raise newException(ValueError, "array data shape does not match array")
-  array.write(data.values)
+  array.write(data.data)
 
 proc write*[T](array: MDArray, slice: ArraySlice, data: ArrayData[T]) =
-  if slice.counts != data.dimensions or elementCount(data.dimensions) != data.values.len:
+  if slice.count != data.shape or arrayElementCount(data.shape) != data.len:
     raise newException(ValueError, "array data shape does not match slice")
-  array.write(slice, data.values)
+  array.write(slice, data.data)

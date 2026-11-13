@@ -2,14 +2,14 @@
 
 `import ngis/mapping` exports standard-library-only tools for native Nim and
 JavaScript. It works without GDAL headers or a shared library. These tools are
-also exported by `ngis/api`, alongside the GDAL workflows.
+also exported by the GDAL-free `ngis` and `ngis/api` entry points.
 
 The numeric core comes from the mapping utilities in `sam1_utils`. Module names
 follow ngis conventions: `mapprojection`, `metricgrid`, `localidw`, and
 `polygonqueries`. `initLocalProjection` constructs a value; projected positions
 and polygon vertices use ngis's existing `Coordinate` type. `coordinatevalues`
 holds that type, `Bounds`, and `AffineTransform` without native dependencies;
-`coordinates` continues to export them with the GDAL CRS API.
+`ngis/gdal/coordinates` consumes those shared values for GDAL CRS transformations.
 
 ## GPS projections
 
@@ -75,7 +75,7 @@ the work or candidate budget sets `limitReached` and returns no estimated cells.
 ## GDAL IDW grids
 
 `ngis/gdal/gridding` supplies `gridIdw(samples, spec, options)` for native GDAL callers.
-It is also exported by `ngis/api`; it is separate from the standalone JavaScript
+It is also exported by `ngis/gdal`; it is separate from the standalone JavaScript
 modules. GDAL performs the interpolation using `invdist` for all locations or
 `invdistnn` for the nearest locations. No new interpolation engine is involved.
 
@@ -159,7 +159,7 @@ across queries. Read-only queries do not mutate the polygon or retain caller inp
 
 ```sh
 atlas-run tests
-atlas-run tests --backend:js mapping mapprojection metricgrid localidw polygonqueries polygonindex
+atlas-run tests --backend:js ngis mapping mapprojection metricgrid localidw polygonqueries polygonindex
 ```
 
 The test configuration defines `nodejs` for JavaScript so failed `unittest`

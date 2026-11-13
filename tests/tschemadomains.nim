@@ -1,5 +1,6 @@
 import std/unittest
-import ngis/[schemadomains, gdal, spatialrefs, datasets]
+import ngis/gdal/[schemadomains, spatialrefs, datasets]
+import ngis/gdal/api
 
 suite "schema resources":
   test "coded, glob and range domains own their native data":

@@ -2,6 +2,12 @@
 
 ## Project Structure & Modules
 - `src/`: Library modules. Keep the root module named after the package.
+- `src/ngis/`: Backend-independent shared types, native implementations, and generic utilities.
+  `import ngis` and `import ngis/api` must work without GDAL headers or a shared library.
+- `src/ngis/gdal/`: Opt-in GDAL implementations and resource wrappers; `ngis/gdal` is their entry point.
+- `src/ngis/gdal/api/`: Generated raw C bindings and their inventories; import `ngis/gdal/api` explicitly.
+- Keep shared value types in the core and have backends consume them. Do not add top-level
+  compatibility modules that forward old APIs to the GDAL backend.
 - `tests/`: Unit tests using Nim's `unittest`; test files should start with `t`.
 - Root files: `ngis.nimble` for package metadata, `config.nims` for common compiler switches, and `README.md` for usage.
 

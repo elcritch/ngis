@@ -1,5 +1,5 @@
 import std/unittest
-import ngis/[geometryops, datasetops, datasets]
+import ngis/gdal/[geometryops, datasetops, datasets]
 
 suite "geometry conveniences":
   test "construct and clone rings":

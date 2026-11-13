@@ -1,17 +1,7 @@
 ## Convenience geometry construction and operations.
 import ./[api, vector, coordinates, datasets]
-export vector, coordinates
-
-type GeometryKind* {.pure.} = enum
-  unknown
-  point
-  lineString
-  polygon
-  multiPoint
-  multiLineString
-  multiPolygon
-  collection
-  none
+import ../geometry
+export vector, coordinates, geometry
 
 proc nativeKind(kind: GeometryKind): OGRwkbGeometryType =
   case kind

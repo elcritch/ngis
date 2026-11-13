@@ -1,5 +1,6 @@
 import std/unittest
-import ngis/[gdal, datasets, raster, asyncio]
+import ngis/gdal/[datasets, raster, asyncio]
+import ngis/gdal/api
 
 suite "asynchronous raster reader":
   test "owns buffer and keeps dataset alive after source close":

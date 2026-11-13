@@ -1,5 +1,6 @@
 import std/[options, unittest]
-import ngis/[gdal, vsi]
+import ngis/gdal/[vsi]
+import ngis/gdal/api
 
 suite "owning VSI resources":
   test "memory files support seek, stat, truncate and shared close":

@@ -1,6 +1,6 @@
 ## Compile this bundle to check the public examples; it is not a test runner.
 import std/options
-import ngis/api
+import ngis/gdal
 
 proc rasterExample() =
   let image = createRaster(float32, 2, 2)

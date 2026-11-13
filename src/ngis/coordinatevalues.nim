@@ -57,3 +57,10 @@ proc worldToPixel*(t: AffineTransform, world: Coordinate): Coordinate =
     x: (dx * t.pixelHeight - dy * t.rowRotation) / determinant,
     y: (dy * t.pixelWidth - dx * t.columnRotation) / determinant,
   )
+
+type AxisOrder* {.pure.} = enum
+  authority
+  traditionalGis
+
+type Point3D* = object
+  x*, y*, z*: float64

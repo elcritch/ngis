@@ -1,7 +1,7 @@
 ## Optional example: add Pixie to the application's Atlas dependencies.
 ## Run with `nim r -d:release render_pixie.nim [output.png]`.
 import std/os
-import ngis/api
+import ngis/gdal
 import pixie/fileformats/png
 
 let source = initRasterLayout(2, 2, initBounds(10, 40, 12, 42), "EPSG:4326")

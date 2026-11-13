@@ -1,26 +1,4 @@
-## High-level GDAL workflows using Nim values, iterators and automatic cleanup.
-##
-## Use `ngis/gdal/api` alongside this module for direct C API access.
-##
-## .. code-block:: nim
-##   import ngis/api
-##   let image = createRaster(float32, 2, 2)
-##   var pixels = initRasterGrid[float32](2, 2)
-##   pixels[1, 0] = 12.5
-##   image.band().write(pixels)
-##   echo readGrid[float32](image.band())[1, 0]
-import
-  ./gdal/[
-    runtime, datasets, datasetops, drivers, raster, rasterio, rasterextras, vector,
-    features, geometryops, vectorextras, spatialrefs, coordinates, schemadomains,
-    multidim, arrayops, gridding, operations, processing, rendering, utilities,
-    algorithms, asyncio, advanced, cpl, vsi, memory, plugins, progress, processes,
-    networks,
-  ]
-import ./mapping
-export
-  datasets, datasetops, drivers, raster, rasterio, rasterextras, vector, features,
-  geometryops, vectorextras, spatialrefs, coordinates, schemadomains, multidim,
-  arrayops, mapping, gridding, operations, processing, rendering, utilities, algorithms,
-  asyncio, advanced, cpl, vsi, memory, plugins, progress, processes, networks
-export runtime except registerGdalImports
+## Backend-independent GIS values and utilities. No GDAL headers or library required.
+## Import ngis/gdal explicitly for the GDAL backend.
+import ./[mapping, raster, arrayops, features, geometry, rendering, gridding]
+export mapping, raster, arrayops, features, geometry, rendering, gridding

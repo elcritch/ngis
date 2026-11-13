@@ -1,5 +1,6 @@
 import std/[options, unittest]
-import ngis/[datasets, raster, gdal]
+import ngis/gdal/[datasets, raster]
+import ngis/gdal/api
 
 suite "raster convenience API":
   test "window IO, geotransform, nodata and metadata":

@@ -1,6 +1,6 @@
 # ngis
 
-Work with GDAL rasters, vector data, multidimensional arrays, and coordinate systems from Nim. Use typed grids, feature values, geometry operations, iterators, and processing options with automatic resource cleanup. The complete GDAL C API is available alongside the high-level API. Standalone mapping tools also support GPS projection, sparse observations, interpolation, and polygon queries without GDAL.
+GIS values and mapping tools for Nim, with an optional GDAL backend. Use `import ngis` for shared coordinates, raster and array buffers, field values, local GPS projections, interpolation tools, polygon queries, and map colorization. The core uses only the standard library and supports native Nim and JavaScript. Opt in with `import ngis/gdal` for GDAL datasets, file formats, reprojection, gridding, and native resources.
 
 ## Install
 
@@ -10,12 +10,12 @@ Install Nim 2.2 or later. For the GDAL modules, also install the GDAL 3.13.3 dev
 requires "https://github.com/elcritch/ngis"
 ```
 
-Run `atlas install` in your project. By default ngis tries to load GDAL at import time using platform library names and, on macOS, Homebrew locations. Use `-d:gdalLib=/path/to/libgdal` when compiling to select a library (`gdalDynlib` is also accepted and takes precedence). The currently tested platforms are macOS arm64 and 64-bit Linux; Windows needs native ABI validation.
+Run `atlas install` in your project. Importing the GDAL backend tries to load GDAL at import time using platform library names and, on macOS, Homebrew locations. Use `-d:gdalLib=/path/to/libgdal` when compiling to select a library (`gdalDynlib` is also accepted and takes precedence). The currently tested platforms are macOS arm64 and 64-bit Linux; Windows needs native ABI validation.
 
-For applications that can operate without GDAL, compile with `-d:gdalRuntime` (or request ngis's Atlas `runtime` feature) and load it explicitly before using GDAL or starting workers that use it:
+The core already operates without GDAL. To defer loading after opting into the GDAL backend, compile with `-d:gdalRuntime` (or request ngis's Atlas `runtime` feature) and load it explicitly before using GDAL or starting workers that use it:
 
 ```nim
-import ngis/api
+import ngis/gdal
 
 try:
   loadGdal() # Or loadGdal(path = "/path/to/libgdal")
@@ -24,12 +24,12 @@ except GdalLoadError as error:
   echo "GDAL unavailable: ", error.msg
 ```
 
-`isGdalLoaded()` reports whether loading succeeded. Failed loads can be retried; a successful load remains in use for the process lifetime. Optional symbols missing from the library remain nil, so check them before calling. Explicit loading controls runtime availability; building still requires GDAL development headers. See [binding generation and checks](docs/bindings.md) for details.
+`isGdalLoaded()` reports whether loading succeeded. Failed loads can be retried; a successful load remains in use for the process lifetime. Optional symbols missing from the library remain nil, so check them before calling. Explicit loading controls runtime availability; building the GDAL backend still requires GDAL development headers. See [binding generation and checks](docs/bindings.md) for details.
 
 ## Raster quick start
 
 ```nim
-import ngis/api
+import ngis/gdal
 
 let image = createRaster(float32, 2, 2)
 var pixels = initRasterGrid(2, 2, @[1'f32, 2, 3, 4])
@@ -45,7 +45,7 @@ for window in image.band().tiles(256, 256):
 Compute reprojection and clipping once, then reuse the pixel lookup for each layer:
 
 ```nim
-import ngis/api
+import ngis/gdal
 
 let source = initRasterLayout(2, 2, initBounds(10, 40, 12, 42), "EPSG:4326")
 let target = initRasterLayout(512, 512, initBounds(9.9, 39.9, 12.1, 42.1), "EPSG:4326")
@@ -85,13 +85,13 @@ wrapping across the antimeridian. `aggregateObserved` retains only occupied cell
 `initPolygon2D` prepares repeated point queries with holes and explicit boundary results.
 All use the same double-precision `Coordinate` as the GDAL API.
 
-These tools are also exported by `ngis/api`. See the [local mapping guide](docs/local_mapping.md)
+These tools are also exported by `ngis` and `ngis/api`. See the [local mapping guide](docs/local_mapping.md)
 for coordinate limits, missing values, and computation budgets. Importing `ngis/mapping`
 directly requires neither GDAL headers nor its shared library.
 
 For GDAL interpolation over every grid cell at the original sample positions, use
 `gridIdw(samples, spec, IdwGridOptions(power: 2, neighbors: 0, coverageRadius: 30))`
-from `ngis/gdal/gridding` or `ngis/api`. Zero neighbors uses all valid locations; a positive
+from `ngis/gdal/gridding` or `ngis/gdal`. Zero neighbors uses all valid locations; a positive
 count selects the nearest locations. The coverage cutoff controls where estimates
 appear, independently of which locations contribute. Exact-position replicates are
 averaged, missing values stay missing, and output rows increase with y. See
@@ -100,7 +100,7 @@ averaged, missing values stay missing, and output rows increase with y. See
 ## Vector data
 
 ```nim
-import ngis/api
+import ngis/gdal
 
 let data = createVector()
 let crs = newSpatialReference(4326, AxisOrder.traditionalGis)
@@ -119,7 +119,7 @@ Use `AxisOrder.traditionalGis` for longitude/latitude or easting/northing coordi
 ## Multidimensional arrays
 
 ```nim
-import ngis/api
+import ngis/gdal
 
 let data = createMultiDimDataset()
 let root = data.rootGroup()
@@ -135,7 +135,7 @@ Copy, crop, resize, and reproject using Nim configuration values:
 
 ```nim
 import std/options
-import ngis/api
+import ngis/gdal
 
 let source = createRaster(uint8, 2, 2)
 source.band().write(initRasterGrid(2, 2, @[1'u8, 2, 3, 4]))
@@ -156,8 +156,11 @@ CPL and virtual filesystem helpers are available too: `parseXml`, `newStringList
 
 ## API guide
 
+The GDAL-specific modules below are under `ngis/gdal/`; shared core modules are listed separately.
+
 | Area | Modules and resources |
 | --- | --- |
+| Shared core | `raster`, `arrayops`, `features`, `geometry`, `coordinatevalues`, `rendering`, `gridding`: values and utilities without GDAL |
 | Datasets and drivers | `datasets`, `datasetops`, `drivers`: opening options, metadata, CRS properties, datasets and drivers |
 | Raster | `raster`, `rasterio`, `rasterextras`, `asyncio`: typed grids, tiles, resampling, bands, tables and async readers |
 | Map rendering | `rendering`: georeferenced layouts, reusable pixel lookups, output-resolution masks, RGBA colors and hatching |
@@ -171,17 +174,21 @@ CPL and virtual filesystem helpers are available too: `parseXml`, `newStringList
 | Networks | `networks`: GNM networks, when the installed GDAL build includes GNM |
 | Raw C API | `gdal/api`: generated GDAL, OGR, OSR, CPL and VSI declarations and macro equivalents |
 
-`import ngis/api` exports the high-level modules. `import ngis` also exports the raw bindings for compatibility; `import ngis/gdal/api` imports only the raw bindings. See the [Nim API guide](docs/api.md) for field values, array slices, metadata, geometry operations, and progress callbacks.
+`import ngis` (or `ngis/api`) exports the backend-independent core.
+`import ngis/gdal` explicitly selects the owning GDAL backend and shared core values.
+`import ngis/gdal/api` selects the raw C API only.
 
-Owning GDAL modules live under `ngis/gdal/`, such as `ngis/gdal/rasterio`,
-`ngis/gdal/coordinates`, and `ngis/gdal/gridding`. Generated C declarations,
-macro helpers, and inventories live under `src/ngis/gdal/api/`. Standalone numeric
-modules such as `ngis/mapping` and `ngis/metricgrid` remain directly under `ngis/`.
-Existing top-level owning imports such as `ngis/rasterio` remain forwarding modules,
-and `ngis/gdal` remains a compatibility import for the raw C API. For direct raw
-submodules, use `ngis/gdal/api/bindings`, `ngis/gdal/api/raster`, or
-`ngis/gdal/api/vector`; `ngis/gdal/raster` and `ngis/gdal/vector` now contain the
-owning APIs.
+Shared types and utilities live directly under `src/ngis/`: `coordinatevalues`,
+`raster`, `arrayops`, `features`, `geometry`, `rendering`, `gridding`, and the local
+mapping modules. GDAL implementations live under `src/ngis/gdal/`; generated C
+bindings and inventories live under `src/ngis/gdal/api/`. There are no compatibility
+forwarders for the former top-level backend modules. Update native imports to paths
+such as `ngis/gdal/rasterio`, `ngis/gdal/coordinates`, and `ngis/gdal/gridding`.
+
+The shared `rendering` module constructs layouts, stores pixel lookups, and colorizes
+buffers. `ngis/gdal/rendering` constructs lookups through GDAL reprojection and
+rasterization. Layouts retain the supplied CRS definition; the selected backend
+parses it when performing native operations. See the [Nim API guide](docs/api.md).
 
 The owning Nim API covers common resource families and workflows, but does not provide a one-to-one wrapper for every C function. For other calls, use the C API directly; `rawHandle` borrows from an owner, and `adopt` factories take ownership of compatible independently owned handles. Keep owners alive for any borrowed handles. See [ownership and lifetimes](docs/ownership.md) for details.
 
@@ -192,6 +199,6 @@ The raw bindings target GDAL 3.13.3's public C headers. They do not wrap the GDA
 ```sh
 atlas install
 atlas-run tests
-atlas-run tests --backend:js mapping mapprojection metricgrid localidw polygonqueries polygonindex
+atlas-run tests --backend:js ngis mapping mapprojection metricgrid localidw polygonqueries polygonindex
 atlas-run tests --compile-only examples/all_compile.nim
 ```

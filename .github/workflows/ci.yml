@@ -23,6 +23,9 @@ jobs:
         shell: bash
         run: curl -fsSL https://raw.githubusercontent.com/nim-lang/atlas/HEAD/install.sh | bash -
 
+      - name: Test core before installing GDAL
+        run: atlas-run tests ngis mapping mapprojection metricgrid localidw polygonqueries polygonindex
+
       - name: Install GDAL
         uses: mamba-org/setup-micromamba@v2
         with:
@@ -68,7 +71,7 @@ jobs:
           atlas-run tests gdal_runtime -- -d:gdalRuntime
 
       - name: Test standalone mapping on JavaScript
-        run: atlas-run tests --backend:js mapping mapprojection metricgrid localidw polygonqueries polygonindex
+        run: atlas-run tests --backend:js ngis mapping mapprojection metricgrid localidw polygonqueries polygonindex
 
       - name: Compile examples
         shell: micromamba-shell {0}

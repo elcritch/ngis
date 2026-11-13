@@ -1,5 +1,5 @@
 import std/[unittest, tempfiles, os]
-import ngis/networks
+import ngis/gdal/networks
 
 suite "geographic networks":
   test "create and open a network when GNM is available":

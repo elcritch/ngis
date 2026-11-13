@@ -1,5 +1,6 @@
 import std/unittest
-import ngis/[gdal, memory, plugins, progress, drivers]
+import ngis/gdal/[memory, plugins, progress, drivers]
+import ngis/gdal/api
 
 proc onProgress(complete: cdouble, message: cstring, data: pointer): cint {.cdecl.} =
   cast[ptr float64](data)[] = complete

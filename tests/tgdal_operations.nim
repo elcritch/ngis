@@ -1,5 +1,6 @@
 import std/unittest
-import ngis/[datasets, operations, raster, gdal]
+import ngis/gdal/[datasets, operations, raster]
+import ngis/gdal/api
 
 suite "GDAL utility operations":
   test "translate copies raster pixels into an owned dataset":
