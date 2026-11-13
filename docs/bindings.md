@@ -1,10 +1,14 @@
 # GDAL bindings and verification
 
-The generated raw bindings target GDAL **3.13.3** public C headers. `src/ngis/gdal/bindings.json` records the header hashes, functions, and coverage; `header_inventory.json` records the disposition of installed headers, including C++ and internal/plugin headers outside the raw C API. `macro_inventory.json` records macro coverage. The C++ API is outside this binding. Some declared C entry points, including optional drivers and features, are not exported by every GDAL build.
+The generated raw bindings target GDAL **3.13.3** public C headers. `src/ngis/gdal/api/bindings.json` records the header hashes, functions, and coverage; `header_inventory.json` records the disposition of installed headers, including C++ and internal/plugin headers outside the raw C API. `macro_inventory.json` records macro coverage. The C++ API is outside this binding. Some declared C entry points, including optional drivers and features, are not exported by every GDAL build.
+
+Import `ngis/gdal/api` for the raw C API. Its declarations and supporting modules
+live under `src/ngis/gdal/api/`; owning wrappers live directly under
+`src/ngis/gdal/`. The `ngis/gdal` facade remains a compatibility raw import.
 
 ## Runtime loading
 
-Importing `ngis/api`, `ngis/gdal` or `ngis` attempts to load GDAL automatically by default. Discovery uses platform library names and macOS Homebrew fallback locations at runtime. `-d:gdalLib=/path/to/libgdal` selects a library at compile time; `-d:gdalDynlib=...` is an alternative override with precedence over `gdalLib`. An explicit `loadGdal(path)` overrides either define.
+Importing `ngis/api`, `ngis/gdal/api` or `ngis` attempts to load GDAL automatically by default. Discovery uses platform library names and macOS Homebrew fallback locations at runtime. `-d:gdalLib=/path/to/libgdal` selects a library at compile time; `-d:gdalDynlib=...` is an alternative override with precedence over `gdalLib`. An explicit `loadGdal(path)` overrides either define.
 
 Compile with `-d:gdalRuntime`, `-d:feature.ngis.runtime`, or `-d:features.ngis.runtime` to skip import-time loading. Atlas consumers can request the `runtime` feature. Call `loadGdal()` or `loadGdal(path = "/path/to/libgdal")` before any GDAL call and before starting workers that use GDAL. Failure raises catchable `GdalLoadError` and can be retried. `isGdalLoaded()` and `gdalLibraryPath()` report the load state and selected path. Repeated loads are idempotent; a successful library stays loaded for the process lifetime and cannot be replaced. Symbols absent from the loaded library remain nil: check an optional procedure before calling it. Loading controls runtime availability, not all build dependencies: for example, `VSIStatBufL` still requires a GDAL header.
 
@@ -36,7 +40,7 @@ python3 scripts/generate_abi_test.py --include "$(gdal-config --prefix)/include"
 python3 scripts/gdal_macros.py --include "$(gdal-config --prefix)/include"
 python3 scripts/audit_headers.py --include "$(gdal-config --prefix)/include"
 python3 scripts/check_function_abi.py --include "$(gdal-config --prefix)/include"
-nph src/ngis/gdal/bindings.nim tests/tgdal_generated_abi.nim
+nph src/ngis/gdal/api/bindings.nim tests/tgdal_generated_abi.nim
 atlas-run tests
 atlas-run tests --compile-only examples/all_compile.nim
 ```

@@ -91,7 +91,7 @@ directly requires neither GDAL headers nor its shared library.
 
 For GDAL interpolation over every grid cell at the original sample positions, use
 `gridIdw(samples, spec, IdwGridOptions(power: 2, neighbors: 0, coverageRadius: 30))`
-from `ngis/gridding` or `ngis/api`. Zero neighbors uses all valid locations; a positive
+from `ngis/gdal/gridding` or `ngis/api`. Zero neighbors uses all valid locations; a positive
 count selects the nearest locations. The coverage cutoff controls where estimates
 appear, independently of which locations contribute. Exact-position replicates are
 averaged, missing values stay missing, and output rows increase with y. See
@@ -169,9 +169,19 @@ CPL and virtual filesystem helpers are available too: `parseXml`, `newStringList
 | Specialised resources | `coordinateprecision`, `geocoding`, `triangulation`, `contours`, `subdatasets`, `computedbands`: precision models, geocoding results, meshes, streaming contours, subdataset descriptions and computed bands |
 | CPL and I/O | `cpl`, `vsi`, `memory`, `progress`, `plugins`, `processes`: XML, HTTP, compression, containers, synchronization, virtual files, ZIP archives, buffers, callbacks and processes |
 | Networks | `networks`: GNM networks, when the installed GDAL build includes GNM |
-| Raw C API | `gdal`: generated GDAL, OGR, OSR, CPL and VSI declarations and macro equivalents |
+| Raw C API | `gdal/api`: generated GDAL, OGR, OSR, CPL and VSI declarations and macro equivalents |
 
-`import ngis/api` exports the high-level modules. `import ngis` also exports the raw bindings for compatibility; `import ngis/gdal` imports only the raw bindings. See the [Nim API guide](docs/api.md) for field values, array slices, metadata, geometry operations, and progress callbacks.
+`import ngis/api` exports the high-level modules. `import ngis` also exports the raw bindings for compatibility; `import ngis/gdal/api` imports only the raw bindings. See the [Nim API guide](docs/api.md) for field values, array slices, metadata, geometry operations, and progress callbacks.
+
+Owning GDAL modules live under `ngis/gdal/`, such as `ngis/gdal/rasterio`,
+`ngis/gdal/coordinates`, and `ngis/gdal/gridding`. Generated C declarations,
+macro helpers, and inventories live under `src/ngis/gdal/api/`. Standalone numeric
+modules such as `ngis/mapping` and `ngis/metricgrid` remain directly under `ngis/`.
+Existing top-level owning imports such as `ngis/rasterio` remain forwarding modules,
+and `ngis/gdal` remains a compatibility import for the raw C API. For direct raw
+submodules, use `ngis/gdal/api/bindings`, `ngis/gdal/api/raster`, or
+`ngis/gdal/api/vector`; `ngis/gdal/raster` and `ngis/gdal/vector` now contain the
+owning APIs.
 
 The owning Nim API covers common resource families and workflows, but does not provide a one-to-one wrapper for every C function. For other calls, use the C API directly; `rawHandle` borrows from an owner, and `adopt` factories take ownership of compatible independently owned handles. Keep owners alive for any borrowed handles. See [ownership and lifetimes](docs/ownership.md) for details.
 

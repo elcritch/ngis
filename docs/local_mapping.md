@@ -74,13 +74,13 @@ the work or candidate budget sets `limitReached` and returns no estimated cells.
 
 ## GDAL IDW grids
 
-`ngis/gridding` supplies `gridIdw(samples, spec, options)` for native GDAL callers.
+`ngis/gdal/gridding` supplies `gridIdw(samples, spec, options)` for native GDAL callers.
 It is also exported by `ngis/api`; it is separate from the standalone JavaScript
 modules. GDAL performs the interpolation using `invdist` for all locations or
 `invdistnn` for the nearest locations. No new interpolation engine is involved.
 
 ```nim
-import ngis/gridding
+import ngis/gdal/gridding
 
 let samples = [MetricSample(x: 1, value: 0), MetricSample(x: 10, value: 100)]
 let spec = GridSpec(originX: -0.5, originY: -0.5, cellSize: 1, columns: 1, rows: 1)

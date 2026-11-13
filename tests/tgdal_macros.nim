@@ -1,5 +1,5 @@
 import std/[strutils, unittest]
-import ngis/gdal/[bindings, macros]
+import ngis/gdal/api/[bindings, macros]
 
 when not defined(windows):
   const cflags = staticExec("gdal-config --cflags").strip

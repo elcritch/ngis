@@ -52,7 +52,7 @@ jobs:
           /tmp/ngis-bindgen/bin/python scripts/audit_headers.py
           /tmp/ngis-bindgen/bin/python scripts/check_function_abi.py
           python3 scripts/gdal_macros.py
-          git diff --exit-code -- src/ngis/gdal/macro_inventory.json
+          git diff --exit-code -- src/ngis/gdal/api/macro_inventory.json
 
       - name: Run tests
         shell: micromamba-shell {0}

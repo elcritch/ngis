@@ -27,8 +27,8 @@ def main():
     args = parser.parse_args()
     include = (args.include or pathlib.Path(subprocess.check_output(
         ['gdal-config', '--prefix'], text=True).strip()) / 'include').resolve()
-    inventory = json.loads((ROOT / 'src/ngis/gdal/header_inventory.json').read_text())
-    bindings = json.loads((ROOT / 'src/ngis/gdal/bindings.json').read_text())
+    inventory = json.loads((ROOT / 'src/ngis/gdal/api/header_inventory.json').read_text())
+    bindings = json.loads((ROOT / 'src/ngis/gdal/api/bindings.json').read_text())
     headers = inventory['headers']
     actual = installed_headers(include)
     problems = []
@@ -92,7 +92,7 @@ def main():
         # identifiers normalize underscores and case after the initial letter.
         def key(name):
             return name[:1] + name[1:].replace('_', '').lower()
-        nim = (ROOT / 'src/ngis/gdal/bindings.nim').read_text() + (ROOT / 'src/ngis/gdal/macros.nim').read_text() + (ROOT / 'src/ngis/gdal/systemtypes.nim').read_text()
+        nim = (ROOT / 'src/ngis/gdal/api/bindings.nim').read_text() + (ROOT / 'src/ngis/gdal/api/macros.nim').read_text() + (ROOT / 'src/ngis/gdal/api/systemtypes.nim').read_text()
         exports = {key(name) for name in re.findall(r'\b([A-Za-z][A-Za-z0-9_]*)\*', nim)}
         for node in walk(units[0].cursor):
             if not node.location.file or pathlib.Path(node.location.file.name).name not in public:

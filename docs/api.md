@@ -1,6 +1,11 @@
 # High-level Nim API
 
-Import `ngis/api` for Nim values and automatically managed resources. Import `ngis/gdal` separately when a workflow needs a raw C call. `import ngis` continues to expose both layers.
+Import `ngis/api` for Nim values and automatically managed resources. Import `ngis/gdal/api` separately when a workflow needs a raw C call. `import ngis` continues to expose both layers.
+
+Individual owning modules use paths such as `ngis/gdal/datasets`,
+`ngis/gdal/rasterio`, and `ngis/gdal/gridding`. Their previous top-level paths remain
+compatibility imports. The raw C declarations live in `ngis/gdal/api/`; the old
+`ngis/gdal` facade continues to export the raw API.
 
 ## Raster pixels and windows
 

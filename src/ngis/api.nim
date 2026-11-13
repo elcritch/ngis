@@ -1,6 +1,6 @@
 ## High-level GDAL workflows using Nim values, iterators and automatic cleanup.
 ##
-## Use `ngis/gdal` alongside this module for direct C API access.
+## Use `ngis/gdal/api` alongside this module for direct C API access.
 ##
 ## .. code-block:: nim
 ##   import ngis/api
@@ -10,13 +10,14 @@
 ##   image.band().write(pixels)
 ##   echo readGrid[float32](image.band())[1, 0]
 import
-  ./[
+  ./gdal/[
     runtime, datasets, datasetops, drivers, raster, rasterio, rasterextras, vector,
     features, geometryops, vectorextras, spatialrefs, coordinates, schemadomains,
-    multidim, arrayops, mapping, gridding, operations, processing, rendering, utilities,
+    multidim, arrayops, gridding, operations, processing, rendering, utilities,
     algorithms, asyncio, advanced, cpl, vsi, memory, plugins, progress, processes,
     networks,
   ]
+import ./mapping
 export
   datasets, datasetops, drivers, raster, rasterio, rasterextras, vector, features,
   geometryops, vectorextras, spatialrefs, coordinates, schemadomains, multidim,

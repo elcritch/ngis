@@ -293,12 +293,12 @@ def main():
     parser.add_argument("--include", type=pathlib.Path)
     parser.add_argument("--libclang")
     parser.add_argument("--bindings", type=pathlib.Path,
-                        default=ROOT / "src/ngis/gdal/bindings.nim")
+                        default=ROOT / "src/ngis/gdal/api/bindings.nim")
     args = parser.parse_args()
     configure_clang(args.libclang)
     include = (args.include or pathlib.Path(subprocess.check_output(
         ["gdal-config", "--prefix"], text=True).strip()) / "include").resolve()
-    manifest = json.loads((ROOT / "src/ngis/gdal/bindings.json").read_text())
+    manifest = json.loads((ROOT / "src/ngis/gdal/api/bindings.json").read_text())
     flags = ["-I" + str(include)]
     if sys.platform == "darwin":
         flags += ["-isysroot", subprocess.check_output(

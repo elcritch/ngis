@@ -256,7 +256,7 @@ def main():
             except (ValueError,KeyError,SyntaxError,TypeError,ZeroDivisionError,OverflowError,RecursionError): ignored_macros[name]=macros[name]
         # Nim identifiers are case/underscore insensitive except for the first letter.
         occupied={key(name) for name in records}|{key(name) for name in aliases}|{key(name) for name in functions}
-        macro_source = (ROOT / "src/ngis/gdal/macros.nim").read_text()
+        macro_source = (ROOT / "src/ngis/gdal/api/macros.nim").read_text()
         manual = set(re.findall(r"^  (\w+)\*\s*=", macro_source, re.M))
         manual_symbols = manual | set(re.findall(r"^(?:proc|func|template) (\w+)\*", macro_source, re.M))
         constants={name:value for name,value in constants.items() if key(name) not in occupied and name not in manual | {"CPL_FRMT_GB_WITHOUT_PREFIX", "CPL_FILE_INVALID_HANDLE"}}
@@ -285,7 +285,7 @@ else:
 '''
         enum_ops = "\n".join("proc `==`*(a, b: " + identifier(name) + "): bool {.borrow.}\nproc `$`*(value: " + identifier(name) + "): string {.borrow.}" for name in enum_aliases)
         output=banner+platform_types+"type\n"+"\n".join(system_types+declarations)+"\n\n"+enum_ops+"\n\nconst\n"+"\n".join("  "+identifier(n)+"* = "+v for n,v in sorted(constants.items()))+"\n\ngdalImports:\n"+"\n".join("  "+f["nim"] for f in functions.values())+"\n\nwhen not gdalRuntimeEnabled:\n  try:\n    loadGdal()\n  except GdalLoadError:\n    discard\n"
-        dest=ROOT/"src/ngis/gdal"
+        dest=ROOT/"src/ngis/gdal/api"
         (dest/"bindings.nim").write_text(output)
         macro_coverage = {}
         for name, expression in ignored_macros.items():

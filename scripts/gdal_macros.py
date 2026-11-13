@@ -13,14 +13,14 @@ from pathlib import Path
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--include', type=Path)
-parser.add_argument('--output', type=Path, default=Path('src/ngis/gdal/macro_inventory.json'))
+parser.add_argument('--output', type=Path, default=Path('src/ngis/gdal/api/macro_inventory.json'))
 args = parser.parse_args()
 include = args.include
 if include is None:
     flags = subprocess.check_output(['gdal-config', '--cflags'], text=True).split()
     include = Path(next(flag[2:] for flag in flags if flag.startswith('-I')))
-manifest = json.loads(Path('src/ngis/gdal/bindings.json').read_text())
-source = Path('src/ngis/gdal/macros.nim').read_text()
+manifest = json.loads(Path('src/ngis/gdal/api/bindings.json').read_text())
+source = Path('src/ngis/gdal/api/macros.nim').read_text()
 implemented = set(re.findall(r'(?m)^\s*(?:proc|func|template)\s+(\w+)\*', source))
 # Each exclusion is reviewed individually; new names must fail the inventory gate.
 annotations = {

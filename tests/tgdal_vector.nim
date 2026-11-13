@@ -1,5 +1,5 @@
 import std/unittest
-import ngis/gdal/vector
+import ngis/gdal/api/vector
 
 suite "GDAL vector C API":
   test "geometry envelope and WKB round trip":
