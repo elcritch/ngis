@@ -70,6 +70,11 @@ polygon queries, see the [local mapping guide](local_mapping.md). `ngis/mapping`
 exports these tools without GDAL and supports JavaScript. They are also available
 through `ngis/api` and share its `Coordinate` type.
 
+`gridding.gridIdw(samples, spec, IdwGridOptions(...))` uses GDAL to interpolate every
+metric grid cell from original sample positions, with configurable power and all
+or nearest-k locations. Its coverage radius masks output separately from the
+contributor search. See [GDAL IDW grids](local_mapping.md#gdal-idw-grids).
+
 `Coordinate`, `Bounds`, and `AffineTransform` are value objects. `pixelToWorld` and `worldToPixel` map pixel corners; add 0.5 to both pixel coordinates to address a pixel center. `worldToPixel` rejects singular or nonfinite transforms. `CoordinateTransform.transform(points)` returns a sequence without changing its input, and fails if any point cannot be transformed.
 
 GDAL follows the CRS's authority axis order by default. For longitude/latitude or easting/northing coordinate order, construct a CRS with `newSpatialReference(4326, AxisOrder.traditionalGis)`. This matters both for coordinate transformations and for CRS definitions assigned to datasets whose affine coordinates follow GIS x/y order.

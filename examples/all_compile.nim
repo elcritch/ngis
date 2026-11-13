@@ -110,6 +110,8 @@ proc localMappingExample() =
   let spec = gridSpecForSamples(samples, cellSize = 10).get()
   let observed = aggregateObserved(samples, spec)
   echo observed.cells[0].value
+  let surface = gridIdw(samples, spec, IdwGridOptions(coverageRadius: 30))
+  echo surface[0]
 
 proc resourcesExample() =
   let xml = parseXml("<station><name>Harbour</name></station>")

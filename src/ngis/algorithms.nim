@@ -1,4 +1,5 @@
 ## Owning access to GDAL's algorithm registry and command-line algorithms.
+import std/math
 import ./gdal
 import ./datasets
 import ./spatialrefs
@@ -523,6 +524,59 @@ proc newNearestGrid*(
     dfNoDataValue: noData,
   )
   newGridContext(GGA_NearestNeighbor, addr options, x, y, z)
+
+proc validateGridPoints(values: openArray[float64]) =
+  for value in values:
+    if classify(value) in {fcNan, fcInf, fcNegInf}:
+      raise newException(ValueError, "grid points must be finite")
+
+proc newIdwGrid*(
+    x, y, z: openArray[float64],
+    power = 2.0,
+    smoothing = 0.0,
+    radius = 0.0,
+    maxPoints: Natural = 0,
+    minPoints: Natural = 0,
+    noData = NaN,
+): GridContext =
+  ## Create a GDAL inverse-distance gridding context, copying the original points.
+  ## Zero radius and maxPoints use all points. A positive radius limits contributors.
+  ## Positive maxPoints selects GDAL's nearest-neighbor IDW and requires a positive
+  ## radius. minPoints applies only to radius-limited searches. Coordinates and values
+  ## must be finite; aggregate duplicate locations before construction.
+  ## This radius limits contributors, not output coverage; see gridding.gridIdw.
+  if classify(power) in {fcNan, fcInf, fcNegInf} or power <= 0 or
+      classify(smoothing) in {fcNan, fcInf, fcNegInf} or smoothing < 0 or
+      classify(radius) in {fcNan, fcInf, fcNegInf} or radius < 0 or
+      (maxPoints > 0 and radius == 0) or uint64(maxPoints) > uint64(high(uint32)) or
+      uint64(minPoints) > uint64(high(uint32)):
+    raise newException(ValueError, "invalid inverse-distance grid options")
+  validateGridPoints(x)
+  validateGridPoints(y)
+  validateGridPoints(z)
+  if maxPoints > 0:
+    var options = GDALGridInverseDistanceToAPowerNearestNeighborOptions(
+      nSizeOfStructure:
+        csize_t(sizeof(GDALGridInverseDistanceToAPowerNearestNeighborOptions)),
+      dfPower: power,
+      dfSmoothing: smoothing,
+      dfRadius: radius,
+      nMaxPoints: GUInt32(maxPoints),
+      nMinPoints: GUInt32(minPoints),
+      dfNoDataValue: noData,
+    )
+    newGridContext(GGA_InverseDistanceToAPowerNearestNeighbor, addr options, x, y, z)
+  else:
+    var options = GDALGridInverseDistanceToAPowerOptions(
+      nSizeOfStructure: csize_t(sizeof(GDALGridInverseDistanceToAPowerOptions)),
+      dfPower: power,
+      dfSmoothing: smoothing,
+      dfRadius1: radius,
+      dfRadius2: radius,
+      nMinPoints: GUInt32(minPoints),
+      dfNoDataValue: noData,
+    )
+    newGridContext(GGA_InverseDistanceToAPower, addr options, x, y, z)
 
 proc grid*(
     context: GridContext, xMin, xMax, yMin, yMax: float64, width, height: Positive

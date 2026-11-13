@@ -72,6 +72,57 @@ positive, and at most 32 cell widths. Invalid input raises `ValueError`. Exceedi
 the work or candidate budget sets `limitReached` and returns no estimated cells.
 `workCount` reports the number of lookups performed.
 
+## GDAL IDW grids
+
+`ngis/gridding` supplies `gridIdw(samples, spec, options)` for native GDAL callers.
+It is also exported by `ngis/api`; it is separate from the standalone JavaScript
+modules. GDAL performs the interpolation using `invdist` for all locations or
+`invdistnn` for the nearest locations. No new interpolation engine is involved.
+
+```nim
+import ngis/gridding
+
+let samples = [MetricSample(x: 1, value: 0), MetricSample(x: 10, value: 100)]
+let spec = GridSpec(originX: -0.5, originY: -0.5, cellSize: 1, columns: 1, rows: 1)
+let surface = gridIdw(samples, spec,
+  IdwGridOptions(power: 2, neighbors: 0, coverageRadius: 5))
+# About 0.990099: the 10 m observation still contributes inside the coverage area.
+```
+
+`IdwGridOptions` defaults to power 2, all locations (`neighbors = 0`), no coverage
+cutoff (`coverageRadius = Inf`), and `NaN` for missing output. A positive neighbor
+count selects up to that many nearest distinct locations. The coverage cutoff is
+an inclusive distance to the nearest valid location, applied as a separate GDAL
+nearest-neighbor mask. It does not exclude distant contributors. A single valid
+location is sufficient. Both interpolation paths use zero smoothing.
+
+Each finite sample retains its actual x/y coordinates, including positions outside
+the output extent. Exact-position replicates are averaged separately for each
+call, then contribute once per location. Every cell center is interpolated,
+including cells containing observations. Invalid samples are ignored; empty or
+all-invalid input produces a full grid of `noData`. Output is flat row-major
+Float64, with rows increasing with y. For map rendering, use
+`RasterRowOrder.bottomUp` for projected metric grids.
+
+Both GDAL interpolation paths use a finite search radius that includes all input
+locations from every output cell. This also avoids the reduced coordinate
+precision of GDAL's optimized unbounded power-2 path, without changing process-wide
+GDAL settings. Results follow GDAL's handling of very near hits and equidistant
+neighbors, so bit-for-bit agreement with another interpolation library is not
+guaranteed. See [GDAL's gridding API](https://gdal.org/en/stable/api/gdal_alg.html).
+
+Default budgets are 10,000 raw samples and 2,000,000 output cells. Oversized or
+invalid configuration raises `ValueError`; GDAL failures raise `IOError`.
+Projection, grouping nearby repeat fixes, per-nutrient validity rules, polygon
+clipping, and clipped acreage remain application concerns. Keep NAD83/UTM or other
+appropriate projected coordinates for analytical distances and areas.
+
+For direct reusable native contexts, `newIdwGrid(x, y, z, ...)` wraps the GDAL
+options without location aggregation or coverage masking. Its `radius` limits
+contributors, and positive `maxPoints` selects nearest-neighbor IDW and requires
+a positive search radius. `context.grid(...)` uses the existing grid API and
+resource ownership rules.
+
 ## Prepared polygon queries
 
 `initPolygon2D(shell, holes = [])` prepares immutable rings for repeated point

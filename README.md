@@ -89,6 +89,14 @@ These tools are also exported by `ngis/api`. See the [local mapping guide](docs/
 for coordinate limits, missing values, and computation budgets. Importing `ngis/mapping`
 directly requires neither GDAL headers nor its shared library.
 
+For GDAL interpolation over every grid cell at the original sample positions, use
+`gridIdw(samples, spec, IdwGridOptions(power: 2, neighbors: 0, coverageRadius: 30))`
+from `ngis/gridding` or `ngis/api`. Zero neighbors uses all valid locations; a positive
+count selects the nearest locations. The coverage cutoff controls where estimates
+appear, independently of which locations contribute. Exact-position replicates are
+averaged, missing values stay missing, and output rows increase with y. See
+[GDAL IDW grids](docs/local_mapping.md#gdal-idw-grids).
+
 ## Vector data
 
 ```nim
@@ -154,6 +162,7 @@ CPL and virtual filesystem helpers are available too: `parseXml`, `newStringList
 | Raster | `raster`, `rasterio`, `rasterextras`, `asyncio`: typed grids, tiles, resampling, bands, tables and async readers |
 | Map rendering | `rendering`: georeferenced layouts, reusable pixel lookups, output-resolution masks, RGBA colors and hatching |
 | Local mapping | `mapping`: `mapprojection`, `metricgrid`, `localidw`, `polygonqueries`, and `coordinatevalues`; GPS and numeric mapping tools for native Nim and JavaScript |
+| GDAL gridding | `gridding`: original-position IDW grids with configurable power, nearest-neighbor counts, and independent output coverage |
 | Vector and schema | `vector`, `features`, `geometryops`, `vectorextras`, `schemadomains`: typed fields, geometry construction and operations, prepared geometries, styles, domains and relationships |
 | Coordinates and arrays | `coordinates`, `spatialrefs`, `multidim`, `arrayops`: bounds, affine mapping, CRS transformations, typed arrays, slices and attributes |
 | Processing | `processing`, `operations`, `utilities`, `algorithms`, `advanced`: typed conversion and reprojection, progress closures, utilities, transformers, gridding and pansharpening |

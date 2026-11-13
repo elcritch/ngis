@@ -8,6 +8,8 @@ static:
   doAssert declared(initLocalProjection)
   doAssert declared(estimateGridIdw)
   doAssert declared(initPolygon2D)
+  doAssert declared(gridIdw)
+  doAssert declared(newIdwGrid)
 
 suite "high-level API":
   test "local mapping uses the same coordinates as native geometry":
